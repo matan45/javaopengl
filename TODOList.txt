@@ -1,0 +1,29 @@
+TODO:
+excption handling (bulider or factory)
+thread pool
+audio class
+save and load
+macro
+entity 
+camrea
+UI system+layers
+input+event handling
+settings files
+load videos
+fps counter
+physics (collision detection)
+optimization
+
+3D:
+day and night system
+text
+shadow
+textures
+light
+material
+load mesh 
+water system 
+particles effect
+raycast
+terrain
+animation

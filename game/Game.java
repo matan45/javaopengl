@@ -2,6 +2,8 @@ package game;
 
 import static org.lwjgl.opengl.GL11.glClearColor;
 
+import aduio.AudioMaster;
+import aduio.Source;
 import shader.StaticShader;
 import vbo.Loader;
 import vbo.RawModel;
@@ -13,6 +15,9 @@ public class Game implements GameLogic {
 	Renderer renderer;
 	RawModel model;
 	StaticShader shader;
+	
+	int buffer;
+	Source source;
 	
 	float[] vertices = {
 			-0.5f,0.5f,0f,  //V0
@@ -27,6 +32,12 @@ public class Game implements GameLogic {
 	};
 	
 	public void preupdate() {
+		AudioMaster.init();
+		AudioMaster.setListenerData();
+		buffer=AudioMaster.loadSound("cartoon001.wav");
+		source=new Source();
+		source.play(buffer);
+		
 		shader=new StaticShader("tt.vs", "tt.frag");
 		loader=new Loader();
 		renderer=new Renderer();
@@ -40,13 +51,14 @@ public class Game implements GameLogic {
 		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 		renderer.render(model);
 		shader.stop();
-
 		
 	}
 
 	public void onclose() {
 		shader.cleanUp();
 		loader.cleanUp();
+		source.delete();
+		AudioMaster.cleanUp();
 		
 	}
 
