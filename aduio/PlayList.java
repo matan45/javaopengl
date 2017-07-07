@@ -4,6 +4,7 @@ public class PlayList implements Runnable {
 
 	volatile boolean running=true;
 	Thread t;
+	static PlayList play=new PlayList();
 	
 	@Override
 	public void run() {
@@ -24,6 +25,11 @@ public class PlayList implements Runnable {
 		running=false;
 		t.interrupt();
 	}
+	
+	public static PlayList getInstance(){
+		return play;
+	}
+	
 	
 	public void start(){
 		t=new Thread(this);

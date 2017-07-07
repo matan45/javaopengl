@@ -1,21 +1,24 @@
 package test;
-import aduio.Music;
+
 import aduio.PlayList;
 import game.Game;
+import video.MediaPanel;
 import window.Window;
-
 
 public class Run {
 
 	public static void main(String[] args) {
 		
-		PlayList s=new PlayList();
+		MediaPanel.start("open video.mp4");
+		MediaPanel.WaitToEnd();
+		
+		PlayList s = PlayList.getInstance();
 		s.start();
-		Game test=new Game();
-		Window mainwin=new Window(800, 600, "Game Engine OpenGL");
-		mainwin.run(test);
-		Music.close();
+		Game game = new Game();
+		Window mainwin = new Window(800, 600, "Game Engine OpenGL");
+		mainwin.run(game);
 		s.closePlayList();
 	}
+	
 
 }

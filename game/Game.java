@@ -18,6 +18,7 @@ public class Game implements GameLogic {
 	
 	int buffer;
 	Source source;
+	float x=0;
 	
 	float[] vertices = {
 			-0.5f,0.5f,0f,  //V0
@@ -33,9 +34,10 @@ public class Game implements GameLogic {
 	
 	public void preupdate() {
 		AudioMaster.init();
-		AudioMaster.setListenerData();
+		AudioMaster.setListenerData(0,0,0);
 		buffer=AudioMaster.loadSound("cartoon001.wav");
-		source=new Source();
+		source=new Source(1,3,20);
+		source.setLooping(true);
 		source.play(buffer);
 		
 		shader=new StaticShader("tt.vs", "tt.frag");
@@ -50,6 +52,10 @@ public class Game implements GameLogic {
 		// Set the clear color
 		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 		renderer.render(model);
+		
+		x-=0.02f;
+		source.setPosition(x, 0, 2);
+		
 		shader.stop();
 		
 	}

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALCCapabilities;
@@ -32,6 +33,7 @@ public class AudioMaster {
 		context = ALC10.alcCreateContext(device, (IntBuffer) null);
 		alcSetThreadContext(context);
 		AL.createCapabilities(deviceCaps);
+		AL10.alDistanceModel(AL11.AL_EXPONENT_DISTANCE);
 	}
 
 	public static int loadSound(String file) {
@@ -43,8 +45,8 @@ public class AudioMaster {
 		return buffer;
 	}
 	
-	public static void setListenerData(){
-		AL10.alListener3f(AL10.AL_POSITION, 0, 0, 0);
+	public static void setListenerData(float x,float y,float z){
+		AL10.alListener3f(AL10.AL_POSITION, x, y, z);
 		AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0);
 	}
 
