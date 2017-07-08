@@ -21,7 +21,8 @@ import org.lwjgl.stb.STBImage;
 
 public class Icon {
 
-	public static void setIcon(String path) throws Exception {
+
+	public static void setIcon(String path,long window) throws Exception {
 		IntBuffer w = memAllocInt(1);
 		IntBuffer h = memAllocInt(1);
 		IntBuffer comp = memAllocInt(1);
@@ -45,7 +46,7 @@ public class Icon {
 				icons.position(1).width(w.get(0)).height(h.get(0)).pixels(pixels32);
 
 				icons.position(0);
-				glfwSetWindowIcon(Window.window, icons);
+				glfwSetWindowIcon(window, icons);
 
 				STBImage.stbi_image_free(pixels32);
 				STBImage.stbi_image_free(pixels16);
@@ -94,4 +95,7 @@ public class Icon {
 		return newBuffer;
 	}
 
+
+	
+	
 }

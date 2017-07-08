@@ -21,9 +21,10 @@ import uk.co.caprica.vlcj.runtime.x.LibXUtil;
 
 public class MediaPanel {
 	static String filename = "";
-	static String location="src/resources/video/";
-	static String icon="src/resources/icons/Video.png"; 
-	JFrame frame;
+	static String location = "src/resources/video/";
+	static String icon = "src/resources/icons/Video.png";
+	static JFrame frame;
+	static volatile long size;
 	static volatile boolean running;
 
 	public static void start(String file) {
@@ -37,14 +38,14 @@ public class MediaPanel {
 			}
 		});
 	}
-	
+
 	static void chargerLibrairie() {
 		NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), "src/resources/external library/VLC");
 		Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
 		LibXUtil.initialise();
 	}
 
-	@SuppressWarnings("static-access")
+
 	private MediaPanel() {
 		frame = new JFrame("VIDEO");
 		frame.setLocation(100, 100);
@@ -74,42 +75,33 @@ public class MediaPanel {
 
 		mediaPlayer.setEnableKeyInputHandling(true);
 
-		mediaPlayer.prepareMedia(location+filename);
+		mediaPlayer.prepareMedia(location + filename);
 
 		mediaPlayer.play();
 
 		try {
-			Thread.currentThread().sleep(100);
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		new Thread(() -> {
-			while (mediaPlayer.isPlaying()) {
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			;
-			frame.dispose();
-			running = false;
-		}).start();
+		size = mediaPlayer.getLength();
 
 	}
 
 	public static void WaitToEnd() {
-		while (running) {
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+		try {
+			while (size == 0) {
+				Thread.sleep(100);
 			}
+			Thread.sleep(size);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
+		frame.dispose();
+
 	}
 
 }

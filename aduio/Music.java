@@ -43,7 +43,9 @@ public class Music {
 	public static boolean isDone(){
 		return (clip.getFrameLength()==clip.getFramePosition());
 	}
-	
+	public static long AudioLengthMilliseconds(){
+		return clip.getMicrosecondLength() /1000;
+	}
 	public static void pause(){
 		lastframe=clip.getFramePosition();
 		clip.stop();
