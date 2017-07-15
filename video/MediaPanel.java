@@ -69,7 +69,7 @@ public class MediaPanel {
 		EmbeddedMediaPlayer mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer(new Win32FullScreenStrategy(frame));
 		mediaPlayer.setVideoSurface(mediaPlayerFactory.newVideoSurface(c));
 
-		mediaPlayer.toggleFullScreen();
+		//mediaPlayer.toggleFullScreen();
 
 		mediaPlayer.setEnableMouseInputHandling(false);
 

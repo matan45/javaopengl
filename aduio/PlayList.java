@@ -2,7 +2,7 @@ package aduio;
 
 public class PlayList implements Runnable {
 
-	volatile boolean running = true;
+	volatile boolean running;
 	Thread t;
 	static PlayList play = new PlayList();
 
@@ -16,19 +16,23 @@ public class PlayList implements Runnable {
 			Music.create("Everdream.wav", false);
 			waiting();
 		}
-
 	}
 
-	@SuppressWarnings("static-access")
-	private void waiting() {
+
+	private void waiting() {	
 		try {
-			t.sleep(Music.AudioLengthMilliseconds());
-		} catch (InterruptedException e) {}
+			Thread.sleep(Music.AudioLengthMilliseconds());
+		} catch (InterruptedException e) {
+			closePlayList();
+		}
+		
 	}
 
 	public void closePlayList() {
 		running = false;
+		Music.close();
 		t.interrupt();
+		
 	}
 
 	public static PlayList getInstance() {
@@ -36,6 +40,7 @@ public class PlayList implements Runnable {
 	}
 
 	public void start() {
+		running = true;
 		t = new Thread(this);
 		t.start();
 	}

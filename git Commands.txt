@@ -1,0 +1,27 @@
+
+git init
+git remote add origin url.git
+echo "git notes" >> notes.txt
+git add notes.txt //add files to git
+git commit -m 'Initial commit with contributors' //add commit to git the '' is the tiltle of the commit
+-m 'notes'
+git push -u origin master //send to git master bruch
+
+git stuts
+
+git checkout -b branchName //crate new branch whit that name
+git checkout branchName //change working branch
+git push origin branchName //push to branch
+git branch -d/-D branchName
+
+git merge:
+git checkout branchName1
+git merge branchName2
+
+git pull origin branchName1 //get the file from current branch
+
+git fetch origin branchName1 //get the commits from the current branchName
+
+git log//get the log file
+
+.gitignore is file to push the repository and set whit folders and file not to upload to serverS
