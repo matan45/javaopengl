@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -20,6 +22,7 @@ public class Texture {
 	private int id;
 	private int width;
 	private int height;
+	List<Integer>textures=new ArrayList<Integer>();
 
 	
 	public Texture(String fileName){
@@ -45,6 +48,7 @@ public class Texture {
 		}
 		pixels.flip();
 		id=GL11.glGenTextures();
+		textures.add(id);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
 		
 		glEnable(GL_BLEND);
@@ -54,6 +58,7 @@ public class Texture {
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixels);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -67,5 +72,10 @@ public class Texture {
 		return id;
 	}
 	
+	public void cleanUp(){
+		for(int texture:textures){
+			GL11.glDeleteTextures(texture);
+		}
+	}
 	
 }

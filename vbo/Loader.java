@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL30;
 
 public class Loader {
 	List<Integer>vaos=new ArrayList<Integer>();
-	List<Integer>vbos=new ArrayList<Integer>();
+	List<Integer> vbos = new ArrayList<Integer>();
 
 	
 	public RawModel loadToVao(float[] positions,float[] textureCoords,int[] indices){

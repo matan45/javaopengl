@@ -7,7 +7,7 @@ git commit -m 'Initial commit with contributors' //add commit to git the '' is t
 -m 'notes'
 git push -u origin master //send to git master bruch
 
-git stuts
+git status
 
 git checkout -b branchName //crate new branch whit that name
 git checkout branchName //change working branch
