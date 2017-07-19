@@ -18,14 +18,15 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-public class Texture {
+public class LoadTexture {
 	private int id;
 	private int width;
 	private int height;
 	List<Integer>textures=new ArrayList<Integer>();
 
+
 	
-	public Texture(String fileName){
+	public LoadTexture(String fileName){
 		BufferedImage bi;
 		try {
 			bi=ImageIO.read(new File("src/resources/texture/"+fileName+".png"));
@@ -64,9 +65,6 @@ public class Texture {
 		}
 	}
 	
-	public void bind(){
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
-	}
 
 	public int getId() {
 		return id;
@@ -77,5 +75,6 @@ public class Texture {
 			GL11.glDeleteTextures(texture);
 		}
 	}
+	
 	
 }

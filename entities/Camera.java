@@ -3,6 +3,8 @@ package entities;
 import org.lwjgl.glfw.GLFW;
 
 import input.Keyinput;
+import input.MouseScroll;
+import input.MouseScroll.Scroll;
 import maths.Vector3f;
 
 public class Camera {
@@ -13,14 +15,29 @@ public class Camera {
 	
 	
 	public void move(){
-		if(Keyinput.keys[GLFW.GLFW_KEY_W])
-			postion.z-=0.02f;
-		if(Keyinput.keys[GLFW.GLFW_KEY_D])
-			postion.x+=0.02f;
-		if(Keyinput.keys[GLFW.GLFW_KEY_A])
-			postion.x-=0.02f;
-		if(Keyinput.keys[GLFW.GLFW_KEY_S])
-			postion.z+=0.02f;
+		if(Keyinput.keyDown(GLFW.GLFW_KEY_W))
+			postion.z-=0.1f;
+		if(Keyinput.keyDown(GLFW.GLFW_KEY_D))
+			postion.x+=0.1f;
+		if(Keyinput.keyDown(GLFW.GLFW_KEY_A))
+			postion.x-=0.1f;
+		if(Keyinput.keyDown(GLFW.GLFW_KEY_S))
+			postion.z+=0.1f;
+		
+		MouseScroll.setS(new Scroll() {
+
+			@Override
+			public void ScrollUp() {
+				postion.y+=0.5f;
+
+			}
+
+			@Override
+			public void ScrollDown() {
+				postion.y-=0.5f;
+
+			}
+		});
 	}
 	
 	public Vector3f getPostion() {

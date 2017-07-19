@@ -30,23 +30,35 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.IntBuffer;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
 import game.GameLogic;
 import input.Keyinput;
+import input.MouseCursor;
+import input.MouseScroll;
+import input.Mouseinput;
 
 public abstract class MasterWindow {
 	// The window handle
 	long window;
 	int Width, Height;
 	String title;
-	@SuppressWarnings("unused")
-	private GLFWKeyCallback keyCallback;
-	static String icon = "src/resources/icons/main_icon.png";
 
+	// input
+	private GLFWKeyCallback keyCallback;
+	private GLFWMouseButtonCallback mouseCallback;
+	private GLFWCursorPosCallback mousePosition;
+	private GLFWScrollCallback mouseScroll;
+
+	static String icon = "src/resources/icons/main_icon.png";
+	static String cursor="src/resources/icons/Cursor.png";
+	
 	public MasterWindow(int sizeX, int sizeY, String title) {
 
 		this.Width = sizeX;
@@ -86,14 +98,19 @@ public abstract class MasterWindow {
 													// after creation
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be
 													// resizable
+		
+		//full screen glfwCreateWindow(Width, Height, title, glfwGetPrimaryMonitor(), NULL);
 		// Create the window
 		window = glfwCreateWindow(Width, Height, title, NULL, NULL);
 		if (window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 		
-		// Sets our keycallback to equal our newly created Input class()
-		GLFW.glfwSetKeyCallback(window, keyCallback = new Keyinput());
-
+		//init input
+		keyCallback = new Keyinput();
+		mouseCallback = new Mouseinput();
+		mousePosition = new MouseCursor();
+		mouseScroll= new MouseScroll();
+		
 		// Get the thread stack and push a new frame
 		try (MemoryStack stack = stackPush()) {
 			IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -149,6 +166,36 @@ public abstract class MasterWindow {
 		return Height;
 	}
 
+	public void Cursormodes(int mode) {
+		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, mode);
+	}
 
+	public void Keyinput(boolean value) {
+		if (value)
+			GLFW.glfwSetKeyCallback(window, keyCallback);
+		else
+			GLFW.glfwSetKeyCallback(window, null);
+	}
+
+	public void Mouseinput(boolean value) {
+		if (value)
+			GLFW.glfwSetMouseButtonCallback(window, mouseCallback);
+		else
+			GLFW.glfwSetMouseButtonCallback(window, null);
+	}
+
+	public void Cursorinput(boolean value) {
+		if (value)
+			GLFW.glfwSetCursorPosCallback(window, mousePosition);
+		else
+			GLFW.glfwSetCursorPosCallback(window, null);
+	}
 	
+	public void Scrollinput(boolean value) {
+		if (value)
+			GLFW.glfwSetScrollCallback(window, mouseScroll);
+		else
+			GLFW.glfwSetScrollCallback(window, null);
+	}
+
 }

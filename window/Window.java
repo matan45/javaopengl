@@ -26,6 +26,7 @@ public class Window extends MasterWindow {
 
 		try {
 			Icon.setIcon(icon, window);
+			Icon.IconCursor(cursor, window);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,7 +40,6 @@ public class Window extends MasterWindow {
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // clear
 																				// the
 																				// framebuffer
-
 			c.update();
 
 			GLFW.glfwSwapBuffers(window); // swap the color buffers
