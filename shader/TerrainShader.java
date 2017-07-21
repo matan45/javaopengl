@@ -6,7 +6,8 @@ import maths.Maths;
 import maths.Matrix4f;
 import maths.Vector3f;
 
-public class StaticShader extends ShaderProgram {
+public class TerrainShader extends ShaderProgram {
+	
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
@@ -14,10 +15,9 @@ public class StaticShader extends ShaderProgram {
 	private int location_lightColour;
 	private int location_shineDamper;
 	private int location_reflectivity;
-	private int location_useFakeLighting;
 	private int location_skyColour;
 	
-	public StaticShader(String vertexFile, String fragmentFile) {
+	public TerrainShader(String vertexFile, String fragmentFile) {
 		super(vertexFile, fragmentFile);
 		// TODO Auto-generated constructor stub
 	}
@@ -38,15 +38,10 @@ public class StaticShader extends ShaderProgram {
 		location_lightColour=super.getUniformLocation("lightColour");
 		location_shineDamper=super.getUniformLocation("shineDamper");
 		location_reflectivity=super.getUniformLocation("reflectivity");
-		location_useFakeLighting=super.getUniformLocation("useFakeLighting");
 		location_skyColour=super.getUniformLocation("skyColour");
 	}
 	public void loadSkyColour(float r,float g,float b){
 		super.loadVector(location_skyColour, new Vector3f(r, g, b));
-	}
-	
-	public void loadFakeLighting(boolean useFake){
-		super.loadBoolean(location_useFakeLighting, useFake);
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix){

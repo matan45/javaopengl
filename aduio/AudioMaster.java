@@ -3,6 +3,9 @@ package aduio;
 import static org.lwjgl.openal.EXTThreadLocalContext.alcSetThreadContext;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -20,7 +23,7 @@ public class AudioMaster {
 	private static List<Integer> buffers = new ArrayList<>();
 	static long device;
 	static long context;
-	static String loction="resources/audio/";
+	static String loction = "src/resources/audio/";
 
 	public static void init() {
 		device = ALC10.alcOpenDevice((ByteBuffer) null);
@@ -39,13 +42,18 @@ public class AudioMaster {
 	public static int loadSound(String file) {
 		int buffer = AL10.alGenBuffers();
 		buffers.add(buffer);
-		WaveData waveFile = WaveData.create(loction+file);
-		AL10.alBufferData(buffer, waveFile.format, waveFile.data, waveFile.samplerate);
-		waveFile.dispose();
+		WaveData waveFile;
+		try {
+			waveFile = WaveData.create(new BufferedInputStream(new FileInputStream(loction + file + ".wav")));
+			AL10.alBufferData(buffer, waveFile.format, waveFile.data, waveFile.samplerate);
+			waveFile.dispose();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		return buffer;
 	}
-	
-	public static void setListenerData(float x,float y,float z){
+
+	public static void setListenerData(float x, float y, float z) {
 		AL10.alListener3f(AL10.AL_POSITION, x, y, z);
 		AL10.alListener3f(AL10.AL_VELOCITY, 0, 0, 0);
 	}

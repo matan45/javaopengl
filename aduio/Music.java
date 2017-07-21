@@ -17,7 +17,7 @@ public class Music {
 	static int lastframe;
 	static FloatControl Control;
 	
-	@SuppressWarnings("static-access")
+	
 	public static void create(String file,boolean loop){
 		try {
 			audioIn = AudioSystem.getAudioInputStream(new File(loc+file));
@@ -27,7 +27,7 @@ public class Music {
 				Control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 				clip.start();
 				if(loop)
-					clip.loop(clip.LOOP_CONTINUOUSLY);
+					clip.loop(Clip.LOOP_CONTINUOUSLY);
 				
 			} catch (LineUnavailableException e) {
 				// TODO Auto-generated catch block
@@ -39,6 +39,7 @@ public class Music {
 			e.printStackTrace();
 		}
 	}
+
 	
 	public static boolean isDone(){
 		return (clip.getFrameLength()==clip.getFramePosition());
@@ -64,5 +65,6 @@ public class Music {
 	public static void unmute(){
 		Control.setValue(5.0f);
 	}
+	
 	
 }

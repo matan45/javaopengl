@@ -94,9 +94,9 @@ public abstract class MasterWindow {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		// already the default
-		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden
+		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE); // the window will stay hidden
 													// after creation
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be
 													// resizable
 		
 		//full screen glfwCreateWindow(Width, Height, title, glfwGetPrimaryMonitor(), NULL);

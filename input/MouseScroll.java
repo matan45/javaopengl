@@ -8,9 +8,9 @@ public class MouseScroll extends GLFWScrollCallback {
 	@Override
 	public void invoke(long window, double xoffset, double yoffset) {
 		if (yoffset > 0)
-			s.ScrollUp();
+			s.ScrollUp(yoffset);
 		if (yoffset < 0)
-			s.ScrollDown();
+			s.ScrollDown(yoffset);
 
 	}
 
@@ -19,9 +19,9 @@ public class MouseScroll extends GLFWScrollCallback {
 	}
 
 	public interface Scroll {
-		public void ScrollUp();
+		public void ScrollUp(double speed);
 
-		public void ScrollDown();
+		public void ScrollDown(double speed);
 	}
 
 }

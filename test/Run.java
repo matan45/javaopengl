@@ -18,14 +18,12 @@ public class Run {
 		PlayList s = PlayList.getInstance();
 		s.start();
 		
-		Game game = new Game();
 		
 		MasterWindow mainwin = new Window(800, 600, "Game Engine OpenGL","main");
 		mainwin.setRestore();
 		mainwin.Keyinput(true);
 		mainwin.Scrollinput(true);
-		mainwin.run(game);
-		
+		mainwin.run(new Game());
 		s.closePlayList();
 		
 	}
