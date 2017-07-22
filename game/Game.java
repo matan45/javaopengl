@@ -8,11 +8,15 @@ import aduio.Source;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
+import input.Mouseinput;
 import maths.Vector3f;
 import terrains.Terrain;
 import texture.ModelTexture;
+import texture.TerrainTexture;
+import texture.TerrainTexturePack;
 import texture.TexturedModel;
-import utill.FPS;
+import utill.Time;
 import vbo.Loader;
 import vbo.MasterRenderer;
 import vbo.OBJLoader;
@@ -31,25 +35,25 @@ public class Game implements GameLogic {
 	Terrain terrain;
 
 	int buffer;
-	Source jungle,horror;
-	float x=0;
+	Source jungle, horror;
+	float x = 0;
 
 	public void preupdate() {
 		AudioMaster.init();
 		AudioMaster.setListenerData(0, 0, 0);
 		buffer = AudioMaster.loadSound("Forest Birds");
-		jungle = new Source(0,0,0);
+		jungle = new Source(0, 0, 0);
 		jungle.play(buffer);
 		jungle.setVolume(0.3f);
 		jungle.setLooping(true);
-		
+
 		buffer = AudioMaster.loadSound("horror");
-		horror=new Source(1,3, 20);
+		horror = new Source(1, 3, 20);
 		horror.play(buffer);
 		horror.setLooping(true);
-		
+
 		renderer = new MasterRenderer();
-		
+
 		Entity dragon = new Entity(new TexturedModel(OBJLoader.loadObjModel("dragon", loader),
 				new ModelTexture(loader.loadTexture("dragon"))), new Vector3f(30, 0, -35), 0, 0, 0, 0.3f);
 		dragon.getModel().getTexture().setReflectivity(2);
@@ -82,31 +86,45 @@ public class Game implements GameLogic {
 		fern.getModel().getTexture().setUseFakeLighting(true);
 		entitys.add(fern);
 
-		terrain = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("grass")));
+		Entity player = new Player(
+				new TexturedModel(OBJLoader.loadObjModel("player", loader),
+						new ModelTexture(loader.loadTexture("playerTexture"))),
+				new Vector3f(30, 0, -20), 0, 0, 0, 0.3f);
+		entitys.add(player);
 
-		camera = new Camera();
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
+
+		terrain = new Terrain(0, -1, loader, texturePack, blendMap);
+
+		camera = new Camera((Player) player);
 		light = new Light(new Vector3f(40, 60, -60), new Vector3f(1, 1, 1));
 
 	}
 
 	public void update() {
-		FPS.update();
-		
-		
+		Time.fps();
+
 		renderer.render(light, camera);
-		camera.move();
+		camera.Person3D();
 
 		renderer.processTerrain(terrain);
+
 		for (Entity entity : entitys)
 			renderer.processEntity(entity);
 
 		entitys.get(2).increaseRotation(0, 1, 0);
 		entitys.get(3).increaseRotation(0, -1, 0);
-		// entity.increasePosition(0, 0, -0.001f);
+		((Player) entitys.get(5)).move();
+
 
 		x -= 0.02f;
 		horror.setPosition(x, 0, 2);
-
+		Mouseinput.resetMouse();
 	}
 
 	public void onclose() {

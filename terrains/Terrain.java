@@ -1,6 +1,7 @@
 package terrains;
 
-import texture.ModelTexture;
+import texture.TerrainTexture;
+import texture.TerrainTexturePack;
 import vbo.Loader;
 import vbo.RawModel;
 
@@ -11,10 +12,12 @@ public class Terrain {
 	float x;
 	float z;
 	RawModel model;
-	ModelTexture texture;
+	TerrainTexturePack texturePack;
+	TerrainTexture blendMap;
 	
-	public Terrain(float gridx, float gridz,Loader loader, ModelTexture texture) {
-		this.texture = texture;
+	public Terrain(float gridx, float gridz,Loader loader, TerrainTexturePack texturePack,TerrainTexture blendMap) {
+		this.texturePack = texturePack;
+		this.blendMap=blendMap;
 		this.x = gridx * SIZE;
 		this.z = gridz * SIZE;
 		this.model = generateTerrain(loader);
@@ -71,8 +74,14 @@ public class Terrain {
 		return model;
 	}
 
-	public ModelTexture getTexture() {
-		return texture;
+	public TerrainTexturePack getTexturePack() {
+		return texturePack;
 	}
+
+	public TerrainTexture getBlendMap() {
+		return blendMap;
+	}
+
+	
 	
 }

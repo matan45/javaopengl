@@ -26,13 +26,13 @@ public class MasterRenderer {
 	static final float NEAR_PLANE = 0.1f;
 	static final float FAR_PLANE = 1000;
 	
-	static final float RED=0.5f;
-	static final float GREEN=0.5f;
-	static final float BLUE=0.5f;
+	static final float RED=1f;
+	static final float GREEN=1f;
+	static final float BLUE=0f;
 
 	Matrix4f projectionMatrix;
 
-	StaticShader shader = new StaticShader("test.vs", "test.frag");
+	StaticShader shader = new StaticShader("entity.vs", "entity.frag");
 	EntityRenderer renderer;
 
 	TerrainRenderer terrainRenderer;

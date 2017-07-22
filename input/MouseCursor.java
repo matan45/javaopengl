@@ -9,11 +9,16 @@ import window.WindowManager;
 public class MouseCursor extends  GLFWCursorPosCallback {
 	static double xposition;
 	static double yposition;
+	static double preX;
+	static double preY;
 	static Vector2f normalize=new Vector2f();
 	@Override
 	public void invoke(long window, double xpos, double ypos) {
+		preX=xposition-xpos;
+		preY=yposition-ypos;
 		xposition=xpos;
 		yposition=ypos;
+		
 		
 	}
 	public static double getXposition() {
@@ -28,5 +33,11 @@ public class MouseCursor extends  GLFWCursorPosCallback {
 		normalize.x = (float)(-1.0 + 2.0 * xposition / win.getWidth()); 
 		normalize.y =(float)( 1.0 - 2.0 * yposition / win.getHeight()); 
 		return normalize;
+	}
+	public static double DX(){
+		return preX;
+	}
+	public static double DY(){
+		return preY;
 	}
 }
