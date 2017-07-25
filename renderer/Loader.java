@@ -1,21 +1,13 @@
-package vbo;
+package renderer;
 
-import static org.lwjgl.BufferUtils.createByteBuffer;
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
 import static org.lwjgl.stb.STBImage.stbi_info_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.SeekableByteChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +18,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import nuklearguitest.IOUtil;
+import utill.IOUtil;
 
 public class Loader {
 	List<Integer> vaos = new ArrayList<Integer>();
@@ -43,11 +35,18 @@ public class Loader {
 		return new RawModel(vaoID, indices.length);
 	}
 
+	public RawModel loadToVAO(float[] positions) {
+		int vaoID = createVAO();
+		this.storeDataInAttributeList(0, 2, positions);
+		unbindVAO();
+		return new RawModel(vaoID, positions.length/2);
+	}
+
 	public int loadTexture(String fileName) {
 		ByteBuffer imageBuffer;
 		ByteBuffer image;
 		try {
-			imageBuffer = ioResourceToByteBuffer("src/resources/texture/" + fileName + ".png", 8 * 1024);
+			imageBuffer = IOUtil.ioResourceToByteBuffer("src/resources/texture/" + fileName + ".png", 8 * 1024);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -146,45 +145,6 @@ public class Loader {
 	private FloatBuffer storeDataInFloatBuffer(float[] data) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
 		buffer.put(data);
-		buffer.flip();
-		return buffer;
-	}
-
-	private static ByteBuffer resizeBuffer(ByteBuffer buffer, int newCapacity) {
-		ByteBuffer newBuffer = BufferUtils.createByteBuffer(newCapacity);
-		buffer.flip();
-		newBuffer.put(buffer);
-		return newBuffer;
-	}
-
-	public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
-		ByteBuffer buffer;
-
-		Path path = Paths.get(resource);
-		if (Files.isReadable(path)) {
-			try (SeekableByteChannel fc = Files.newByteChannel(path)) {
-				buffer = BufferUtils.createByteBuffer((int) fc.size() + 1);
-				while (fc.read(buffer) != -1) {
-					;
-				}
-			}
-		} else {
-			try (InputStream source = IOUtil.class.getClassLoader().getResourceAsStream(resource);
-					ReadableByteChannel rbc = Channels.newChannel(source)) {
-				buffer = createByteBuffer(bufferSize);
-
-				while (true) {
-					int bytes = rbc.read(buffer);
-					if (bytes == -1) {
-						break;
-					}
-					if (buffer.remaining() == 0) {
-						buffer = resizeBuffer(buffer, buffer.capacity() * 2);
-					}
-				}
-			}
-		}
-
 		buffer.flip();
 		return buffer;
 	}

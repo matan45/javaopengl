@@ -2,7 +2,7 @@
  
 package texture;
  
-import vbo.RawModel;
+import renderer.RawModel;
  
 public class TexturedModel {
      

@@ -1,4 +1,4 @@
-package vbo;
+package renderer;
 
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.glClearColor;
@@ -26,9 +26,9 @@ public class MasterRenderer {
 	static final float NEAR_PLANE = 0.1f;
 	static final float FAR_PLANE = 1000;
 	
-	static final float RED=1f;
-	static final float GREEN=1f;
-	static final float BLUE=0f;
+	static final float RED=0.5f;
+	static final float GREEN=0.5f;
+	static final float BLUE=0.5f;
 
 	Matrix4f projectionMatrix;
 

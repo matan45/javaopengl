@@ -2,7 +2,6 @@ package nuklearguitest;
 
 import static java.lang.Math.max;
 import static nuklearguitest.GLFWUtil.glfwInvoke;
-import static nuklearguitest.IOUtil.ioResourceToByteBuffer;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
@@ -81,6 +80,7 @@ import static org.lwjgl.stb.STBImage.stbi_info_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_is_hdr_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static utill.IOUtil.ioResourceToByteBuffer;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

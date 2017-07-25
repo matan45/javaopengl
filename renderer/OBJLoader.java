@@ -1,4 +1,4 @@
-package vbo;
+package renderer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,6 +29,7 @@ public class OBJLoader {
 		float[] normalsArray = null;
 		float[] textureArray = null;
 		int[] indicesArray = null;
+
 		try {
 			while (true) {
 				line = reader.readLine();
@@ -51,6 +52,7 @@ public class OBJLoader {
 					break;
 				}
 			}
+
 			while (line != null) {
 				if (!line.startsWith("f ")) {
 					line = reader.readLine();
@@ -83,9 +85,9 @@ public class OBJLoader {
 		for (int i = 0; i < indices.size(); i++) {
 			indicesArray[i] = indices.get(i);
 		}
-		
-		return loader.loadToVAO(verticesArray, textureArray,normalsArray, indicesArray);
-		
+
+		return loader.loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
+
 	}
 
 	private static void processVertex(String[] vertexData, List<Integer> indices, List<Vector2f> textures,
@@ -100,4 +102,5 @@ public class OBJLoader {
 		normalsArray[currentVertxPointer * 3 + 1] = currenNorm.y;
 		normalsArray[currentVertxPointer * 3 + 2] = currenNorm.z;
 	}
+
 }

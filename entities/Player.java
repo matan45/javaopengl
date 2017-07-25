@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFW;
 
 import input.Keyinput;
 import maths.Vector3f;
+import terrains.Terrain;
 import texture.TexturedModel;
 import utill.Time;
 
@@ -12,7 +13,6 @@ public class Player extends Entity {
 	static final float TURN_SPEED = 160;
 	static final float GRAVITY = -50;
 	static final float JUMP_POWER = 20;
-	static final float TERRAIN_HEIGHT = 0;
 
 	float currentSpeed = 0;
 	float currentTurnSpeed = 0;
@@ -23,7 +23,7 @@ public class Player extends Entity {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 
-	public void move() {
+	public void move(Terrain terrain) {
 		checkInputs();
 		super.increaseRotation(0, currentTurnSpeed * Time.getDeltaTime(), 0);
 		float distance = currentSpeed * Time.getDeltaTime();
@@ -32,10 +32,11 @@ public class Player extends Entity {
 		super.increasePosition(dx, 0, dz);
 		upwardsSpeed += GRAVITY * Time.getDeltaTime();
 		super.increasePosition(0, upwardsSpeed * Time.getDeltaTime(), 0);
-		if (super.getPosition().y < TERRAIN_HEIGHT) {
+		float terrainHeight = terrain.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
+		if (super.getPosition().y < terrainHeight) {
 			upwardsSpeed = 0;
 			isInAir = false;
-			super.getPosition().y = TERRAIN_HEIGHT;
+			super.getPosition().y = terrainHeight;
 		}
 	}
 

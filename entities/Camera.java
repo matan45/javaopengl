@@ -143,7 +143,7 @@ public class Camera {
 	}
 
 	private void calculateAngleAoundPlayer() {
-		if (Mouseinput.mouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
+		if (Mouseinput.mouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_2)) {
 			float angleChange = (float) (MouseCursor.DX() * 0.1f);
 			angleAroundPlayer -= angleChange;
 		}

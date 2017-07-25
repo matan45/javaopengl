@@ -5,7 +5,7 @@ audio class
 save and load
 macro
 entity 
-camrea
+camera
 UI system+layers
 input+event handling
 settings files

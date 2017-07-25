@@ -23,6 +23,7 @@ public class Window extends MasterWindow {
 		// creates the GLCapabilities instance and makes the OpenGL
 		// bindings available for use.
 		GL.createCapabilities();
+		int prew = this.Width, preh = this.Height;
 
 		try {
 			Icon.setIcon(icon, window);
@@ -37,9 +38,15 @@ public class Window extends MasterWindow {
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while (!GLFW.glfwWindowShouldClose(window)) {
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // clear
-																				// the
-																				// framebuffer
+			// clear the frame buffer
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+
+			if (this.Width != prew || this.Height != preh) {
+				GL11.glViewport(-1, 1, this.Width, this.Height);
+				prew = this.Width;
+				preh = this.Height;
+			}
+
 			c.update();
 
 			GLFW.glfwSwapBuffers(window); // swap the color buffers

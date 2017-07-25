@@ -1,4 +1,4 @@
-package vbo;
+package renderer;
 
 import java.util.List;
 import java.util.Map;
@@ -45,7 +45,8 @@ public class EntityRenderer {
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
-		ModelTexture texture =model.getTexture();
+		ModelTexture texture = model.getTexture();
+		shader.loadNumberOfRows(texture.getNumberOfRows());
 		if(texture.isHasTransparency()){
 			MasterRenderer.disableCulling();
 		}
@@ -67,6 +68,7 @@ public class EntityRenderer {
 		Matrix4f transfromationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
 				entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transfromationMatrix);
+		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
 	}
 
 	

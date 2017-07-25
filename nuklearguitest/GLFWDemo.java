@@ -1,6 +1,5 @@
 package nuklearguitest;
 
-import static nuklearguitest.IOUtil.ioResourceToByteBuffer;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
@@ -217,6 +216,7 @@ import static org.lwjgl.system.MemoryUtil.memCopy;
 import static org.lwjgl.system.MemoryUtil.memFree;
 import static org.lwjgl.system.MemoryUtil.nmemAlloc;
 import static org.lwjgl.system.MemoryUtil.nmemFree;
+import static utill.IOUtil.ioResourceToByteBuffer;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

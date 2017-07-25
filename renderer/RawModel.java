@@ -1,4 +1,4 @@
-package vbo;
+package renderer;
  
 public class RawModel {
      

@@ -20,7 +20,7 @@ public class Music {
 	
 	public static void create(String file,boolean loop){
 		try {
-			audioIn = AudioSystem.getAudioInputStream(new File(loc+file));
+			audioIn = AudioSystem.getAudioInputStream(new File(loc+file+".wav"));
 			try {
 				clip = AudioSystem.getClip();
 				clip.open(audioIn);

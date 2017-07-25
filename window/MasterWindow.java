@@ -20,6 +20,7 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
@@ -57,8 +58,8 @@ public abstract class MasterWindow {
 	private GLFWScrollCallback mouseScroll;
 
 	static String icon = "src/resources/icons/main_icon.png";
-	static String cursor="src/resources/icons/Cursor.png";
-	
+	static String cursor = "src/resources/icons/Cursor.png";
+
 	public MasterWindow(int sizeX, int sizeY, String title) {
 
 		this.Width = sizeX;
@@ -94,23 +95,26 @@ public abstract class MasterWindow {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		// already the default
-		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE); // the window will stay hidden
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden
 													// after creation
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be
 													// resizable
-		
-		//full screen glfwCreateWindow(Width, Height, title, glfwGetPrimaryMonitor(), NULL);
+
+		// full screen glfwCreateWindow(Width, Height, title,
+		// glfwGetPrimaryMonitor(), NULL);
 		// Create the window
 		window = glfwCreateWindow(Width, Height, title, NULL, NULL);
 		if (window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 		
-		//init input
+		glfwSetWindowSizeCallback(window, this::windowSizeChanged);
+
+		// init input
 		keyCallback = new Keyinput();
 		mouseCallback = new Mouseinput();
 		mousePosition = new MouseCursor();
-		mouseScroll= new MouseScroll();
-		
+		mouseScroll = new MouseScroll();
+
 		// Get the thread stack and push a new frame
 		try (MemoryStack stack = stackPush()) {
 			IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -190,7 +194,7 @@ public abstract class MasterWindow {
 		else
 			GLFW.glfwSetCursorPosCallback(window, null);
 	}
-	
+
 	public void Scrollinput(boolean value) {
 		if (value)
 			GLFW.glfwSetScrollCallback(window, mouseScroll);
@@ -198,4 +202,9 @@ public abstract class MasterWindow {
 			GLFW.glfwSetScrollCallback(window, null);
 	}
 
+	private void windowSizeChanged(long window, int width, int height) {
+		this.Width = width;
+		this.Height = height;
+
+	}
 }

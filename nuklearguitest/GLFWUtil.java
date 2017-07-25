@@ -32,12 +32,13 @@ public final class GLFWUtil {
 
             if (windowSizeCB != null) {
                 glfwGetWindowSize(window, w, h);
-                windowSizeCB.invoke(window, w.get(0), h.get(0));
+
             }
 
             if (framebufferSizeCB != null) {
                 glfwGetFramebufferSize(window, w, h);
                 framebufferSizeCB.invoke(window, w.get(0), h.get(0));
+
             }
         }
 
