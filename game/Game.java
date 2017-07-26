@@ -1,5 +1,6 @@
 package game;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +11,12 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import fontRendering.TextMaster;
 import guis.GuiHandler;
 import guis.GuiRenderer;
 import guis.button.Button;
 import guis.button.IButton;
+import input.Keyinput;
 import input.Mouseinput;
 import maths.Vector2f;
 import maths.Vector3f;
@@ -21,6 +24,8 @@ import renderer.Loader;
 import renderer.MasterRenderer;
 import renderer.OBJLoader;
 import terrains.Terrain;
+import text.FontType;
+import text.GUIText;
 import texture.ModelTexture;
 import texture.TerrainTexture;
 import texture.TerrainTexturePack;
@@ -35,12 +40,12 @@ public class Game implements GameLogic {
 	GuiRenderer guiRenderer;
 
 	List<Entity> entitys = new ArrayList<>();
+	List<Light> lights = new ArrayList<>();
 	GuiHandler guis = new GuiHandler();
 
 	Camera camera;
-	Light light;
-
 	Terrain terrain;
+	GUIText text;
 
 	int buffer;
 	Source jungle, Dragon;
@@ -66,8 +71,17 @@ public class Game implements GameLogic {
 		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
-
 		terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
+
+		// up to 4 lights
+		Light light = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.5f, 0.5f, 0.5f));
+		lights.add(light);
+		Light light2 = new Light(new Vector3f(21, 0, -40), new Vector3f(10, 0, 0), new Vector3f(1f, 0.1f, 0.002f));
+		lights.add(light2);
+		Light light3 = new Light(new Vector3f(50, 0, -30), new Vector3f(0, 10, 0), new Vector3f(1f, 0.1f, 0.002f));
+		lights.add(light3);
+		Light light4 = new Light(new Vector3f(39, 0, -45), new Vector3f(0, 0, 10), new Vector3f(1f, 0.1f, 0.002f));
+		lights.add(light4);
 
 		Entity dragon = new Entity(new TexturedModel(OBJLoader.loadObjModel("dragon", loader),
 				new ModelTexture(loader.loadTexture("dragon"))), new Vector3f(30, 0, -35), 0, 0, 0, 0.3f);
@@ -89,7 +103,7 @@ public class Game implements GameLogic {
 
 		Entity tree = new Entity(
 				new TexturedModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree"))),
-				new Vector3f(33, 0, -38), 0, 0, 0, 1.5f);
+				new Vector3f(33, 0, -38), 0, 0, 0, 1.7f);
 		tree.getModel().getTexture().setReflectivity(5);
 		tree.getModel().getTexture().setShineDamper(20);
 		entitys.add(tree);
@@ -118,6 +132,28 @@ public class Game implements GameLogic {
 		fern.getModel().getTexture().setUseFakeLighting(true);
 		entitys.add(fern4);
 
+		Entity lamp = new Entity(
+				new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
+				new Vector3f(21, 0, -40), 0, 0, 0, 0.4f);
+		lamp.getModel().getTexture().setReflectivity(1f);
+		lamp.getModel().getTexture().setShineDamper(5f);
+		lamp.addLight(light);
+		entitys.add(lamp);
+
+		Entity lamp2 = new Entity(
+				new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
+				new Vector3f(50, 0, -30), 0, 0, 0, 0.4f);
+		lamp2.getModel().getTexture().setReflectivity(1f);
+		lamp2.getModel().getTexture().setShineDamper(5f);
+		entitys.add(lamp2);
+
+		Entity lamp3 = new Entity(
+				new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
+				new Vector3f(39, 0, -45), 0, 0, 0, 0.4f);
+		lamp3.getModel().getTexture().setReflectivity(1f);
+		lamp3.getModel().getTexture().setShineDamper(5f);
+		entitys.add(lamp3);
+
 		Entity player = new Player(
 				new TexturedModel(OBJLoader.loadObjModel("player", loader),
 						new ModelTexture(loader.loadTexture("playerTexture"))),
@@ -128,22 +164,29 @@ public class Game implements GameLogic {
 			float y = terrain.getHeightOfTerrain(entity.getPosition().x, entity.getPosition().z);
 			entity.setPosition(new Vector3f(entity.getPosition().x, y, entity.getPosition().z));
 		}
+		// need here for y position
+		lamp.addLight(light2);
+		lamp2.addLight(light3);
+		lamp3.addLight(light4);
 
 		camera = new Camera((Player) player);
-		light = new Light(new Vector3f(40, 60, -60), new Vector3f(1, 1, 1));
 
 		Button gui = new Button(loader.loadTexture("Mortal komba"), new Vector2f(0.9f, 0.9f), new Vector2f(0.1f, 0.1f),
 				new Vector2f(0, 0));
 		gui.setTransparent(true);
 		gui.setB(new IButton() {
 			@Override
-			public void onClick() {}
+			public void onClick() {
+				guis.removegui(0);
+			}
+
 			@Override
 			public void onHover() {
 				gui.setPosition(new Vector2f(0.8f, 0.8f));
 				gui.setScale(new Vector2f(0.2f, 0.2f));
 				gui.increaseRotation(new Vector2f(1, 0));
 			}
+
 			@Override
 			public void stopHover() {
 				gui.setPosition(new Vector2f(0.9f, 0.9f));
@@ -152,28 +195,36 @@ public class Game implements GameLogic {
 			}
 		});
 		guis.addgui(gui);
-		
+		TextMaster.init(loader);
+		FontType font=new FontType(loader.loadTexture("font"),new File("src/resources/fonts/font.fnt"));
+		text =new GUIText(1.5f,font,new Vector2f(-0.05f, 0f),0.3f,true);
+		text.setColour(0f,0f, 0f);
+		Time.setText(text);
+
 
 	}
 
 	public void update() {
 		Time.fps();
 
-		renderer.render(light, camera);
+		renderer.render(lights, camera);
 		camera.Person3D();
-		guis.update();
 
 		renderer.processTerrain(terrain);
 
 		for (Entity entity : entitys)
 			renderer.processEntity(entity);
+
 		guiRenderer.render(guis.getGuis());
+		TextMaster.render();
+
+		guis.update();
 
 		entitys.get(2).increaseRotation(0, 1, 0);
 		entitys.get(3).increaseRotation(0, -1, 0);
-		((Player) entitys.get(8)).move(terrain);
+		((Player) entitys.get(11)).move(terrain);
 
-		if (AABB.collides(entitys.get(8), entitys.get(0))) {
+		if (AABB.collides(entitys.get(11), entitys.get(0))) {
 			if (!Dragon.isPlaying()) {
 				Dragon.setPitch(10f);
 				Dragon.play(buffer);
@@ -181,9 +232,13 @@ public class Game implements GameLogic {
 		}
 
 		Mouseinput.resetMouse();
+		Keyinput.resetKeyboard();
+		
+		
 	}
 
 	public void onclose() {
+		TextMaster.cleanUp();
 		renderer.cleanUp();
 		guiRenderer.cleanUp();
 		loader.cleanUp();

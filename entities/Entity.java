@@ -9,6 +9,7 @@ public class Entity {
 	private float rotX, rotY, rotZ;
 	private float scale;
 	private int textureIndex = 0;
+	private float offset=3f;
 
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.model = model;
@@ -49,6 +50,10 @@ public class Entity {
 		this.rotX += dx;
 		this.rotY += dy;
 		this.rotZ += dz;
+	}
+
+	public void addLight(Light light) {
+		light.setPosition(new Vector3f(position.x,position.y+offset,position.z));
 	}
 
 	public TexturedModel getModel() {

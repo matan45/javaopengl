@@ -48,7 +48,7 @@ public class Window extends MasterWindow {
 			}
 
 			c.update();
-
+			
 			GLFW.glfwSwapBuffers(window); // swap the color buffers
 
 			// Poll for window events. The key callback above will only be

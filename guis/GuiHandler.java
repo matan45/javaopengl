@@ -7,9 +7,10 @@ public class GuiHandler {
 	List<Basicgui> guis = new ArrayList<>();
 	List<GuiTexture> textruegui = new ArrayList<>();
 
+
 	public void update() {
-		for (Basicgui gui : guis)
-			gui.update();
+		for (int i = 0; i < guis.size(); i++)
+			guis.get(i).update();
 	}
 
 	public void addgui(Basicgui gui) {
@@ -26,8 +27,13 @@ public class GuiHandler {
 		return textruegui;
 	}
 
+	public int getsize() {
+		return guis.size();
+	}
+
 	public void cleanup() {
 		textruegui.clear();
 		guis.clear();
+
 	}
 }

@@ -26,9 +26,9 @@ public class MasterRenderer {
 	static final float NEAR_PLANE = 0.1f;
 	static final float FAR_PLANE = 1000;
 	
-	static final float RED=0.5f;
+	static final float RED=0f;
 	static final float GREEN=0.5f;
-	static final float BLUE=0.5f;
+	static final float BLUE=1f;
 
 	Matrix4f projectionMatrix;
 
@@ -61,17 +61,17 @@ public class MasterRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 
-	public void render(Light sun, Camera camera) {
+	public void render(List<Light> lights, Camera camera) {
 		prepare();
 		shader.start();
 		shader.loadSkyColour(RED, GREEN, BLUE);
-		shader.loadLight(sun);
+		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
 		shader.stop();
 		terrainShader.start();
 		terrainShader.loadSkyColour(RED, GREEN, BLUE);
-		terrainShader.loadLight(sun);
+		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();

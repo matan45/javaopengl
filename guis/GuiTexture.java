@@ -43,10 +43,15 @@ public class GuiTexture {
 	public void setRotation(Vector2f rotation) {
 		this.rotation = rotation;
 	}
-	
-	public void increaseRotation(Vector2f rotation){
+
+	public void increaseRotation(Vector2f rotation) {
 		this.rotation.x += rotation.x;
 		this.rotation.y += rotation.y;
+	}
+
+	public void increasePosition(Vector2f position) {
+		this.position.x += position.x;
+		this.position.y += position.y;
 	}
 
 	public boolean isTransparent() {
@@ -56,6 +61,5 @@ public class GuiTexture {
 	public void setTransparent(boolean transparent) {
 		this.transparent = transparent;
 	}
-	
 
 }

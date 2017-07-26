@@ -2,7 +2,7 @@ package guis;
 
 import input.MouseCursor;
 import maths.Vector2f;
-//for delete a gui need to remove it from list
+
 public abstract class Basicgui extends GuiTexture implements Igui {
 
 	public Basicgui(int texture, Vector2f position, Vector2f scale, Vector2f rotation) {
