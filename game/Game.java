@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.glfw.GLFW;
+
 import aduio.AudioMaster;
 import aduio.Source;
 import entities.AABB;
@@ -30,6 +32,7 @@ import texture.ModelTexture;
 import texture.TerrainTexture;
 import texture.TerrainTexturePack;
 import texture.TexturedModel;
+import utill.MousePicker;
 import utill.Time;
 
 public class Game implements GameLogic {
@@ -45,7 +48,7 @@ public class Game implements GameLogic {
 
 	Camera camera;
 	Terrain terrain;
-	GUIText text;
+	MousePicker picker;
 
 	int buffer;
 	Source jungle, Dragon;
@@ -62,7 +65,7 @@ public class Game implements GameLogic {
 		buffer = AudioMaster.loadSound("Dragon Roaring");
 		Dragon = new Source(0, 0, 0);
 
-		renderer = new MasterRenderer();
+		renderer = new MasterRenderer(loader);
 		guiRenderer = new GuiRenderer(loader);
 
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
@@ -149,7 +152,7 @@ public class Game implements GameLogic {
 
 		Entity lamp3 = new Entity(
 				new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
-				new Vector3f(39, 0, -45), 0, 0, 0, 0.4f);
+				new Vector3f(35, 0, -52), 0, 0, 0, 0.4f);
 		lamp3.getModel().getTexture().setReflectivity(1f);
 		lamp3.getModel().getTexture().setShineDamper(5f);
 		entitys.add(lamp3);
@@ -196,11 +199,12 @@ public class Game implements GameLogic {
 		});
 		guis.addgui(gui);
 		TextMaster.init(loader);
-		FontType font=new FontType(loader.loadTexture("font"),new File("src/resources/fonts/font.fnt"));
-		text =new GUIText(1.5f,font,new Vector2f(-0.05f, 0f),0.3f,true);
-		text.setColour(0f,0f, 0f);
+		FontType font = new FontType(loader.loadTexture("font"), new File("src/resources/fonts/font.fnt"));
+		GUIText text = new GUIText(1.5f, font, new Vector2f(-0.05f, 0f), 0.3f, true);
+		text.setColour(1f, 1f, 1f);
 		Time.setText(text);
 
+		picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 
 	}
 
@@ -211,9 +215,16 @@ public class Game implements GameLogic {
 		camera.Person3D();
 
 		renderer.processTerrain(terrain);
+		picker.update();
 
 		for (Entity entity : entitys)
 			renderer.processEntity(entity);
+
+		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+		if (terrainPoint != null && Mouseinput.mouseButtonDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_1)) {
+			entitys.get(10).setPosition(terrainPoint);
+			entitys.get(10).addLight(lights.get(3));
+		}
 
 		guiRenderer.render(guis.getGuis());
 		TextMaster.render();
@@ -226,15 +237,14 @@ public class Game implements GameLogic {
 
 		if (AABB.collides(entitys.get(11), entitys.get(0))) {
 			if (!Dragon.isPlaying()) {
-				Dragon.setPitch(10f);
+				Dragon.setPosition(entitys.get(0).getPosition());
 				Dragon.play(buffer);
 			}
 		}
 
 		Mouseinput.resetMouse();
 		Keyinput.resetKeyboard();
-		
-		
+
 	}
 
 	public void onclose() {

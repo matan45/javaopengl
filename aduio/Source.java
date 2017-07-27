@@ -2,6 +2,8 @@ package aduio;
 
 import org.lwjgl.openal.AL10;
 
+import maths.Vector3f;
+
 public class Source {
 	private int sourceID;
 
@@ -58,8 +60,8 @@ public class Source {
 		AL10.alSourcef(sourceID, AL10.AL_POSITION, pitch);
 	}
 
-	public void setPosition(float x, float y, float z) {
-		AL10.alSource3f(sourceID, AL10.AL_POSITION, x, y, z);
+	public void setPosition(Vector3f position) {
+		AL10.alSource3f(sourceID, AL10.AL_POSITION, position.x, position.y, position.z);
 	}
 
 }

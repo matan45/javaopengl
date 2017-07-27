@@ -18,8 +18,9 @@ uniform vec3 lightColour[4];
 uniform vec3 attenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
-
 uniform vec3 skyColour;
+
+const float levels = 3.0;
 
 void main(void){
 	

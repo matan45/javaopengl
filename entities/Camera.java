@@ -124,7 +124,6 @@ public class Camera {
 	public void Person3D() {
 		calculateZoom();
 		calculatePitch();
-		calculateAngleAoundPlayer();
 		float HorizontalDistance = calculateHorizontalDistance();
 		float VerticalDistance = calculateVerticalDistance();
 		calculateCameraPosition(HorizontalDistance, VerticalDistance);
@@ -133,6 +132,8 @@ public class Camera {
 
 	private void calculatePitch() {
 		if (Mouseinput.mouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_2)) {
+			float angleChange = (float) (MouseCursor.DX() * 0.1f);
+			angleAroundPlayer -= angleChange;
 			float pitchChange = (float) (MouseCursor.DY() * 0.1f);
 			pitch -= pitchChange;
 			if (pitch < 1)
@@ -140,12 +141,9 @@ public class Camera {
 			else if (pitch > 90)
 				pitch = 90;
 		}
-	}
-
-	private void calculateAngleAoundPlayer() {
-		if (Mouseinput.mouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_2)) {
-			float angleChange = (float) (MouseCursor.DX() * 0.1f);
-			angleAroundPlayer -= angleChange;
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_R)) {
+			pitch = 20;
+			angleAroundPlayer = 0;
 		}
 	}
 

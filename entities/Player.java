@@ -48,23 +48,24 @@ public class Player extends Entity {
 	}
 
 	private void checkInputs() {
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_KP_8)) {
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_W)) {
 			this.currentSpeed = RUN_SPEED;
-		} else if (Keyinput.keyDown(GLFW.GLFW_KEY_KP_2)) {
+		} else if (Keyinput.keyDown(GLFW.GLFW_KEY_S)) {
 			this.currentSpeed = -RUN_SPEED;
 		} else {
 			this.currentSpeed = 0;
 		}
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_KP_6)) {
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_D)) {
 			this.currentTurnSpeed = -TURN_SPEED;
-		} else if (Keyinput.keyDown(GLFW.GLFW_KEY_KP_4)) {
+		} else if (Keyinput.keyDown(GLFW.GLFW_KEY_A)) {
 			this.currentTurnSpeed = TURN_SPEED;
 		} else {
 			this.currentTurnSpeed = 0;
 		}
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_KP_5)) {
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_SPACE)) {
 			jump();
 		}
+		
 	}
 
 }

@@ -17,6 +17,7 @@ import entities.Light;
 import maths.Matrix4f;
 import shader.StaticShader;
 import shader.TerrainShader;
+import skybox.SkyboxRenderer;
 import terrains.Terrain;
 import texture.TexturedModel;
 import window.WindowManager;
@@ -25,12 +26,13 @@ public class MasterRenderer {
 	static final float FOV = 70;
 	static final float NEAR_PLANE = 0.1f;
 	static final float FAR_PLANE = 1000;
-	
-	static final float RED=0f;
-	static final float GREEN=0.5f;
-	static final float BLUE=1f;
+
+	static final float RED = 0.65f;
+	static final float GREEN = 0.76f;
+	static final float BLUE = 0.94f;
 
 	Matrix4f projectionMatrix;
+	SkyboxRenderer skyboxRenderer;
 
 	StaticShader shader = new StaticShader("entity.vs", "entity.frag");
 	EntityRenderer renderer;
@@ -41,13 +43,15 @@ public class MasterRenderer {
 	Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	List<Terrain> terrains = new ArrayList<Terrain>();
 
-	public MasterRenderer() {
+	public MasterRenderer(Loader loader) {
 		enableCulling();
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
-	public void prepare(){
+
+	public void prepare() {
 		// Set the clear color
 		glClearColor(RED, GREEN, BLUE, 1.0f);
 		glEnable(GL_DEPTH_TEST);
@@ -57,6 +61,7 @@ public class MasterRenderer {
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
 	}
+
 	public static void disableCulling() {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
@@ -75,6 +80,7 @@ public class MasterRenderer {
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
+		skyboxRenderer.render(camera, RED, GREEN, BLUE);
 		terrains.clear();
 		entities.clear();
 
@@ -117,5 +123,10 @@ public class MasterRenderer {
 		projectionMatrix.m33 = 0;
 
 	}
+
+	public Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
+	}
+	
 
 }
