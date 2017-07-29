@@ -1,5 +1,6 @@
 package entities;
 
+import maths.Vector2f;
 import maths.Vector3f;
 import texture.TexturedModel;
 
@@ -9,7 +10,8 @@ public class Entity {
 	private float rotX, rotY, rotZ;
 	private float scale;
 	private int textureIndex = 0;
-	private float offset=3f;
+	private float offset = 3f;
+	private float x, y, z;
 
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.model = model;
@@ -19,7 +21,7 @@ public class Entity {
 		this.rotZ = rotZ;
 		this.scale = scale;
 	}
-
+//for the text alest
 	public Entity(TexturedModel model, int index, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.textureIndex = index;
 		this.model = model;
@@ -53,7 +55,7 @@ public class Entity {
 	}
 
 	public void addLight(Light light) {
-		light.setPosition(new Vector3f(position.x,position.y+offset,position.z));
+		light.setPosition(new Vector3f(position.x, position.y + offset, position.z));
 	}
 
 	public TexturedModel getModel() {
@@ -102,6 +104,34 @@ public class Entity {
 
 	public void setScale(float scale) {
 		this.scale = scale;
+	}
+
+	public Vector2f getpicker() {
+		return new Vector2f(position.x * 0.03f, position.z * 0.01f);
+	}
+
+	public float getX() {
+		return x * scale;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y * scale;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public float getZ() {
+		return z * scale;
+	}
+
+	public void setZ(float z) {
+		this.z = z;
 	}
 
 }

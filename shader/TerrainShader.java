@@ -7,6 +7,7 @@ import entities.Light;
 import maths.Maths;
 import maths.Matrix4f;
 import maths.Vector3f;
+import maths.Vector4f;
 
 public class TerrainShader extends ShaderProgram {
 	private static final int MAX_LIGHTS = 4;
@@ -25,6 +26,7 @@ public class TerrainShader extends ShaderProgram {
 	private int location_gTexture;
 	private int location_bTexture;
 	private int location_blendMap;
+	private int location_plane;
 
 	public TerrainShader(String vertexFile, String fragmentFile) {
 		super(vertexFile, fragmentFile);
@@ -51,6 +53,7 @@ public class TerrainShader extends ShaderProgram {
 		location_gTexture = super.getUniformLocation("gTexture");
 		location_bTexture = super.getUniformLocation("bTexture");
 		location_blendMap = super.getUniformLocation("blendMap");
+		location_plane= super.getUniformLocation("plane");
 		
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
@@ -60,6 +63,10 @@ public class TerrainShader extends ShaderProgram {
 			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
+	}
+	
+	public void loadClipPlane(Vector4f plane){
+		super.load4DVector(location_plane, plane);
 	}
 
 	public void connectTextureUnits() {

@@ -8,7 +8,6 @@ import shader.ShaderProgram;
 
 public class WaterShader extends ShaderProgram {
 
-
 	private int location_modelMatrix;
 	private int location_viewMatrix;
 	private int location_projectionMatrix;
@@ -22,8 +21,8 @@ public class WaterShader extends ShaderProgram {
 	private int location_lightColour;
 	private int location_depthMap;
 
-	public WaterShader() {
-		super("water.vs", "water.frag");
+	public WaterShader(String vs, String frag) {
+		super(vs, frag);
 	}
 
 	@Override
@@ -46,35 +45,35 @@ public class WaterShader extends ShaderProgram {
 		location_lightColour = getUniformLocation("lightColour");
 		location_depthMap = getUniformLocation("depthMap");
 	}
-	
-	public void connectTextureUnits(){
+
+	public void connectTextureUnits() {
 		super.loadInt(location_reflectionTexture, 0);
 		super.loadInt(location_refractionTexture, 1);
 		super.loadInt(location_dudvMap, 2);
 		super.loadInt(location_normalMap, 3);
 		super.loadInt(location_depthMap, 4);
 	}
-	
-	public void loadLight(Light light){
+
+	public void loadLight(Light light) {
 		super.loadVector(location_lightColour, light.getColour());
 		super.loadVector(location_lightPosition, light.getPosition());
 	}
-	
-	public void loadMoveFactor(float factor){
+
+	public void loadMoveFactor(float factor) {
 		super.loadFloat(location_moveFactor, factor);
 	}
 
 	public void loadProjectionMatrix(Matrix4f projection) {
 		loadMatrix(location_projectionMatrix, projection);
 	}
-	
-	public void loadViewMatrix(Camera camera){
+
+	public void loadViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		loadMatrix(location_viewMatrix, viewMatrix);
 		super.loadVector(location_cameraPosition, camera.getPosition());
 	}
 
-	public void loadModelMatrix(Matrix4f modelMatrix){
+	public void loadModelMatrix(Matrix4f modelMatrix) {
 		loadMatrix(location_modelMatrix, modelMatrix);
 	}
 

@@ -11,9 +11,11 @@ import maths.Vector2f;
 import maths.Vector3f;
 
 public class OBJLoader {
+	static Vector3f OBJLength = new Vector3f();
 
 	public static RawModel loadObjModel(String fileName, Loader loader) {
 		FileReader fr = null;
+
 		try {
 			fr = new FileReader(new File("src/resources/3D model/" + fileName + ".obj"));
 		} catch (FileNotFoundException e) {
@@ -52,7 +54,20 @@ public class OBJLoader {
 					break;
 				}
 			}
-
+			float maxX = 0, minX = 0;
+			float maxY = 0, minY = 0;
+			float maxZ = 0, minZ = 0;
+			for (Vector3f vertex : vertices) {
+				minX = Math.min(minX, vertex.x);
+				minY = Math.min(minY, vertex.y);
+				minZ = Math.min(minZ, vertex.z);
+				maxX = Math.max(maxX, vertex.x);
+				maxY = Math.max(maxY, vertex.y);
+				maxZ = Math.max(maxZ, vertex.z);
+			}
+			OBJLength.x = maxX - minX;
+			OBJLength.y = maxY - minY;
+			OBJLength.z = maxZ - minZ;
 			while (line != null) {
 				if (!line.startsWith("f ")) {
 					line = reader.readLine();
@@ -101,6 +116,10 @@ public class OBJLoader {
 		normalsArray[currentVertxPointer * 3] = currenNorm.x;
 		normalsArray[currentVertxPointer * 3 + 1] = currenNorm.y;
 		normalsArray[currentVertxPointer * 3 + 2] = currenNorm.z;
+	}
+
+	public static Vector3f getOBJLength() {
+		return OBJLength;
 	}
 
 }

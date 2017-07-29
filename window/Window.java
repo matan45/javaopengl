@@ -46,7 +46,7 @@ public class Window extends MasterWindow {
 				prew = this.Width;
 				preh = this.Height;
 			}
-
+			
 			c.update();
 			
 			GLFW.glfwSwapBuffers(window); // swap the color buffers

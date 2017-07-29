@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 import aduio.AudioMaster;
 import aduio.Source;
@@ -18,10 +20,14 @@ import guis.GuiHandler;
 import guis.GuiRenderer;
 import guis.button.Button;
 import guis.button.IButton;
+import guis.windowgui.IWindowgui;
+import guis.windowgui.WindowGui;
 import input.Keyinput;
 import input.Mouseinput;
 import maths.Vector2f;
 import maths.Vector3f;
+import maths.Vector4f;
+import normalMappingObjConverter.NormalMappedObjLoader;
 import renderer.Loader;
 import renderer.MasterRenderer;
 import renderer.OBJLoader;
@@ -34,6 +40,10 @@ import texture.TerrainTexturePack;
 import texture.TexturedModel;
 import utill.MousePicker;
 import utill.Time;
+import water.WaterFrameBuffers;
+import water.WaterRenderer;
+import water.WaterShader;
+import water.WaterTile;
 
 public class Game implements GameLogic {
 
@@ -42,18 +52,26 @@ public class Game implements GameLogic {
 	MasterRenderer renderer;
 	GuiRenderer guiRenderer;
 
+	WaterRenderer waterRenderer;
+	WaterShader waterShader;
+	WaterFrameBuffers buffers;
+
 	List<Entity> entitys = new ArrayList<>();
+	List<Entity> normalMapentitys = new ArrayList<>();
 	List<Light> lights = new ArrayList<>();
+	List<Terrain> terrains = new ArrayList<>();
+	List<WaterTile> waters = new ArrayList<>();
 	GuiHandler guis = new GuiHandler();
 
 	Camera camera;
-	Terrain terrain;
+
 	MousePicker picker;
 
 	int buffer;
 	Source jungle, Dragon;
 
 	public void preupdate() {
+		//INIT OPENAL
 		AudioMaster.init();
 		AudioMaster.setListenerData(0, 0, 0);
 		buffer = AudioMaster.loadSound("Forest Birds");
@@ -64,20 +82,23 @@ public class Game implements GameLogic {
 
 		buffer = AudioMaster.loadSound("Dragon Roaring");
 		Dragon = new Source(0, 0, 0);
-
+		
+		//INIT RENDERER
 		renderer = new MasterRenderer(loader);
 		guiRenderer = new GuiRenderer(loader);
-
+		
+		//TERRAIN TEXTURE
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
 		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
 		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
-		terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
+		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
+		terrains.add(terrain);
 
-		// up to 4 lights
-		Light light = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.5f, 0.5f, 0.5f));
+		// UP TO 4 LIGHTS
+		Light light = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(2f, 2f, 2f));
 		lights.add(light);
 		Light light2 = new Light(new Vector3f(21, 0, -40), new Vector3f(10, 0, 0), new Vector3f(1f, 0.1f, 0.002f));
 		lights.add(light2);
@@ -86,10 +107,14 @@ public class Game implements GameLogic {
 		Light light4 = new Light(new Vector3f(39, 0, -45), new Vector3f(0, 0, 10), new Vector3f(1f, 0.1f, 0.002f));
 		lights.add(light4);
 
+		//INIT ENTITYS
 		Entity dragon = new Entity(new TexturedModel(OBJLoader.loadObjModel("dragon", loader),
 				new ModelTexture(loader.loadTexture("dragon"))), new Vector3f(30, 0, -35), 0, 0, 0, 0.3f);
 		dragon.getModel().getTexture().setReflectivity(2);
 		dragon.getModel().getTexture().setShineDamper(10);
+		dragon.setX(OBJLoader.getOBJLength().getX());
+		dragon.setY(OBJLoader.getOBJLength().getY());
+		dragon.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(dragon);
 
 		Entity grass = new Entity(new TexturedModel(OBJLoader.loadObjModel("grassModel", loader),
@@ -111,6 +136,7 @@ public class Game implements GameLogic {
 		tree.getModel().getTexture().setShineDamper(20);
 		entitys.add(tree);
 
+		// TEXTURE ATLASES
 		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
 		fernTextureAtlas.setNumberOfRows(2);
 		TexturedModel Mfern = new TexturedModel(OBJLoader.loadObjModel("fern", loader), fernTextureAtlas);
@@ -161,6 +187,9 @@ public class Game implements GameLogic {
 				new TexturedModel(OBJLoader.loadObjModel("player", loader),
 						new ModelTexture(loader.loadTexture("playerTexture"))),
 				new Vector3f(30, 0, -20), 0, 0, 0, 0.3f);
+		player.setX(OBJLoader.getOBJLength().getX());
+		player.setY(OBJLoader.getOBJLength().getY());
+		player.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(player);
 
 		for (Entity entity : entitys) {
@@ -172,8 +201,10 @@ public class Game implements GameLogic {
 		lamp2.addLight(light3);
 		lamp3.addLight(light4);
 
+		// 3D PLAYER CAMERA
 		camera = new Camera((Player) player);
 
+		// GUI
 		Button gui = new Button(loader.loadTexture("Mortal komba"), new Vector2f(0.9f, 0.9f), new Vector2f(0.1f, 0.1f),
 				new Vector2f(0, 0));
 		gui.setTransparent(true);
@@ -198,32 +229,64 @@ public class Game implements GameLogic {
 			}
 		});
 		guis.addgui(gui);
+
+		WindowGui win = new WindowGui(loader.loadTexture("windowgui"), new Vector2f(-0.7f, -0.7f),
+				new Vector2f(0.3f, 0.3f), new Vector2f(0, 0));
+		win.setTransparent(false);
+		win.setWindow(new IWindowgui() {
+
+			@Override
+			public void whileDrag() {
+
+			}
+		});
+		guis.addgui(win);
+
+		// TEXT
 		TextMaster.init(loader);
 		FontType font = new FontType(loader.loadTexture("font"), new File("src/resources/fonts/font.fnt"));
 		GUIText text = new GUIText(1.5f, font, new Vector2f(-0.05f, 0f), 0.3f, true);
 		text.setColour(1f, 1f, 1f);
 		Time.setText(text);
 
+		// RAYCAST
 		picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 
+		// WATER
+		waterShader = new WaterShader("water.vs", "water.frag");
+		buffers = new WaterFrameBuffers();
+		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), buffers);
+		waters.add(new WaterTile(43, -189, -2f));
+
+		// NORMAL MAP
+		TexturedModel barrelModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("Oildrum", loader),
+				new ModelTexture(loader.loadTexture("oildrum")));
+		barrelModel.getTexture().setShineDamper(10);
+		barrelModel.getTexture().setReflectivity(1f);
+		barrelModel.getTexture().setNormalMap(loader.loadTexture("oildrum_normal"));
+		normalMapentitys.add(new Entity(barrelModel, new Vector3f(20, 5, -20), 0, 0, 0, 2f));
+
+		for (Entity nentity : normalMapentitys) {
+			float y = terrain.getHeightOfTerrain(nentity.getPosition().x, nentity.getPosition().z);
+			nentity.setPosition(new Vector3f(nentity.getPosition().x, y, nentity.getPosition().z));
+		}
 	}
 
 	public void update() {
 		Time.fps();
-
-		renderer.render(lights, camera);
 		camera.Person3D();
-
-		renderer.processTerrain(terrain);
 		picker.update();
 
-		for (Entity entity : entitys)
-			renderer.processEntity(entity);
+		watercode();
+		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera, new Vector4f(0, -1, 0, 1000));
+		waterRenderer.render(waters, camera, lights.get(0));
 
 		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 		if (terrainPoint != null && Mouseinput.mouseButtonDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_1)) {
-			entitys.get(10).setPosition(terrainPoint);
-			entitys.get(10).addLight(lights.get(3));
+			System.out.println(terrainPoint);
+			if (AABB.insidepicker(entitys.get(0), terrainPoint))
+				System.out.println("inside");
+
 		}
 
 		guiRenderer.render(guis.getGuis());
@@ -233,7 +296,8 @@ public class Game implements GameLogic {
 
 		entitys.get(2).increaseRotation(0, 1, 0);
 		entitys.get(3).increaseRotation(0, -1, 0);
-		((Player) entitys.get(11)).move(terrain);
+		normalMapentitys.get(0).increaseRotation(0, 1, 0);
+		((Player) entitys.get(11)).move(terrains.get(0));
 
 		if (AABB.collides(entitys.get(11), entitys.get(0))) {
 			if (!Dragon.isPlaying()) {
@@ -249,6 +313,8 @@ public class Game implements GameLogic {
 
 	public void onclose() {
 		TextMaster.cleanUp();
+		buffers.cleanUp();
+		waterShader.cleanUp();
 		renderer.cleanUp();
 		guiRenderer.cleanUp();
 		loader.cleanUp();
@@ -256,6 +322,24 @@ public class Game implements GameLogic {
 		jungle.delete();
 		AudioMaster.cleanUp();
 
+	}
+
+	private void watercode() {
+		GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
+		buffers.bindReflectionFrameBuffer();
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		float distance = 2 * (camera.getPosition().y - waters.get(0).getHeight());
+		camera.getPosition().y -= distance;
+		camera.invertPitch();
+		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera,
+				new Vector4f(0, -1, 0, -waters.get(0).getHeight() + 1));
+		camera.getPosition().y += distance;
+		camera.invertPitch();
+		buffers.bindRefractionFrameBuffer();
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera,
+				new Vector4f(0, -1, 0, waters.get(0).getHeight()));
+		buffers.unbindCurrentFrameBuffer();
 	}
 
 }

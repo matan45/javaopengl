@@ -3,13 +3,14 @@ package texture;
 public class ModelTexture {
 
 	private int textureID;
+	private int normalMap;
 
 	private float shineDamper = 1;
 	private float reflectivity = 0;
 	private boolean hasTransparency = false;
-	private boolean useFakeLighting=false;
-	private int numberOfRows=1;
-	
+	private boolean useFakeLighting = false;
+	private int numberOfRows = 1;
+
 	public boolean isUseFakeLighting() {
 		return useFakeLighting;
 	}
@@ -44,6 +45,14 @@ public class ModelTexture {
 
 	public float getShineDamper() {
 		return shineDamper;
+	}
+
+	public int getNormalMap() {
+		return normalMap;
+	}
+
+	public void setNormalMap(int normalMap) {
+		this.normalMap = normalMap;
 	}
 
 	public void setShineDamper(float shineDamper) {

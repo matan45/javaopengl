@@ -1,6 +1,6 @@
 #version 140
 
-in vec2 position;
+in vec3 position;
 
 out vec4 clipSpace;
 out vec2 textureCoords;

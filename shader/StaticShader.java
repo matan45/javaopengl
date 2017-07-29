@@ -8,6 +8,7 @@ import maths.Maths;
 import maths.Matrix4f;
 import maths.Vector2f;
 import maths.Vector3f;
+import maths.Vector4f;
 
 public class StaticShader extends ShaderProgram {
 
@@ -25,7 +26,8 @@ public class StaticShader extends ShaderProgram {
 	private int location_skyColour;
 	private int location_numberOfRows;
 	private int location_offset;
-
+	private int location_plane;
+	
 	public StaticShader(String vertexFile, String fragmentFile) {
 		super(vertexFile, fragmentFile);
 		// TODO Auto-generated constructor stub
@@ -49,7 +51,8 @@ public class StaticShader extends ShaderProgram {
 		location_skyColour = super.getUniformLocation("skyColour");
 		location_numberOfRows = super.getUniformLocation("numberOfRows");
 		location_offset = super.getUniformLocation("offset");
-
+		location_plane= super.getUniformLocation("plane");
+		
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
 		location_attenuation=new int[MAX_LIGHTS];
@@ -59,6 +62,10 @@ public class StaticShader extends ShaderProgram {
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
 
+	}
+	
+	public void loadClipPlane(Vector4f plane){
+		super.load4DVector(location_plane, plane);
 	}
 
 	public void loadNumberOfRows(int numberOfRows) {

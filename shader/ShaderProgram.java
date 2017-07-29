@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL20;
 import maths.Matrix4f;
 import maths.Vector2f;
 import maths.Vector3f;
+import maths.Vector4f;
 
 public abstract class ShaderProgram {
 	int programID;
@@ -45,6 +46,11 @@ public abstract class ShaderProgram {
 
 	protected void loadVector(int location, Vector3f vector) {
 		GL20.glUniform3f(location, vector.x, vector.y, vector.z);
+
+	}
+	
+	protected void load4DVector(int location, Vector4f vector) {
+		GL20.glUniform4f(location, vector.x, vector.y, vector.z,vector.w);
 
 	}
 	protected void load2DVector(int location, Vector2f vector) {

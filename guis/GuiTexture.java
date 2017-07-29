@@ -7,7 +7,7 @@ public class GuiTexture {
 	Vector2f position;
 	Vector2f scale;
 	Vector2f rotation;
-	boolean transparent;
+	boolean transparent = false;
 
 	public GuiTexture(int texture, Vector2f position, Vector2f scale, Vector2f rotation) {
 		this.texture = texture;
