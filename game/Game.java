@@ -28,6 +28,9 @@ import maths.Vector2f;
 import maths.Vector3f;
 import maths.Vector4f;
 import normalMappingObjConverter.NormalMappedObjLoader;
+import particles.ParticleMaster;
+import particles.ParticleSystem;
+import particles.ParticleTexture;
 import renderer.Loader;
 import renderer.MasterRenderer;
 import renderer.OBJLoader;
@@ -65,13 +68,15 @@ public class Game implements GameLogic {
 
 	Camera camera;
 
+	ParticleSystem particlesystem;
+
 	MousePicker picker;
 
 	int buffer;
 	Source jungle, Dragon;
 
 	public void preupdate() {
-		//INIT OPENAL
+		// INIT OPENAL
 		AudioMaster.init();
 		AudioMaster.setListenerData(0, 0, 0);
 		buffer = AudioMaster.loadSound("Forest Birds");
@@ -82,12 +87,13 @@ public class Game implements GameLogic {
 
 		buffer = AudioMaster.loadSound("Dragon Roaring");
 		Dragon = new Source(0, 0, 0);
-		
-		//INIT RENDERER
+
+		// INIT RENDERER
 		renderer = new MasterRenderer(loader);
 		guiRenderer = new GuiRenderer(loader);
-		
-		//TERRAIN TEXTURE
+		ParticleMaster.init(loader, renderer.getProjectionMatrix());
+
+		// TERRAIN TEXTURE
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
 		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
@@ -107,7 +113,7 @@ public class Game implements GameLogic {
 		Light light4 = new Light(new Vector3f(39, 0, -45), new Vector3f(0, 0, 10), new Vector3f(1f, 0.1f, 0.002f));
 		lights.add(light4);
 
-		//INIT ENTITYS
+		// INIT ENTITYS
 		Entity dragon = new Entity(new TexturedModel(OBJLoader.loadObjModel("dragon", loader),
 				new ModelTexture(loader.loadTexture("dragon"))), new Vector3f(30, 0, -35), 0, 0, 0, 0.3f);
 		dragon.getModel().getTexture().setReflectivity(2);
@@ -244,8 +250,8 @@ public class Game implements GameLogic {
 
 		// TEXT
 		TextMaster.init(loader);
-		FontType font = new FontType(loader.loadTexture("font"), new File("src/resources/fonts/font.fnt"));
-		GUIText text = new GUIText(1.5f, font, new Vector2f(-0.05f, 0f), 0.3f, true);
+		FontType font = new FontType(loader.loadTexture("candara"), new File("src/resources/fonts/candara.fnt"));
+		GUIText text = new GUIText(1.5f, font, new Vector2f(-0.07f, 0f), 0.3f, true);
 		text.setColour(1f, 1f, 1f);
 		Time.setText(text);
 
@@ -270,12 +276,23 @@ public class Game implements GameLogic {
 			float y = terrain.getHeightOfTerrain(nentity.getPosition().x, nentity.getPosition().z);
 			nentity.setPosition(new Vector3f(nentity.getPosition().x, y, nentity.getPosition().z));
 		}
+		
+		//PARTICLE EFFECTS 
+		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("fire"), 8,true);
+		particlesystem = new ParticleSystem(particleTexture,60, 10, 0.1f, 0.5f, 1.5f);
+		particlesystem.setDirection(new Vector3f(0, 3, 0), 0.05f);
+		particlesystem.randomizeRotation();
+		
 	}
 
 	public void update() {
 		Time.fps();
 		camera.Person3D();
 		picker.update();
+		
+		particlesystem.generateParticles(new Vector3f(entitys.get(11).getPosition()));
+		
+		ParticleMaster.update(camera);
 
 		watercode();
 		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera, new Vector4f(0, -1, 0, 1000));
@@ -288,11 +305,13 @@ public class Game implements GameLogic {
 				System.out.println("inside");
 
 		}
+		
+
+		ParticleMaster.renderParticles(camera);
 
 		guiRenderer.render(guis.getGuis());
-		TextMaster.render();
-
 		guis.update();
+		TextMaster.render();
 
 		entitys.get(2).increaseRotation(0, 1, 0);
 		entitys.get(3).increaseRotation(0, -1, 0);
@@ -313,6 +332,7 @@ public class Game implements GameLogic {
 
 	public void onclose() {
 		TextMaster.cleanUp();
+		ParticleMaster.cleanup();
 		buffers.cleanUp();
 		waterShader.cleanUp();
 		renderer.cleanUp();

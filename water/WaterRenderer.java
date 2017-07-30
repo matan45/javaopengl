@@ -14,7 +14,7 @@ import maths.Matrix4f;
 import maths.Vector3f;
 import renderer.Loader;
 import renderer.RawModel;
-import utill.Time;
+import window.Window;
 
 public class WaterRenderer {
 	
@@ -58,7 +58,7 @@ public class WaterRenderer {
 	private void prepareRender(Camera camera, Light sun){
 		shader.start();
 		shader.loadViewMatrix(camera);
-		moveFactor += WAVE_SPEED * Time.getDeltaTime();
+		moveFactor += WAVE_SPEED * Window.getDeltaTime();
 		moveFactor %= 1;
 		shader.loadMoveFactor(moveFactor);
 		shader.loadLight(sun);

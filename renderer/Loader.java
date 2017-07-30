@@ -20,12 +20,12 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
 import texture.TextureData;
 import utill.IOUtil;
-
 
 public class Loader {
 	List<Integer> vaos = new ArrayList<Integer>();
@@ -41,7 +41,37 @@ public class Loader {
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
-	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals,float[] tangents ,int[] indices) {
+
+	public int createEmptyVbo(int floatCount) {
+		int vbo = GL15.glGenBuffers();
+		vbos.add(vbo);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatCount * 4, GL15.GL_STREAM_DRAW);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		return vbo;
+	}
+
+	public void addInstanceAttibute(int vao, int vbo, int attribute, int dataSize, int instacedDataLength, int offset) {
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL30.glBindVertexArray(vao);
+		GL20.glVertexAttribPointer(attribute, dataSize, GL11.GL_FLOAT, false, instacedDataLength * 4, offset * 4);
+		GL33.glVertexAttribDivisor(attribute, 1);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
+	}
+
+	public void updateVbo(int vbo, float[] data, FloatBuffer buffer) {
+		buffer.clear();
+		buffer.put(data);
+		buffer.flip();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity() * 4, GL15.GL_STREAM_DRAW);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
+
+	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, float[] tangents,
+			int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, 3, positions);
@@ -59,53 +89,53 @@ public class Loader {
 		unbindVAO();
 		return vaoID;
 	}
-	
+
 	public RawModel loadToVAO(float[] positions, int dimensions) {
-        int vaoID = createVAO();
-        this.storeDataInAttributeList(0, dimensions, positions);
-        unbindVAO();
-        return new RawModel(vaoID, positions.length / dimensions);
-    }
-	
+		int vaoID = createVAO();
+		this.storeDataInAttributeList(0, dimensions, positions);
+		unbindVAO();
+		return new RawModel(vaoID, positions.length / dimensions);
+	}
+
 	public int loadCubeMap(String[] textureFiles) {
-        int texID = GL11.glGenTextures();
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID);
- 
-        for (int i = 0; i < textureFiles.length; i++) {
-            TextureData data = decodeTextureFile("src/resources/texture/skybox/" + textureFiles[i] + ".png");
-            GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0,
-                    GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
-        }
-         
-        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-        textures.add(texID);
-        return texID;
-    }
-	
+		int texID = GL11.glGenTextures();
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID);
+
+		for (int i = 0; i < textureFiles.length; i++) {
+			TextureData data = decodeTextureFile("src/resources/texture/skybox/" + textureFiles[i] + ".png");
+			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, data.getWidth(),
+					data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+		}
+
+		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+		textures.add(texID);
+		return texID;
+	}
+
 	private TextureData decodeTextureFile(String fileName) {
-        int width = 0;
-        int height = 0;
-        ByteBuffer buffer = null;
-        try {
-            FileInputStream in = new FileInputStream(fileName);
-            PNGDecoder decoder = new PNGDecoder(in);
-            width = decoder.getWidth();
-            height = decoder.getHeight();
-            buffer = ByteBuffer.allocateDirect(4 * width * height);
-            decoder.decode(buffer, width * 4, Format.RGBA);
-            buffer.flip();
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Tried to load texture " + fileName + ", didn't work");
-            System.exit(-1);
-        }
-        return new TextureData(buffer, width, height);
-    }
+		int width = 0;
+		int height = 0;
+		ByteBuffer buffer = null;
+		try {
+			FileInputStream in = new FileInputStream(fileName);
+			PNGDecoder decoder = new PNGDecoder(in);
+			width = decoder.getWidth();
+			height = decoder.getHeight();
+			buffer = ByteBuffer.allocateDirect(4 * width * height);
+			decoder.decode(buffer, width * 4, Format.RGBA);
+			buffer.flip();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Tried to load texture " + fileName + ", didn't work");
+			System.exit(-1);
+		}
+		return new TextureData(buffer, width, height);
+	}
 
 	public int loadTexture(String fileName) {
 		ByteBuffer imageBuffer;

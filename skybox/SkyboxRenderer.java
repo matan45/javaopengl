@@ -9,7 +9,7 @@ import entities.Camera;
 import maths.Matrix4f;
 import renderer.Loader;
 import renderer.RawModel;
-import utill.Time;
+import window.Window;
 
 public class SkyboxRenderer {
 	
@@ -93,7 +93,7 @@ public class SkyboxRenderer {
 	}
 	
 	private void bindTextures(){
-		time += Time.getDeltaTime()*1000;
+		time += Window.getDeltaTime()*1000;
 		time %= 24000;
 		int texture1;
 		int texture2;
