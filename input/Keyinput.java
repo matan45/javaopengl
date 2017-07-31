@@ -12,9 +12,11 @@ public class Keyinput extends GLFWKeyCallback {
 
 	@Override
 	public void invoke(long window, int key, int scancode, int action, int mods) {
-		keyNumber = key;
-		keys[key] = action != GLFW_RELEASE;
-		keyStates[key] = action;
+		if (key != -1) {
+			keyNumber = key;
+			keys[key] = action != GLFW_RELEASE;
+			keyStates[key] = action;
+		}
 
 	}
 

@@ -27,6 +27,9 @@ public class TerrainShader extends ShaderProgram {
 	private int location_bTexture;
 	private int location_blendMap;
 	private int location_plane;
+	private int location_toShadowMapSpace;
+	private int location_shadowMap;
+	private int location_shadowDistance;
 
 	public TerrainShader(String vertexFile, String fragmentFile) {
 		super(vertexFile, fragmentFile);
@@ -53,19 +56,30 @@ public class TerrainShader extends ShaderProgram {
 		location_gTexture = super.getUniformLocation("gTexture");
 		location_bTexture = super.getUniformLocation("bTexture");
 		location_blendMap = super.getUniformLocation("blendMap");
-		location_plane= super.getUniformLocation("plane");
-		
+		location_plane = super.getUniformLocation("plane");
+		location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
+		location_shadowMap = super.getUniformLocation("shadowMap");
+		location_shadowDistance = super.getUniformLocation("shadowDistance");
+
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
-		location_attenuation=new int[MAX_LIGHTS];
+		location_attenuation = new int[MAX_LIGHTS];
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
 			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
 	}
-	
-	public void loadClipPlane(Vector4f plane){
+
+	public void loadshadowDistance(float shadowDistance) {
+		super.loadFloat(location_shadowDistance, shadowDistance);
+	}
+
+	public void loadToShadowSpaceMatrix(Matrix4f matrix) {
+		super.loadMatrix(location_toShadowMapSpace, matrix);
+	}
+
+	public void loadClipPlane(Vector4f plane) {
 		super.load4DVector(location_plane, plane);
 	}
 
@@ -75,6 +89,7 @@ public class TerrainShader extends ShaderProgram {
 		super.loadInt(location_gTexture, 2);
 		super.loadInt(location_bTexture, 3);
 		super.loadInt(location_blendMap, 4);
+		super.loadInt(location_shadowMap, 5);
 	}
 
 	public void loadSkyColour(float r, float g, float b) {

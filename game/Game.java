@@ -64,6 +64,7 @@ public class Game implements GameLogic {
 	List<Light> lights = new ArrayList<>();
 	List<Terrain> terrains = new ArrayList<>();
 	List<WaterTile> waters = new ArrayList<>();
+	List<Source> audios = new ArrayList<>();
 	GuiHandler guis = new GuiHandler();
 
 	Camera camera;
@@ -72,26 +73,20 @@ public class Game implements GameLogic {
 
 	MousePicker picker;
 
-	int buffer;
-	Source jungle, Dragon;
-
 	public void preupdate() {
 		// INIT OPENAL
 		AudioMaster.init();
 		AudioMaster.setListenerData(0, 0, 0);
-		buffer = AudioMaster.loadSound("Forest Birds");
-		jungle = new Source(0, 0, 0);
-		jungle.play(buffer);
+		Source jungle = new Source(0, 0, 0);
+		jungle.setBuffer(AudioMaster.loadSound("Forest Birds"));
+		jungle.play();
 		jungle.setVolume(0.3f);
 		jungle.setLooping(true);
+		audios.add(jungle);
 
-		buffer = AudioMaster.loadSound("Dragon Roaring");
-		Dragon = new Source(0, 0, 0);
-
-		// INIT RENDERER
-		renderer = new MasterRenderer(loader);
-		guiRenderer = new GuiRenderer(loader);
-		ParticleMaster.init(loader, renderer.getProjectionMatrix());
+		Source Dragon = new Source(0, 0, 0);
+		Dragon.setBuffer(AudioMaster.loadSound("Dragon Roaring"));
+		audios.add(Dragon);
 
 		// TERRAIN TEXTURE
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
@@ -100,11 +95,12 @@ public class Game implements GameLogic {
 		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
+		// RANDOM HEIGHTS
 		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
 		terrains.add(terrain);
 
 		// UP TO 4 LIGHTS
-		Light light = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(2f, 2f, 2f));
+		Light light = new Light(new Vector3f(1000000, 150000, -100000), new Vector3f(1f, 1f, 1f));
 		lights.add(light);
 		Light light2 = new Light(new Vector3f(21, 0, -40), new Vector3f(10, 0, 0), new Vector3f(1f, 0.1f, 0.002f));
 		lights.add(light2);
@@ -210,6 +206,11 @@ public class Game implements GameLogic {
 		// 3D PLAYER CAMERA
 		camera = new Camera((Player) player);
 
+		// INIT RENDERER
+		renderer = new MasterRenderer(loader, camera);
+		guiRenderer = new GuiRenderer(loader);
+		ParticleMaster.init(loader, renderer.getProjectionMatrix());
+
 		// GUI
 		Button gui = new Button(loader.loadTexture("Mortal komba"), new Vector2f(0.9f, 0.9f), new Vector2f(0.1f, 0.1f),
 				new Vector2f(0, 0));
@@ -253,6 +254,7 @@ public class Game implements GameLogic {
 		FontType font = new FontType(loader.loadTexture("candara"), new File("src/resources/fonts/candara.fnt"));
 		GUIText text = new GUIText(1.5f, font, new Vector2f(-0.07f, 0f), 0.3f, true);
 		text.setColour(1f, 1f, 1f);
+		text.setOutlinecolour(1, 0, 0);
 		Time.setText(text);
 
 		// RAYCAST
@@ -262,7 +264,7 @@ public class Game implements GameLogic {
 		waterShader = new WaterShader("water.vs", "water.frag");
 		buffers = new WaterFrameBuffers();
 		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), buffers);
-		waters.add(new WaterTile(43, -189, -2f));
+		waters.add(new WaterTile(75, -84, -4f));
 
 		// NORMAL MAP
 		TexturedModel barrelModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("Oildrum", loader),
@@ -276,22 +278,22 @@ public class Game implements GameLogic {
 			float y = terrain.getHeightOfTerrain(nentity.getPosition().x, nentity.getPosition().z);
 			nentity.setPosition(new Vector3f(nentity.getPosition().x, y, nentity.getPosition().z));
 		}
-		
-		//PARTICLE EFFECTS 
-		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("fire"), 8,true);
-		particlesystem = new ParticleSystem(particleTexture,60, 10, 0.1f, 0.5f, 1.5f);
+
+		// PARTICLE EFFECTS
+		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("fire"), 8, true);
+		particlesystem = new ParticleSystem(particleTexture, 100, 10, 0.3f, 5f, 1.5f);
 		particlesystem.setDirection(new Vector3f(0, 3, 0), 0.05f);
 		particlesystem.randomizeRotation();
-		
+
 	}
 
 	public void update() {
 		Time.fps();
 		camera.Person3D();
 		picker.update();
-		
-		particlesystem.generateParticles(new Vector3f(entitys.get(11).getPosition()));
-		
+
+		renderer.renderShadowMap(entitys, lights.get(0));
+
 		ParticleMaster.update(camera);
 
 		watercode();
@@ -305,7 +307,6 @@ public class Game implements GameLogic {
 				System.out.println("inside");
 
 		}
-		
 
 		ParticleMaster.renderParticles(camera);
 
@@ -319,10 +320,11 @@ public class Game implements GameLogic {
 		((Player) entitys.get(11)).move(terrains.get(0));
 
 		if (AABB.collides(entitys.get(11), entitys.get(0))) {
-			if (!Dragon.isPlaying()) {
-				Dragon.setPosition(entitys.get(0).getPosition());
-				Dragon.play(buffer);
+			if (!audios.get(1).isPlaying()) {
+				audios.get(1).setPosition(entitys.get(0).getPosition());
+				audios.get(1).play();
 			}
+			particlesystem.generateParticles(new Vector3f(entitys.get(11).getPosition()));
 		}
 
 		Mouseinput.resetMouse();
@@ -338,9 +340,9 @@ public class Game implements GameLogic {
 		renderer.cleanUp();
 		guiRenderer.cleanUp();
 		loader.cleanUp();
-		Dragon.delete();
-		jungle.delete();
 		AudioMaster.cleanUp();
+		for (Source s : audios)
+			s.delete();
 
 	}
 

@@ -3,6 +3,7 @@ package window;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import game.GameLogic;
 
@@ -33,6 +34,8 @@ public class Window extends MasterWindow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//anti aliasing
+		GL11.glEnable(GL13.GL_MULTISAMPLE);
 
 		c.preupdate();
 

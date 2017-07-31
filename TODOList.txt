@@ -6,13 +6,13 @@ macro
 UI system+layers //need to do window and the 2 scroll bar and radio button and textbox
 settings files
 load videos
-physics (entity collision detection)
+physics (entity collision detection) //need to get the model length in the load objnormal
 optimization
 
 3D:
 day and night system //need to do time system
 text
-shadow
+shadow // add shadow to normal and entity like the terrain
 material
 water system 
 particles effect

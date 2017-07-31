@@ -22,6 +22,8 @@ public class Particle {
 
 	float elapsedTime = 0;
 	float distance;
+	
+	Vector3f change=new Vector3f();
 
 	public Particle(ParticleTexture texture, Vector3f position, Vector3f velocity, float gravityEffect,
 			float lifeLength, float rotation, float scale) {
@@ -70,7 +72,7 @@ public class Particle {
 
 	public boolean update(Camera camera) {
 		velocity.y += Player.GRAVITY * gravityEffect * Window.getDeltaTime();
-		Vector3f change = new Vector3f(velocity);
+		change = new Vector3f(velocity);
 		change.scale(Window.getDeltaTime());
 		Vector3f.add(change, position, position);
 		distance = Vector3f.sub(camera.getPosition(), position, null).lengthSquared();

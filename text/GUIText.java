@@ -1,11 +1,8 @@
 package text;
 
-
-
 import fontRendering.TextMaster;
 import maths.Vector2f;
 import maths.Vector3f;
-
 
 /**
  * Represents a piece of text in the game.
@@ -21,6 +18,7 @@ public class GUIText {
 	private int textMeshVao;
 	private int vertexCount;
 	private Vector3f colour = new Vector3f(0f, 0f, 0f);
+	private Vector3f outlinecolour = new Vector3f(0f, 0f, 0f);
 
 	private Vector2f position;
 	private float lineMaxSize;
@@ -55,13 +53,16 @@ public class GUIText {
 	 * @param centered
 	 *            - whether the text should be centered or not.
 	 */
-	public GUIText( float fontSize, FontType font, Vector2f position, float maxLineLength,
-			boolean centered) {
+	public GUIText(float fontSize, FontType font, Vector2f position, float maxLineLength, boolean centered) {
 		this.fontSize = fontSize;
 		this.font = font;
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
+	}
+
+	public void setPosition(Vector2f position) {
+		this.position = position;
 	}
 
 	/**
@@ -188,6 +189,13 @@ public class GUIText {
 		this.textString = textString;
 		TextMaster.loadText(this);
 	}
-	
+
+	public Vector3f getOutlinecolour() {
+		return outlinecolour;
+	}
+
+	public void setOutlinecolour(float r, float g, float b) {
+		outlinecolour.set(r, g, b);
+	}
 
 }

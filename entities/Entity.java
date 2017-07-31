@@ -21,7 +21,8 @@ public class Entity {
 		this.rotZ = rotZ;
 		this.scale = scale;
 	}
-//for the text alest
+
+	// for the texture atlases
 	public Entity(TexturedModel model, int index, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.textureIndex = index;
 		this.model = model;

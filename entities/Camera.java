@@ -118,8 +118,8 @@ public class Camera {
 			@Override
 			public void ScrollDown(double speed) {
 				distanceFromPlayer -= speed;
-				if (distanceFromPlayer > 22)
-					distanceFromPlayer = 22;
+				if (distanceFromPlayer > 40)
+					distanceFromPlayer = 40;
 
 			}
 		});

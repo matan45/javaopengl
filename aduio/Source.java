@@ -6,6 +6,7 @@ import maths.Vector3f;
 
 public class Source {
 	private int sourceID;
+	private int buffer;
 
 	public Source(int RollFactor, int ReferenceD, int MaxDistance) {
 		sourceID = AL10.alGenSources();
@@ -17,7 +18,11 @@ public class Source {
 		AL10.alSourcef(sourceID, AL10.AL_MAX_DISTANCE, MaxDistance);
 	}
 
-	public void play(int buffer) {
+	public void setBuffer(int buffer) {
+		this.buffer = buffer;
+	}
+
+	public void play() {
 		stop();
 		AL10.alSourcei(sourceID, AL10.AL_BUFFER, buffer);
 		AL10.alSourcePlay(sourceID);
