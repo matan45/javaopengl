@@ -1,22 +1,30 @@
 TODO:
-excption handling (bulider or factory)
+exception handling (builder or factory)// massages box
 thread pool
 save and load
+loading screen
 macro
-UI system+layers //need to do window and the 2 scroll bar and radio button and textbox
+UI system+layers // 2 scroll bar and radio button and textbox and need to do hash map for the gui handler 
 settings files
 load videos
-physics (entity collision detection) //need to get the model length in the load objnormal
-optimization
+physics (entity collision detection) //player collision move
+optimization // use Profiling
+level generator 
+FBO common class
+music class do not to make it static
+
 
 3D:
-day and night system //need to do time system
-text
-shadow // add shadow to normal and entity like the terrain
+day and night system //have time system just need to update you sky box and print to the gui text
+fog//need to add uniform variables for the const 
+input text //need to change the const to uniform
+shadow // add shadow to normal and entity like the terrain and optimize it
 material
-water system 
-particles effect
+water system //need to optimize it
 animation
-weather system (rain snow)
+weather system (rain ,snow)
+terrain // need to do common abstract class need to add normals maps like entity
+clouds 
+need to add specular maps to the normal entity
 
-need to refactoring the shader class
+need to refactoring the shaders class

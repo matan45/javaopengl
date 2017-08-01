@@ -61,5 +61,6 @@ public class GuiTexture {
 	public void setTransparent(boolean transparent) {
 		this.transparent = transparent;
 	}
+	
 
 }

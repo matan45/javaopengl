@@ -54,7 +54,11 @@ public class EntityRenderer {
 		shader.loadShineVariables(texture.getShineDamper(),texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
-		
+		shader.loadUseSpecularMap(texture.isHasSpecularMap());
+		if(texture.isHasSpecularMap()){
+			GL13.glActiveTexture(GL13.GL_TEXTURE1);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getSpecularMap());
+		}
 	}
 	private void unbindTextured(){
 		MasterRenderer.enableCulling();

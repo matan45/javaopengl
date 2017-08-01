@@ -3,6 +3,7 @@ package guis.button;
 import org.lwjgl.glfw.GLFW;
 
 import guis.Basicgui;
+import guis.GuiHandler;
 import input.Mouseinput;
 import maths.Vector2f;
 
@@ -11,9 +12,11 @@ public class Button extends Basicgui {
 	IButton b;
 	boolean ishover = false;
 
-	public Button(int texture, Vector2f position, Vector2f scale, Vector2f rotation) {
+	public Button(int texture, Vector2f position, Vector2f scale, Vector2f rotation,boolean added) {
 		super(texture, position, scale, rotation);
-		// TODO Auto-generated constructor stub
+		if(added)
+			GuiHandler.addgui(this);
+		
 	}
 
 	public void setB(IButton b) {

@@ -12,7 +12,7 @@ public abstract class Basicgui extends GuiTexture implements Igui {
 
 	public abstract void update();
 	
-	protected boolean IsCursorOn(){
+	public boolean IsCursorOn(){
 		Vector2f location = super.getPosition();
 		Vector2f scale = super.getScale();
 		Vector2f mouseCoordinates = MouseCursor.getNormalizePosition();

@@ -6,7 +6,6 @@ import text.GUIText;
 public class Time {
 
 	static long timer = System.currentTimeMillis();
-	static int updates = 0;
 	static int frames = 0;
 	static boolean Btime = true;
 	static GUIText text;
@@ -15,10 +14,9 @@ public class Time {
 	public static void fps() {
 
 		frames++;
-		updates++;
 		if (System.currentTimeMillis() - timer > 1000) {
 			text.print("");
-			text.print(updates + " ups " + frames + " fps");
+			text.print(frames + " fps");
 
 			if (Btime) {
 				time.y++;
@@ -31,7 +29,6 @@ public class Time {
 			}
 
 			timer = System.currentTimeMillis();
-			updates = 0;
 			frames = 0;
 		}
 

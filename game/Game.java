@@ -31,6 +31,8 @@ import normalMappingObjConverter.NormalMappedObjLoader;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
 import particles.ParticleTexture;
+import postProcessing.Fbo;
+import postProcessing.PostProcessing;
 import renderer.Loader;
 import renderer.MasterRenderer;
 import renderer.OBJLoader;
@@ -47,6 +49,7 @@ import water.WaterFrameBuffers;
 import water.WaterRenderer;
 import water.WaterShader;
 import water.WaterTile;
+import window.WindowManager;
 
 public class Game implements GameLogic {
 
@@ -65,9 +68,10 @@ public class Game implements GameLogic {
 	List<Terrain> terrains = new ArrayList<>();
 	List<WaterTile> waters = new ArrayList<>();
 	List<Source> audios = new ArrayList<>();
-	GuiHandler guis = new GuiHandler();
 
 	Camera camera;
+
+	Fbo multisampleFbo, outputFbo;
 
 	ParticleSystem particlesystem;
 
@@ -194,6 +198,13 @@ public class Game implements GameLogic {
 		player.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(player);
 
+		Entity barrel = new Entity(new TexturedModel(OBJLoader.loadObjModel("barrel", loader),
+				new ModelTexture(loader.loadTexture("barrel"))), new Vector3f(15, 0, -20), 0, 0, 0, 0.2f);
+		barrel.getModel().getTexture().setShineDamper(10);
+		barrel.getModel().getTexture().setReflectivity(1f);
+		barrel.getModel().getTexture().setSpecularMap(loader.loadTexture("barrelS"));
+		entitys.add(barrel);
+
 		for (Entity entity : entitys) {
 			float y = terrain.getHeightOfTerrain(entity.getPosition().x, entity.getPosition().z);
 			entity.setPosition(new Vector3f(entity.getPosition().x, y, entity.getPosition().z));
@@ -212,33 +223,33 @@ public class Game implements GameLogic {
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
 
 		// GUI
-		Button gui = new Button(loader.loadTexture("Mortal komba"), new Vector2f(0.9f, 0.9f), new Vector2f(0.1f, 0.1f),
-				new Vector2f(0, 0));
-		gui.setTransparent(true);
-		gui.setB(new IButton() {
+		Button button = new Button(loader.loadTexture("gui/Mortal komba"), new Vector2f(0.9f, 0.9f),
+				new Vector2f(0.1f, 0.1f), new Vector2f(0, 0), true);
+		button.setTransparent(true);
+		button.setB(new IButton() {
 			@Override
 			public void onClick() {
-				guis.removegui(0);
+
 			}
 
 			@Override
 			public void onHover() {
-				gui.setPosition(new Vector2f(0.8f, 0.8f));
-				gui.setScale(new Vector2f(0.2f, 0.2f));
-				gui.increaseRotation(new Vector2f(1, 0));
+				button.setPosition(new Vector2f(0.8f, 0.8f));
+				button.setScale(new Vector2f(0.2f, 0.2f));
+				button.increaseRotation(new Vector2f(1, 0));
 			}
 
 			@Override
 			public void stopHover() {
-				gui.setPosition(new Vector2f(0.9f, 0.9f));
-				gui.setScale(new Vector2f(0.1f, 0.1f));
-				gui.setRotation(new Vector2f(0, 0));
+				button.setPosition(new Vector2f(0.9f, 0.9f));
+				button.setScale(new Vector2f(0.1f, 0.1f));
+				button.setRotation(new Vector2f(0, 0));
 			}
 		});
-		guis.addgui(gui);
 
-		WindowGui win = new WindowGui(loader.loadTexture("windowgui"), new Vector2f(-0.7f, -0.7f),
-				new Vector2f(0.3f, 0.3f), new Vector2f(0, 0));
+		WindowGui win = new WindowGui(loader.loadTexture("gui/windowgui"), new Vector2f(-0.7f, -0.7f),
+				new Vector2f(0.3f, 0.3f), new Vector2f(0, 0), new Button(loader.loadTexture("gui/xxx"),
+						new Vector2f(0.9f, 0.9f), new Vector2f(0.05f, 0.05f), new Vector2f(0, 0), false));
 		win.setTransparent(false);
 		win.setWindow(new IWindowgui() {
 
@@ -246,13 +257,17 @@ public class Game implements GameLogic {
 			public void whileDrag() {
 
 			}
+
+			@Override
+			public void onclose() {
+
+			}
 		});
-		guis.addgui(win);
 
 		// TEXT
 		TextMaster.init(loader);
 		FontType font = new FontType(loader.loadTexture("candara"), new File("src/resources/fonts/candara.fnt"));
-		GUIText text = new GUIText(1.5f, font, new Vector2f(-0.07f, 0f), 0.3f, true);
+		GUIText text = new GUIText(1.5f, font, new Vector2f(0.01f, 0f), 0.3f, false);
 		text.setColour(1f, 1f, 1f);
 		text.setOutlinecolour(1, 0, 0);
 		Time.setText(text);
@@ -285,6 +300,12 @@ public class Game implements GameLogic {
 		particlesystem.setDirection(new Vector3f(0, 3, 0), 0.05f);
 		particlesystem.randomizeRotation();
 
+		// POST PROCESSING
+		multisampleFbo = new Fbo(WindowManager.getWindow("main").getWidth(),
+				WindowManager.getWindow("main").getHeight());
+		outputFbo = new Fbo(WindowManager.getWindow("main").getWidth(), WindowManager.getWindow("main").getHeight(),
+				Fbo.DEPTH_TEXTURE);
+		PostProcessing.init(loader);
 	}
 
 	public void update() {
@@ -297,8 +318,14 @@ public class Game implements GameLogic {
 		ParticleMaster.update(camera);
 
 		watercode();
+		multisampleFbo.bindFrameBuffer();
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera, new Vector4f(0, -1, 0, 1000));
 		waterRenderer.render(waters, camera, lights.get(0));
+		ParticleMaster.renderParticles(camera);
+		multisampleFbo.unbindFrameBuffer();
+		multisampleFbo.resolveToFbo(outputFbo);
+		PostProcessing.doPostProcessing(outputFbo.getColourTexture());
 
 		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 		if (terrainPoint != null && Mouseinput.mouseButtonDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_1)) {
@@ -308,10 +335,8 @@ public class Game implements GameLogic {
 
 		}
 
-		ParticleMaster.renderParticles(camera);
-
-		guiRenderer.render(guis.getGuis());
-		guis.update();
+		guiRenderer.render(GuiHandler.getGuis());
+		GuiHandler.update();
 		TextMaster.render();
 
 		entitys.get(2).increaseRotation(0, 1, 0);
@@ -335,12 +360,16 @@ public class Game implements GameLogic {
 	public void onclose() {
 		TextMaster.cleanUp();
 		ParticleMaster.cleanup();
+		multisampleFbo.cleanUp();
+		outputFbo.cleanUp();
+		PostProcessing.cleanUp();
 		buffers.cleanUp();
 		waterShader.cleanUp();
 		renderer.cleanUp();
 		guiRenderer.cleanUp();
 		loader.cleanUp();
 		AudioMaster.cleanUp();
+		GuiHandler.cleanup();
 		for (Source s : audios)
 			s.delete();
 
@@ -355,6 +384,7 @@ public class Game implements GameLogic {
 		camera.invertPitch();
 		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera,
 				new Vector4f(0, -1, 0, -waters.get(0).getHeight() + 1));
+		multisampleFbo.unbindFrameBuffer();
 		camera.getPosition().y += distance;
 		camera.invertPitch();
 		buffers.bindRefractionFrameBuffer();

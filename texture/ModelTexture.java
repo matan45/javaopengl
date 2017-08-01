@@ -4,11 +4,15 @@ public class ModelTexture {
 
 	private int textureID;
 	private int normalMap;
+	private int specularMap;
 
 	private float shineDamper = 1;
 	private float reflectivity = 0;
+
 	private boolean hasTransparency = false;
 	private boolean useFakeLighting = false;
+	private boolean hasSpecularMap = false;
+
 	private int numberOfRows = 1;
 
 	public boolean isUseFakeLighting() {
@@ -65,6 +69,19 @@ public class ModelTexture {
 
 	public void setReflectivity(float reflectivity) {
 		this.reflectivity = reflectivity;
+	}
+
+	public int getSpecularMap() {
+		return specularMap;
+	}
+
+	public void setSpecularMap(int specularMap) {
+		this.specularMap = specularMap;
+		this.hasSpecularMap = true;
+	}
+
+	public boolean isHasSpecularMap() {
+		return hasSpecularMap;
 	}
 
 }

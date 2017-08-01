@@ -9,7 +9,9 @@
  out vec4 out_Color;
  
  uniform sampler2D textureSampler;
- 
+ uniform sampler2D modelTexture;
+ uniform sampler2D spcularMap;
+ uniform float usesSpecularMap;
  uniform vec3 lightColour[4];
  uniform vec3 attenuation[4];
  uniform float shineDamper;
@@ -50,6 +52,11 @@
  	if(textureColour.a<0.5){
  		discard;
  	} 
+ 	
+ 	if(usesSpecularMap > 0.5){
+ 		vec4 mapInfo = texture(spcularMap,pass_textureCoords);
+ 		totalSpecular *= mapInfo.r;
+ 	} 	
     out_Color = vec4(totalDiffuse,1.0) * textureColour + vec4(totalSpecular,1.0);
     out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
 }

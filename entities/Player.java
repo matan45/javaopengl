@@ -65,7 +65,7 @@ public class Player extends Entity {
 		if (Keyinput.keyDown(GLFW.GLFW_KEY_SPACE)) {
 			jump();
 		}
-		
+
 	}
 
 }

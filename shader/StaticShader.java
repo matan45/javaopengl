@@ -27,7 +27,10 @@ public class StaticShader extends ShaderProgram {
 	private int location_numberOfRows;
 	private int location_offset;
 	private int location_plane;
-	
+	private int location_spcularMap;
+	private int location_usesSpecularMap;
+	private int location_modelTexture;
+
 	public StaticShader(String vertexFile, String fragmentFile) {
 		super(vertexFile, fragmentFile);
 		// TODO Auto-generated constructor stub
@@ -43,6 +46,9 @@ public class StaticShader extends ShaderProgram {
 	@Override
 	protected void getAllUniformLocations() {
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
+		location_spcularMap = super.getUniformLocation("spcularMap");
+		location_usesSpecularMap = super.getUniformLocation("usesSpecularMap");
+		location_modelTexture = super.getUniformLocation("modelTexture");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_shineDamper = super.getUniformLocation("shineDamper");
@@ -51,11 +57,11 @@ public class StaticShader extends ShaderProgram {
 		location_skyColour = super.getUniformLocation("skyColour");
 		location_numberOfRows = super.getUniformLocation("numberOfRows");
 		location_offset = super.getUniformLocation("offset");
-		location_plane= super.getUniformLocation("plane");
-		
+		location_plane = super.getUniformLocation("plane");
+
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
-		location_attenuation=new int[MAX_LIGHTS];
+		location_attenuation = new int[MAX_LIGHTS];
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
 			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
@@ -63,8 +69,17 @@ public class StaticShader extends ShaderProgram {
 		}
 
 	}
-	
-	public void loadClipPlane(Vector4f plane){
+
+	public void connectTextureUnits() {
+		super.loadInt(location_modelTexture, 0);
+		super.loadInt(location_spcularMap, 1);
+	}
+
+	public void loadUseSpecularMap(boolean useMap) {
+		super.loadBoolean(location_usesSpecularMap, useMap);
+	}
+
+	public void loadClipPlane(Vector4f plane) {
 		super.load4DVector(location_plane, plane);
 	}
 
