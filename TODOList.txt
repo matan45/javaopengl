@@ -11,7 +11,7 @@ physics (entity collision detection) //player collision move
 optimization // use Profiling
 level generator 
 FBO common class
-music class do not to make it static
+music class do not make it static
 
 
 3D:
@@ -26,5 +26,6 @@ weather system (rain ,snow)
 terrain // need to do common abstract class need to add normals maps like entity
 clouds 
 need to add specular maps to the normal entity
+
 
 need to refactoring the shaders class

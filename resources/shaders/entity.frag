@@ -6,9 +6,9 @@
  in vec3 toCameraVector;
  in float visibility;
  
- out vec4 out_Color;
+layout (location = 0) out vec4 out_Color;
+layout (location = 1) out vec4 out_BrightColor;
  
- uniform sampler2D textureSampler;
  uniform sampler2D modelTexture;
  uniform sampler2D spcularMap;
  uniform float usesSpecularMap;
@@ -48,7 +48,7 @@
 	
 	totalDiffuse = max(totalDiffuse,0.2);
 	
-	vec4 textureColour = texture(textureSampler,pass_textureCoords);
+	vec4 textureColour = texture(modelTexture,pass_textureCoords);
  	if(textureColour.a<0.5){
  		discard;
  	} 
@@ -59,4 +59,5 @@
  	} 	
     out_Color = vec4(totalDiffuse,1.0) * textureColour + vec4(totalSpecular,1.0);
     out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
+    out_BrightColor = vec4(1.0,0.0,0.0,1.0);
 }

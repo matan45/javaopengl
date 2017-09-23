@@ -4,7 +4,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import bloom.BrightFilter;
 import bloom.CombineFilter;
 import gaussianBlur.HorizontalBlur;
 import gaussianBlur.VerticalBlur;
@@ -16,36 +15,43 @@ public class PostProcessing {
 
 	private static final float[] POSITIONS = { -1, 1, -1, -1, 1, 1, 1, -1 };
 	private static RawModel quad;
-	private static ContrastChanger contrastChanger;
-	private static BrightFilter brightFilter;
+	// filters
+	// private static ContrastChanger contrastChanger;
+	// private static BrightFilter brightFilter;
 	private static HorizontalBlur hBlur;
 	private static VerticalBlur vBlur;
+	private static HorizontalBlur hBlur2;
+	private static VerticalBlur vBlur2;
 	private static CombineFilter combineFilter;
-	
 
 	public static void init(Loader loader) {
 		quad = loader.loadToVAO(POSITIONS, 2);
-		contrastChanger = new ContrastChanger();
-		brightFilter = new BrightFilter(WindowManager.getWindow("main").getWidth()/2, WindowManager.getWindow("main").getHeight()/2);
-		hBlur=new HorizontalBlur(WindowManager.getWindow("main").getWidth()/5, WindowManager.getWindow("main").getHeight()/5);
-		vBlur=new VerticalBlur(WindowManager.getWindow("main").getWidth()/5, WindowManager.getWindow("main").getHeight()/5);
+		hBlur = new HorizontalBlur(WindowManager.getWindow("main").getWidth() / 4,
+				WindowManager.getWindow("main").getHeight() / 4);
+		vBlur = new VerticalBlur(WindowManager.getWindow("main").getWidth() / 4,
+				WindowManager.getWindow("main").getHeight() / 4);
+		hBlur2 = new HorizontalBlur(WindowManager.getWindow("main").getWidth() / 2,
+				WindowManager.getWindow("main").getHeight() / 2);
+		vBlur2 = new VerticalBlur(WindowManager.getWindow("main").getWidth() / 2,
+				WindowManager.getWindow("main").getHeight() / 2);
 		combineFilter = new CombineFilter();
 	}
 
-	public static void doPostProcessing(int colourTexture) {
+	public static void doPostProcessing(int colourTexture, int brightTexture) {
 		start();
-		brightFilter.render(colourTexture);
-		hBlur.render(brightFilter.getOutputTexture());
-		vBlur.render(hBlur.getOutputTexture());
-		combineFilter.render(colourTexture, vBlur.getOutputTexture());
+		hBlur2.render(brightTexture);
+		vBlur2.render(hBlur2.getOutputTexture());
+		hBlur2.render(vBlur2.getOutputTexture());
+		vBlur2.render(hBlur2.getOutputTexture());
+		combineFilter.render(colourTexture, vBlur2.getOutputTexture());
 		end();
 	}
 
 	public static void cleanUp() {
-		contrastChanger.cleanUp();
-		brightFilter.cleanUp();
 		hBlur.cleanUp();
 		vBlur.cleanUp();
+		hBlur2.cleanUp();
+		vBlur2.cleanUp();
 		combineFilter.cleanUp();
 
 	}

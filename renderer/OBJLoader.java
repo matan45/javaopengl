@@ -65,6 +65,7 @@ public class OBJLoader {
 				maxY = Math.max(maxY, vertex.y);
 				maxZ = Math.max(maxZ, vertex.z);
 			}
+			
 			OBJLength.x = maxX - minX;
 			OBJLength.y = maxY - minY;
 			OBJLength.z = maxZ - minZ;
@@ -121,5 +122,8 @@ public class OBJLoader {
 	public static Vector3f getOBJLength() {
 		return OBJLength;
 	}
+
+
+	
 
 }

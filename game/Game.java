@@ -71,7 +71,7 @@ public class Game implements GameLogic {
 
 	Camera camera;
 
-	Fbo multisampleFbo, outputFbo;
+	Fbo multisampleFbo, outputFbo,outputFbo2;
 
 	ParticleSystem particlesystem;
 
@@ -173,6 +173,9 @@ public class Game implements GameLogic {
 		lamp.getModel().getTexture().setReflectivity(1f);
 		lamp.getModel().getTexture().setShineDamper(5f);
 		lamp.addLight(light);
+		lamp.setX(OBJLoader.getOBJLength().getX());
+		lamp.setY(OBJLoader.getOBJLength().getY());
+		lamp.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(lamp);
 
 		Entity lamp2 = new Entity(
@@ -201,7 +204,7 @@ public class Game implements GameLogic {
 		Entity barrel = new Entity(new TexturedModel(OBJLoader.loadObjModel("barrel", loader),
 				new ModelTexture(loader.loadTexture("barrel"))), new Vector3f(15, 0, -20), 0, 0, 0, 0.2f);
 		barrel.getModel().getTexture().setShineDamper(10);
-		barrel.getModel().getTexture().setReflectivity(1f);
+		barrel.getModel().getTexture().setReflectivity(0.5f);
 		barrel.getModel().getTexture().setSpecularMap(loader.loadTexture("barrelS"));
 		entitys.add(barrel);
 
@@ -305,6 +308,8 @@ public class Game implements GameLogic {
 				WindowManager.getWindow("main").getHeight());
 		outputFbo = new Fbo(WindowManager.getWindow("main").getWidth(), WindowManager.getWindow("main").getHeight(),
 				Fbo.DEPTH_TEXTURE);
+		outputFbo2 = new Fbo(WindowManager.getWindow("main").getWidth(), WindowManager.getWindow("main").getHeight(),
+				Fbo.DEPTH_TEXTURE);
 		PostProcessing.init(loader);
 	}
 
@@ -324,8 +329,10 @@ public class Game implements GameLogic {
 		waterRenderer.render(waters, camera, lights.get(0));
 		ParticleMaster.renderParticles(camera);
 		multisampleFbo.unbindFrameBuffer();
-		multisampleFbo.resolveToFbo(outputFbo);
-		PostProcessing.doPostProcessing(outputFbo.getColourTexture());
+		multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0,outputFbo);
+		multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1,outputFbo2);
+		PostProcessing.doPostProcessing(outputFbo.getColourTexture(),outputFbo2.getColourTexture());
+		
 
 		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 		if (terrainPoint != null && Mouseinput.mouseButtonDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_1)) {
@@ -341,8 +348,11 @@ public class Game implements GameLogic {
 
 		entitys.get(2).increaseRotation(0, 1, 0);
 		entitys.get(3).increaseRotation(0, -1, 0);
+		entitys.get(12).increaseRotation(0, 1, 0);
 		normalMapentitys.get(0).increaseRotation(0, 1, 0);
 		((Player) entitys.get(11)).move(terrains.get(0));
+		((Player)entitys.get(11)).colliding(entitys.get(0));
+		
 
 		if (AABB.collides(entitys.get(11), entitys.get(0))) {
 			if (!audios.get(1).isPlaying()) {
@@ -362,6 +372,7 @@ public class Game implements GameLogic {
 		ParticleMaster.cleanup();
 		multisampleFbo.cleanUp();
 		outputFbo.cleanUp();
+		outputFbo2.cleanUp();
 		PostProcessing.cleanUp();
 		buffers.cleanUp();
 		waterShader.cleanUp();

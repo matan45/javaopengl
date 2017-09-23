@@ -19,6 +19,11 @@ public class Player extends Entity {
 	float upwardsSpeed = 0;
 	boolean isInAir = false;
 
+	boolean forward;
+	boolean back;
+	boolean canMoveFoward = true;
+	boolean canMoveBack = true;
+
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
@@ -48,10 +53,18 @@ public class Player extends Entity {
 	}
 
 	private void checkInputs() {
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_W)) {
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_W) && canMoveFoward) {
 			this.currentSpeed = RUN_SPEED;
-		} else if (Keyinput.keyDown(GLFW.GLFW_KEY_S)) {
+			forward = true;
+			back = false;
+			if (!canMoveBack)
+				canMoveBack = true;
+		} else if (Keyinput.keyDown(GLFW.GLFW_KEY_S) && canMoveBack) {
 			this.currentSpeed = -RUN_SPEED;
+			back = true;
+			forward = false;
+			if (!canMoveFoward)
+				canMoveFoward = true;
 		} else {
 			this.currentSpeed = 0;
 		}
@@ -66,6 +79,17 @@ public class Player extends Entity {
 			jump();
 		}
 
+	}
+
+	public void colliding(Entity other) {
+		if (AABB.collides(this, other)) {
+			if (forward) {
+				canMoveFoward = false;
+			} else if (back) {
+				canMoveBack = false;
+			}
+
+		}
 	}
 
 }

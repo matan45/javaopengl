@@ -1,7 +1,7 @@
 package test;
 
 import aduio.PlayList;
-import game.Game;
+import game.PhysicsTest;
 import video.MediaPanel;
 import window.MasterWindow;
 import window.Window;
@@ -22,9 +22,11 @@ public class Run {
 		mainwin.Scrollinput(true);
 		mainwin.Mouseinput(true);
 		mainwin.Cursorinput(true);
-		mainwin.run(new Game());
+		mainwin.run(new PhysicsTest());
 		s.closePlayList();
 
+		
+	
 	}
 
 }

@@ -1,3 +1,5 @@
+#version 140
+
 in vec2 position;
 
 in mat4 modelViewMatrix;
