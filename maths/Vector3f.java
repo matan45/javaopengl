@@ -382,4 +382,14 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 		max=Math.max(Math.max(this.x, this.y), this.z);
 		return max;
 	}
+	
+	public Vector3f reflected(Vector3f normal){
+		float a=Vector3f.dot(this, normal)*(-2);
+		normal.x=normal.x*a;
+		normal.y=normal.y*a;
+		normal.z=normal.z*a;
+		Vector3f dest=new Vector3f();
+		Vector3f.add(normal, this, dest);
+		return dest;
+	}
 }

@@ -25,9 +25,12 @@ public abstract class Collider implements ICollider {
 		} else if (this.getType() == ColliderType.TYPE_AABB && other.getType() == ColliderType.TYPE_AABB) {
 			AABB self = (AABB) this;
 			return self.IntersectAABB((AABB) other);
-		} else if ((this.getType() == ColliderType.TYPE_AABB && other.getType() == ColliderType.TYPE_SPHERE)
-				|| (this.getType() == ColliderType.TYPE_SPHERE && other.getType() == ColliderType.TYPE_AABB)) {
-			//TODO implement
+		} else if (this.getType() == ColliderType.TYPE_AABB && other.getType() == ColliderType.TYPE_SPHERE) {
+			AABB self = (AABB) this;
+			return self.IntersectSphere((Sphere) other);
+		}else if(this.getType() == ColliderType.TYPE_SPHERE && other.getType() == ColliderType.TYPE_AABB){
+			AABB self = (AABB) other;
+			return self.IntersectSphere((Sphere) this);
 		}
 		return new IntersectData(false, 0);
 	}

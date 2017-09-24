@@ -1,5 +1,6 @@
 package Physics;
 
+
 import maths.Vector3f;
 
 public class AABB extends Collider {
@@ -10,7 +11,7 @@ public class AABB extends Collider {
 
 	public AABB(Vector3f center, Vector3f halfwidths) {
 		super(ColliderType.TYPE_AABB);
-		this.halfwidths = halfwidths;
+		this.halfwidths=halfwidths;
 		updateCenter(center);
 
 	}
@@ -47,12 +48,31 @@ public class AABB extends Collider {
 		return center;
 	}
 
+	public IntersectData IntersectSphere(Sphere other) {
+		Vector3f distances1 = new Vector3f();
+		Vector3f.sub(other.getCenter(), this.maxExtents, distances1);
+
+		Vector3f distances2 = new Vector3f();
+		Vector3f.sub(this.minExtents, other.getCenter(), distances2);
+
+		Vector3f distances = distances1.Max(distances2);
+		float distanceX = Math.abs(distances.x);
+		float distanceY = Math.abs(distances.y);
+		float distanceZ = Math.abs(distances.z);
+		if (distanceX < other.getRadius() && distanceY < other.getRadius() && distanceZ < other.getRadius()) {
+			return new IntersectData(true, distanceX - other.getRadius());
+		}
+		return new IntersectData(false, 0);
+	}
+
 	@Override
 	public void updateCenter(Vector3f center) {
 		this.center = center;
+		
 		this.maxExtents = Vector3f.add(this.center, halfwidths, this.maxExtents);
 		this.minExtents = Vector3f.sub(this.center, halfwidths, this.minExtents);
 
 	}
+	
 
 }
