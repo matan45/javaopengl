@@ -7,8 +7,8 @@ public class Sphere extends Collider {
 	Vector3f center;
 	float radius;
 
-	public Sphere(Vector3f center, float radius) {
-		super(ColliderType.TYPE_SPHERE);
+	public Sphere(Vector3f center, float radius, Layers layer) {
+		super(ColliderType.TYPE_SPHERE, layer);
 		this.center = center;
 		this.radius = radius;
 	}

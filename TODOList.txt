@@ -3,15 +3,16 @@ exception handling (builder or factory)// massages box
 thread pool
 save and load
 loading screen
-macro
+macro record  
 UI system+layers // 2 scroll bar and radio button and textbox and need to do hash map for the gui handler 
 settings files
 load videos
-physics (entity collision detection) //player collision move
+physics (aabb rotation vector3f rotation ,gravite, terrain test,add triangle collider mabe ) //player collision move
 optimization // use Profiling
 level generator 
 FBO common class
 music class do not make it static
+AI //need to map the terrain for walkable layer nav agent
 
 
 3D:
@@ -21,11 +22,13 @@ input text //need to change the const to uniform
 shadow // add shadow to normal and entity like the terrain and optimize it
 material
 water system //need to optimize it
-animation
+animation need to add
+lens Flare need to add
 weather system (rain ,snow)
-terrain // need to do common abstract class need to add normals maps like entity
+terrain // need to do common abstract class need to add normals maps like entity 
+terrain editor //mabe?
 clouds 
-need to add specular maps to the normal entity
+entity //need to add specular maps to the normal entity 
 
-
+add cube map reflection
 need to refactoring the shaders class

@@ -377,19 +377,52 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 		return result;
 	}
 
-	public float MaxValue(){
-		float max=0;
-		max=Math.max(Math.max(this.x, this.y), this.z);
+	public float MaxValue() {
+		float max = 0;
+		max = Math.max(Math.max(this.x, this.y), this.z);
 		return max;
 	}
-	
-	public Vector3f reflected(Vector3f normal){
-		float a=Vector3f.dot(this, normal)*(-2);
-		normal.x=normal.x*a;
-		normal.y=normal.y*a;
-		normal.z=normal.z*a;
-		Vector3f dest=new Vector3f();
+
+	public Vector3f reflected(Vector3f normal) {
+		float a = Vector3f.dot(this, normal) * (-2);
+		normal.x = normal.x * a;
+		normal.y = normal.y * a;
+		normal.z = normal.z * a;
+		Vector3f dest = new Vector3f();
 		Vector3f.add(normal, this, dest);
 		return dest;
 	}
+
+	public boolean isZero() {
+		return (this.x == 0 && this.y == 0 && this.z == 0);
+	}
+
+	public boolean equls(Vector3f other) {
+		return (this.x == other.x && this.y == other.y && this.z == other.z);
+	}
+	
+	public Vector3f MaxVector(Vector3f other){
+		Vector3f max=new Vector3f();
+		max.x=Math.max(this.x, other.x);
+		max.y=Math.max(this.y, other.y);
+		max.z=Math.max(this.z, other.z);
+		return max;
+	}
+	
+	public Vector3f rotate(Vector3f rotation){
+		Matrix4f matrix=new Matrix4f();
+		matrix.setIdentity();
+		Matrix4f.rotate((float) Math.toRadians(rotation.x), new Vector3f(1, 0, 0), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(rotation.y), new Vector3f(0, 1, 0), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(rotation.z), new Vector3f(0, 0, 1), matrix, matrix);
+		Matrix4f ro=new Matrix4f();
+		ro.setZero();
+		ro.m00=this.x;
+		ro.m01=this.y;
+		ro.m02=this.z;
+		Matrix4f.mul(matrix, ro, matrix);
+		
+		return new Vector3f(matrix.m00,matrix.m01,matrix.m02);
+	}
+	
 }

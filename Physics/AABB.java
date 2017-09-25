@@ -1,6 +1,5 @@
 package Physics;
 
-
 import maths.Vector3f;
 
 public class AABB extends Collider {
@@ -9,9 +8,9 @@ public class AABB extends Collider {
 	Vector3f center;
 	Vector3f halfwidths;
 
-	public AABB(Vector3f center, Vector3f halfwidths) {
-		super(ColliderType.TYPE_AABB);
-		this.halfwidths=halfwidths;
+	public AABB(Vector3f center, Vector3f halfwidths, Layers layer) {
+		super(ColliderType.TYPE_AABB, layer);
+		this.halfwidths = halfwidths;
 		updateCenter(center);
 
 	}
@@ -68,11 +67,10 @@ public class AABB extends Collider {
 	@Override
 	public void updateCenter(Vector3f center) {
 		this.center = center;
-		
+
 		this.maxExtents = Vector3f.add(this.center, halfwidths, this.maxExtents);
 		this.minExtents = Vector3f.sub(this.center, halfwidths, this.minExtents);
 
 	}
-	
 
 }

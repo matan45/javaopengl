@@ -3,6 +3,7 @@ package Physics;
 import java.util.ArrayList;
 import java.util.List;
 
+import Physics.Collider.Layers;
 import maths.Vector3f;
 
 public class PhysicsEngine {
@@ -40,7 +41,9 @@ public class PhysicsEngine {
 				if (data.isDoesIntersect()) {
 					objects.get(i).setData(data);
 					objects.get(j).setData(data);
-					CollisionResponse(objects.get(i), objects.get(j));
+					if ((!objects.get(i).getVelocity().isZero() || !objects.get(j).getVelocity().isZero())
+							&& objects.get(i).getCollider().getLayers() == Layers.Physics_Layer)
+						CollisionResponse(objects.get(i), objects.get(j));
 
 				} else {
 					objects.get(i).setData(data);
@@ -60,24 +63,58 @@ public class PhysicsEngine {
 
 	private void CollisionResponse(PhysicsObject p1, PhysicsObject p2) {
 		float totalmass = p1.getMass() + p2.getMass();
-		Vector3f momentum1 = new Vector3f();
-		momentum1.x = p1.getVelocity().x * p1.getMass();
-		momentum1.y = p1.getVelocity().y * p1.getMass();
-		momentum1.z = p1.getVelocity().z * p1.getMass();
-		Vector3f momentum2 = new Vector3f();
-		momentum2.x = p2.getVelocity().x * p2.getMass();
-		momentum2.y = p2.getVelocity().y * p2.getMass();
-		momentum2.z = p2.getVelocity().z * p2.getMass();
+		
+		Vector3f momentum1 = Momentum(p1);
+		Vector3f momentum2 = Momentum(p2);
+		
 		Vector3f vf = new Vector3f();
 		Vector3f.sub(momentum1, momentum2, vf);
 		vf.x = vf.x / totalmass;
 		vf.y = vf.y / totalmass;
 		vf.z = vf.z / totalmass;
-		vf.normalise();
-		Vector3f vf1=new Vector3f(vf); 
-		Vector3f vf2=new Vector3f(vf); 
+
+		if (!p1.getVelocity().isZero() && !p2.getVelocity().isZero()) {
+			MaxVelocity(p1, p2);
+		} else {
+			reflected(p1, p2, vf);
+		}
+
+		if (p1.getVelocity().isZero()) {
+			p1.setVelocity(vf);
+		} else if (p2.getVelocity().isZero()) {
+			p2.setVelocity(vf);
+		}
+
+	}
+
+	private void reflected(PhysicsObject p1, PhysicsObject p2, Vector3f direction) {
+		Vector3f vf1 = new Vector3f(direction);
+		Vector3f vf2 = new Vector3f(direction);
+		vf1.normalise();
+		vf2.normalise();
 		p1.setVelocity(p1.getVelocity().reflected(vf1));
 		p2.setVelocity(p2.getVelocity().reflected(vf2));
 	}
+
+	private void MaxVelocity(PhysicsObject p1, PhysicsObject p2) {
+		Vector3f direction1 = new Vector3f(p1.getVelocity());
+		Vector3f direction2 = new Vector3f(p2.getVelocity());
+		direction1.normalise();
+		direction2.normalise();
+		if (direction1.equls(direction2)) {
+			p1.setVelocity(p1.getVelocity().Max(p2.getVelocity()));
+			p2.setVelocity(p1.getVelocity().Max(p2.getVelocity()));
+
+		}
+	}
+	
+	private Vector3f Momentum(PhysicsObject p){
+		Vector3f momentum = new Vector3f();
+		momentum.x = p.getVelocity().x * p.getMass();
+		momentum.y = p.getVelocity().y * p.getMass();
+		momentum.z = p.getVelocity().z * p.getMass();
+		return momentum;
+	}
+	
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Physics.AABB;
+import Physics.Collider.Layers;
 import Physics.PhysicsEngine;
 import Physics.PhysicsObject;
 import Physics.Sphere;
@@ -56,12 +57,12 @@ public class PhysicsTest implements GameLogic {
 
 		Entity box = new Entity(
 				new TexturedModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box"))),
-				new Vector3f(5, -5, -10), 0, 0, 0, 1f);
+				new Vector3f(20, -5, -20), 0, 45,0, 1f);
 		box.setX(OBJLoader.getOBJLength().getX());
 		box.setY(OBJLoader.getOBJLength().getY());
 		box.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(box);
-
+		
 		Entity box2 = new Entity(
 				new TexturedModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box"))),
 				new Vector3f(20, -5, -10), 0, 0, 0, 1f);
@@ -71,11 +72,11 @@ public class PhysicsTest implements GameLogic {
 		entitys.add(box2);
 		
 		PhysicsObject obj1 = new PhysicsObject(
-				new AABB(box.getPosition(), new Vector3f(box.getX() / 2, box.getY() / 2, box.getZ() / 2)),
-				new Vector3f(1.5f, 0.0f, 0.0f),10);
+				new AABB(box.getPosition(), new Vector3f(box.getX() / 2, box.getY() / 2, box.getZ() / 2),Layers.Physics_Layer),
+				new Vector3f(0f, 0.0f, 0.0f),10);
 		PhysicsObject obj2 = new PhysicsObject(
-				new AABB(box2.getPosition(), new Vector3f(box2.getX() / 2, box2.getY() / 2, box2.getZ() / 2)),
-				new Vector3f(0.0f, 0.0f, 0.0f),10);
+				new AABB(box2.getPosition(), new Vector3f(box2.getX() / 2, box2.getY() / 2, box2.getZ() / 2),Layers.Physics_Layer),
+				new Vector3f(0.0f, 0.0f, 0.0f),5);
 		
 		physicsEngine.AddObject(obj1);
 		physicsEngine.AddObject(obj2);
@@ -86,18 +87,18 @@ public class PhysicsTest implements GameLogic {
 		sphere.setY(OBJLoader.getOBJLength().getY());
 		sphere.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(sphere);
-
+		
 		Entity sphere2 = new Entity(new TexturedModel(OBJLoader.loadObjModel("earth", loader),
-				new ModelTexture(loader.loadTexture("earth"))), new Vector3f(20, -5, -20), 0, 0, 0, 0.01f);
+				new ModelTexture(loader.loadTexture("earth"))), new Vector3f(5, -5, -10), 0, 0, 0, 0.01f);
 		sphere2.setX(OBJLoader.getOBJLength().getX());
 		sphere2.setY(OBJLoader.getOBJLength().getY());
 		sphere2.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(sphere2);
-
-		PhysicsObject obj3 = new PhysicsObject(new Sphere(sphere.getPosition(), sphere.getY() / 2),
-				new Vector3f(-1.0f, 0.0f, 0.0f),100);
-		PhysicsObject obj4 = new PhysicsObject(new Sphere(sphere2.getPosition(), sphere2.getY() / 2),
-				new Vector3f(1.0f, 0.0f, 0.0f),100);
+		
+		PhysicsObject obj3 = new PhysicsObject(new Sphere(sphere.getPosition(), sphere.getY() / 2,Layers.Physics_Layer),
+				new Vector3f(0.0f, 0.0f, 0.0f),100);
+		PhysicsObject obj4 = new PhysicsObject(new Sphere(sphere2.getPosition(), sphere2.getY() / 2,Layers.Physics_Layer),
+				new Vector3f(0.0f, 0.0f, 0.0f),1);
 		physicsEngine.AddObject(obj3);
 		physicsEngine.AddObject(obj4);
 
