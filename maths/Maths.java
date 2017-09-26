@@ -3,7 +3,7 @@ package maths;
 import entities.Camera;
 
 public class Maths {
-	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale,Vector2f rotation) {
+	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale, Vector2f rotation) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(translation, matrix, matrix);
@@ -12,7 +12,6 @@ public class Maths {
 		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
 		return matrix;
 	}
-	
 
 	public static float barryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) {
 		float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
@@ -45,6 +44,19 @@ public class Maths {
 
 		return viewMatrix;
 	}
+
+	public static Vector3f max(Vector3f a, Vector3f b) {
+
+		return new Vector3f(Math.max(a.x, b.x), Math.max(a.y, b.y), Math.max(a.z, b.z));
+	}
+
+	public static Vector3f min(Vector3f a, Vector3f b) {
+
+		return new Vector3f(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.min(a.z, b.z));
+	}
 	
-	
+	public static Vector3f abs(Vector3f a) {
+		return new Vector3f(Math.abs(a.x), Math.abs(a.y), Math.abs(a.z));
+	}
+
 }

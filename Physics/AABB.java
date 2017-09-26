@@ -7,6 +7,7 @@ public class AABB extends Collider {
 	Vector3f maxExtents; // top right corner
 	Vector3f center;
 	Vector3f halfwidths;
+	Vector3f rotation;
 
 	public AABB(Vector3f center, Vector3f halfwidths, Layers layer) {
 		super(ColliderType.TYPE_AABB, layer);
@@ -24,9 +25,9 @@ public class AABB extends Collider {
 	}
 
 	public IntersectData IntersectAABB(AABB other) {
-		if ((this.maxExtents.x > other.getMinExtents().x && this.minExtents.x < other.getMaxExtents().x
-				&& this.maxExtents.y > other.getMinExtents().y && this.minExtents.y < other.getMaxExtents().y
-				&& this.maxExtents.z > other.getMinExtents().z && this.minExtents.z < other.getMaxExtents().z)) {
+		if ((this.maxExtents.x >= other.getMinExtents().x && this.minExtents.x <= other.getMaxExtents().x
+				&& this.maxExtents.y >= other.getMinExtents().y && this.minExtents.y <= other.getMaxExtents().y
+				&& this.maxExtents.z >= other.getMinExtents().z && this.minExtents.z <= other.getMaxExtents().z)) {
 
 			Vector3f distances1 = new Vector3f();
 			Vector3f.sub(other.getMinExtents(), this.maxExtents, distances1);
@@ -58,7 +59,7 @@ public class AABB extends Collider {
 		float distanceX = Math.abs(distances.x);
 		float distanceY = Math.abs(distances.y);
 		float distanceZ = Math.abs(distances.z);
-		if (distanceX < other.getRadius() && distanceY < other.getRadius() && distanceZ < other.getRadius()) {
+		if (distanceX <= other.getRadius() && distanceY <= other.getRadius() && distanceZ <= other.getRadius()) {
 			return new IntersectData(true, distanceX - other.getRadius());
 		}
 		return new IntersectData(false, 0);
@@ -66,10 +67,32 @@ public class AABB extends Collider {
 
 	@Override
 	public void updateCenter(Vector3f center) {
+
 		this.center = center;
 
-		this.maxExtents = Vector3f.add(this.center, halfwidths, this.maxExtents);
-		this.minExtents = Vector3f.sub(this.center, halfwidths, this.minExtents);
+		this.maxExtents = Vector3f.add(this.center, this.halfwidths, this.maxExtents);
+		this.minExtents = Vector3f.sub(this.center, this.halfwidths, this.minExtents);
+
+		PositionAfterRotation();
+	}
+
+	public void setRotation(Vector3f rotation) {
+		this.rotation = rotation;
+
+	}
+
+	private void PositionAfterRotation() {
+		Vector3f maxsub = new Vector3f();
+		maxsub = Vector3f.sub(maxExtents, center, maxsub);
+		Vector3f maxro = new Vector3f();
+		maxro = maxsub.rotate(new Vector3f(0, 0, 90));
+		maxExtents = Vector3f.add(maxro, center, maxExtents);
+
+		Vector3f minsub = new Vector3f();
+		minsub = Vector3f.sub(minExtents, center, minsub);
+		Vector3f minro = new Vector3f();
+		minro = minsub.rotate(new Vector3f(0, 0, 90));
+		minExtents = Vector3f.add(minro, center, minExtents);
 
 	}
 

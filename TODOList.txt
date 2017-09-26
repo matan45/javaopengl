@@ -8,6 +8,8 @@ UI system+layers // 2 scroll bar and radio button and textbox and need to do has
 settings files
 load videos
 physics (aabb rotation vector3f rotation ,gravite, terrain test,add triangle collider mabe ) //player collision move
+//no collision on rotation aabb need to implement Separating Axis Theorem
+//fix position on the model in blander
 optimization // use Profiling
 level generator 
 FBO common class
