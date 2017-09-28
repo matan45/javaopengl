@@ -6,6 +6,7 @@ public class PhysicsObject {
 	Vector3f velocity;
 	ICollider collider;
 	IntersectData data;
+	Vector3f temp = new Vector3f();
 	float mass = 0;
 	float friction = 0.001f;
 
@@ -56,7 +57,6 @@ public class PhysicsObject {
 	}
 
 	public void Integrate(float delta) {
-		Vector3f temp = new Vector3f();
 		temp.x = velocity.x * delta;
 		temp.y = velocity.y * delta;
 		temp.z = velocity.z * delta;
@@ -64,6 +64,7 @@ public class PhysicsObject {
 		velocity.y = SlowDown(velocity.y);
 		velocity.z = SlowDown(velocity.z);
 		this.collider.updateCenter(Vector3f.add(collider.getCenter(), temp, null));
+		
 	}
 
 	private float SlowDown(float speed) {

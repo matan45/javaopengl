@@ -7,9 +7,9 @@ macro record
 UI system+layers // 2 scroll bar and radio button and textbox and need to do hash map for the gui handler 
 settings files
 load videos
-physics (aabb rotation vector3f rotation ,gravite, terrain test,add triangle collider mabe ) //player collision move
+physics (gravite, terrain test,add triangle collider mabe ) //player collision move
 //no collision on rotation aabb need to implement Separating Axis Theorem
-//fix position on the model in blander
+
 optimization // use Profiling
 level generator 
 FBO common class
@@ -26,7 +26,7 @@ material
 water system //need to optimize it
 animation need to add
 lens Flare need to add
-weather system (rain ,snow)
+weather system (rain ,snow)//extend particle system
 terrain // need to do common abstract class need to add normals maps like entity 
 terrain editor //mabe?
 clouds 

@@ -13,6 +13,8 @@ public class AABB extends Collider {
 		super(ColliderType.TYPE_AABB, layer);
 		this.halfwidths = halfwidths;
 		updateCenter(center);
+		this.maxExtents.y=this.maxExtents.y+1;
+		this.minExtents.y=this.minExtents.y+1;
 
 	}
 
@@ -72,13 +74,14 @@ public class AABB extends Collider {
 
 		this.maxExtents = Vector3f.add(this.center, this.halfwidths, this.maxExtents);
 		this.minExtents = Vector3f.sub(this.center, this.halfwidths, this.minExtents);
+		this.maxExtents.y=this.maxExtents.y+this.halfwidths.y;
+		this.minExtents.y=this.minExtents.y+this.halfwidths.y;
 
-		PositionAfterRotation();
 	}
 
 	public void setRotation(Vector3f rotation) {
 		this.rotation = rotation;
-
+		PositionAfterRotation();
 	}
 
 	private void PositionAfterRotation() {

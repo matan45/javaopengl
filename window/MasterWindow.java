@@ -96,7 +96,7 @@ public abstract class MasterWindow {
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		
 		//anti aliasing
-		//glfwWindowHint(GLFW_SAMPLES, 4);
+		glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
 		
 		// already the default
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden
