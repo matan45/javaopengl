@@ -13,8 +13,6 @@ public class AABB extends Collider {
 		super(ColliderType.TYPE_AABB, layer);
 		this.halfwidths = halfwidths;
 		updateCenter(center);
-		this.maxExtents.y=this.maxExtents.y+1;
-		this.minExtents.y=this.minExtents.y+1;
 
 	}
 

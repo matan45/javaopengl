@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Physics.AABB;
+import Physics.OnOverLaps;
 import Physics.Collider.Layers;
 import Physics.PhysicsEngine;
 import Physics.PhysicsObject;
@@ -56,8 +57,8 @@ public class PhysicsTest implements GameLogic {
 		lights.add(light);
 
 		Entity box = new Entity(
-				new TexturedModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box"))),
-				new Vector3f(20, -3, -20), 0, 0, 0, 1f);
+				new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("box"))),
+				new Vector3f(20, -5, -20), 0, 0, 0, 0.5f);
 		box.setX(OBJLoader.getOBJLength().getX());
 		box.setY(OBJLoader.getOBJLength().getY());
 		box.setZ(OBJLoader.getOBJLength().getZ());
@@ -74,7 +75,7 @@ public class PhysicsTest implements GameLogic {
 		AABB sa = new AABB(box.getPosition(), new Vector3f(box.getX() / 2, box.getY() / 2, box.getZ() / 2),
 				Layers.Physics_Layer);
 
-		PhysicsObject obj1 = new PhysicsObject(sa, new Vector3f(0.0f, 0.0f, 0.0f), 10);
+		PhysicsObject obj1 = new PhysicsObject(sa, new Vector3f(2.0f, 1.0f, 0.0f), 10);
 		PhysicsObject obj2 = new PhysicsObject(new AABB(box2.getPosition(),
 				new Vector3f(box2.getX() / 2, box2.getY() / 2, box2.getZ() / 2), Layers.Physics_Layer),
 				new Vector3f(0.0f, 0.0f, 0.0f), 5);
@@ -122,6 +123,15 @@ public class PhysicsTest implements GameLogic {
 		camera = new Camera(null);
 
 		renderer = new MasterRenderer(loader, camera);
+		
+		physicsEngine.setCollision(new OnOverLaps() {
+			
+			@Override
+			public void OnCollision(PhysicsObject p1, PhysicsObject p2) {
+				
+				
+			}
+		});
 
 	}
 

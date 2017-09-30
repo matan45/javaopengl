@@ -7,9 +7,9 @@ macro record
 UI system+layers // 2 scroll bar and radio button and textbox and need to do hash map for the gui handler 
 settings files
 load videos
-physics (gravite, terrain test,add triangle collider mabe ) //player collision move
-//no collision on rotation aabb need to implement Separating Axis Theorem
-
+physics (gravite, terrain test) //player collision move
+//no collision on rotation aabb need to implement Separating Axis Theorem for 3d
+//need to define velocity on the entities and only the physics check collision
 optimization // use Profiling
 level generator 
 FBO common class

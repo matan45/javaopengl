@@ -8,11 +8,19 @@ import maths.Vector3f;
 
 public class PhysicsEngine {
 	List<PhysicsObject> objects;
+	OnOverLaps collision;
 	float gravite = 0.0f;
 
 	public PhysicsEngine() {
 		objects = new ArrayList<>();
 	}
+	
+
+	public void setCollision(OnOverLaps collision) {
+		this.collision = collision;
+	}
+
+
 
 	public void AddObject(PhysicsObject object) {
 		objects.add(object);
@@ -43,6 +51,9 @@ public class PhysicsEngine {
 					objects.get(j).setData(data);
 					if ((!objects.get(i).getVelocity().isZero() || !objects.get(j).getVelocity().isZero())
 							&& objects.get(i).getCollider().getLayers() == Layers.Physics_Layer)
+						if(collision != null){
+							collision.OnCollision(objects.get(i), objects.get(j));
+						}
 						CollisionResponse(objects.get(i), objects.get(j));
 
 				} else {
