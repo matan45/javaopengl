@@ -14,13 +14,10 @@ public class PhysicsEngine {
 	public PhysicsEngine() {
 		objects = new ArrayList<>();
 	}
-	
 
 	public void setCollision(OnOverLaps collision) {
 		this.collision = collision;
 	}
-
-
 
 	public void AddObject(PhysicsObject object) {
 		objects.add(object);
@@ -51,10 +48,11 @@ public class PhysicsEngine {
 					objects.get(j).setData(data);
 					if ((!objects.get(i).getVelocity().isZero() || !objects.get(j).getVelocity().isZero())
 							&& objects.get(i).getCollider().getLayers() == Layers.Physics_Layer)
-						if(collision != null){
+						if (collision != null) {
 							collision.OnCollision(objects.get(i), objects.get(j));
 						}
-						CollisionResponse(objects.get(i), objects.get(j));
+
+					CollisionResponse(objects.get(i), objects.get(j));
 
 				} else {
 					objects.get(i).setData(data);
@@ -74,26 +72,28 @@ public class PhysicsEngine {
 
 	private void CollisionResponse(PhysicsObject p1, PhysicsObject p2) {
 		float totalmass = p1.getMass() + p2.getMass();
-		
+
 		Vector3f momentum1 = Momentum(p1);
 		Vector3f momentum2 = Momentum(p2);
-		
+
 		Vector3f vf = new Vector3f();
 		Vector3f.sub(momentum1, momentum2, vf);
 		vf.x = vf.x / totalmass;
 		vf.y = vf.y / totalmass;
 		vf.z = vf.z / totalmass;
 
-		if (!p1.getVelocity().isZero() && !p2.getVelocity().isZero()) {
+		if (p1.getVelocity().isZero()) {
+			reflected(p1, p2, vf);
+			p1.setVelocity(vf);
+		} else if (p2.getVelocity().isZero()) {
+			reflected(p1, p2, vf);
+			p2.setVelocity(vf);
+
+		} else if (SameDirection(p1.getVelocity(), p2.getVelocity())) {
 			MaxVelocity(p1, p2);
 		} else {
 			reflected(p1, p2, vf);
-		}
 
-		if (p1.getVelocity().isZero()) {
-			p1.setVelocity(vf);
-		} else if (p2.getVelocity().isZero()) {
-			p2.setVelocity(vf);
 		}
 
 	}
@@ -108,24 +108,27 @@ public class PhysicsEngine {
 	}
 
 	private void MaxVelocity(PhysicsObject p1, PhysicsObject p2) {
-		Vector3f direction1 = new Vector3f(p1.getVelocity());
-		Vector3f direction2 = new Vector3f(p2.getVelocity());
-		direction1.normalise();
-		direction2.normalise();
-		if (direction1.equls(direction2)) {
-			p1.setVelocity(p1.getVelocity().Max(p2.getVelocity()));
-			p2.setVelocity(p1.getVelocity().Max(p2.getVelocity()));
 
-		}
+		p1.setVelocity(p1.getVelocity().MaxVector(p2.getVelocity()));
+		p2.setVelocity(p2.getVelocity().MaxVector(p1.getVelocity()));
+
 	}
-	
-	private Vector3f Momentum(PhysicsObject p){
+
+	private Vector3f Momentum(PhysicsObject p) {
 		Vector3f momentum = new Vector3f();
 		momentum.x = p.getVelocity().x * p.getMass();
 		momentum.y = p.getVelocity().y * p.getMass();
 		momentum.z = p.getVelocity().z * p.getMass();
 		return momentum;
 	}
-	
+
+	private boolean SameDirection(Vector3f speed1, Vector3f speed2) {
+		Vector3f mul = new Vector3f();
+		mul = Vector3f.mul(speed2, speed1);
+		if (mul.x >= 0 && mul.y >= 0 && mul.z >= 0) {
+			return true;
+		}
+		return false;
+	}
 
 }

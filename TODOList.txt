@@ -10,6 +10,7 @@ load videos
 physics (gravite, terrain test) //player collision move
 //no collision on rotation aabb need to implement Separating Axis Theorem for 3d
 //need to define velocity on the entities and only the physics check collision
+//aabb rotation is working but need the 4 corners to make it accurate and need to pass the rotation on the update method
 optimization // use Profiling
 level generator 
 FBO common class

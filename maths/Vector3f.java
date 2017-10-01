@@ -376,12 +376,12 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 
 		return result;
 	}
-	// return the max values of the 2 vectors
-		public Vector3f Min(Vector3f other) {
-			
 
-			return new Vector3f(Math.min(this.x,other.x), Math.min(this.y,other.y), Math.min(this.z,other.z));
-		}
+	// return the max values of the 2 vectors
+	public Vector3f Min(Vector3f other) {
+
+		return new Vector3f(Math.min(this.x, other.x), Math.min(this.y, other.y), Math.min(this.z, other.z));
+	}
 
 	public float MaxValue() {
 		float max = 0;
@@ -428,11 +428,17 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 		ro.m02 = this.z;
 		Matrix4f.mul(matrix, ro, matrix);
 
-		return new Vector3f(matrix.m00,matrix.m01,matrix.m02);
+		return new Vector3f(matrix.m00, matrix.m01, matrix.m02);
 	}
 
 	public Vector3f mulscalar(float scalar) {
 		return new Vector3f(this.x * scalar, this.y * scalar, this.z * scalar);
+	}
+
+	public static Vector3f mul(Vector3f left, Vector3f right) {
+
+		return new Vector3f(left.x * right.x, left.y * right.y, left.z * right.z);
+
 	}
 
 }

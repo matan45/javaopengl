@@ -8,9 +8,11 @@ public class AABB extends Collider {
 	Vector3f center;
 	Vector3f halfwidths;
 	Vector3f rotation;
+	Layers layer;
 
 	public AABB(Vector3f center, Vector3f halfwidths, Layers layer) {
 		super(ColliderType.TYPE_AABB, layer);
+		this.layer = layer;
 		this.halfwidths = halfwidths;
 		updateCenter(center);
 
@@ -69,11 +71,11 @@ public class AABB extends Collider {
 	public void updateCenter(Vector3f center) {
 
 		this.center = center;
-
 		this.maxExtents = Vector3f.add(this.center, this.halfwidths, this.maxExtents);
 		this.minExtents = Vector3f.sub(this.center, this.halfwidths, this.minExtents);
-		this.maxExtents.y=this.maxExtents.y+this.halfwidths.y;
-		this.minExtents.y=this.minExtents.y+this.halfwidths.y;
+		this.maxExtents.y = this.maxExtents.y + this.halfwidths.y;
+		this.minExtents.y = this.minExtents.y + this.halfwidths.y;
+		
 
 	}
 
@@ -83,16 +85,17 @@ public class AABB extends Collider {
 	}
 
 	private void PositionAfterRotation() {
+
 		Vector3f maxsub = new Vector3f();
 		maxsub = Vector3f.sub(maxExtents, center, maxsub);
 		Vector3f maxro = new Vector3f();
-		maxro = maxsub.rotate(new Vector3f(0, 0, 90));
+		maxro = maxsub.rotate(this.rotation);
 		maxExtents = Vector3f.add(maxro, center, maxExtents);
 
 		Vector3f minsub = new Vector3f();
 		minsub = Vector3f.sub(minExtents, center, minsub);
 		Vector3f minro = new Vector3f();
-		minro = minsub.rotate(new Vector3f(0, 0, 90));
+		minro = minsub.rotate(this.rotation);
 		minExtents = Vector3f.add(minro, center, minExtents);
 
 	}
