@@ -8,11 +8,10 @@ public class AABB extends Collider {
 	Vector3f center;
 	Vector3f halfwidths;
 	Vector3f rotation;
-	Layers layer;
+
 
 	public AABB(Vector3f center, Vector3f halfwidths, Layers layer) {
 		super(ColliderType.TYPE_AABB, layer);
-		this.layer = layer;
 		this.halfwidths = halfwidths;
 		updateCenter(center);
 

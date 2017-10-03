@@ -60,7 +60,7 @@ public class PhysicsTest implements GameLogic {
 
 		Entity box = new Entity(
 				new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("box"))),
-				new Vector3f(25, 0, -20), -50, 14, 180, 0.5f);
+				new Vector3f(25, 0, -20), 0, 0, 0, 0.5f);
 		box.setX(OBJLoader.getOBJLength().getX());
 		box.setY(OBJLoader.getOBJLength().getY());
 		box.setZ(OBJLoader.getOBJLength().getZ());
@@ -80,32 +80,32 @@ public class PhysicsTest implements GameLogic {
 		b2 = new AABB(box2.getPosition(), new Vector3f(box2.getX() / 2, box2.getY() / 2, box2.getZ() / 2),
 				Layers.Physics_Layer);
 
-		PhysicsObject obj1 = new PhysicsObject(b1, new Vector3f(3.0f, 0.0f, 0.0f), 100);
-		PhysicsObject obj2 = new PhysicsObject(b2, new Vector3f(1.0f, 0.0f, 0.0f), 100);
+		PhysicsObject obj1 = new PhysicsObject(b1, new Vector3f(1.0f, 0.0f, 0.0f), 100);
+		PhysicsObject obj2 = new PhysicsObject(b2, new Vector3f(0.0f, 0.0f, 0.0f), 100);
 
 		physicsEngine.AddObject(obj1);
 		physicsEngine.AddObject(obj2);
 
 		Entity sphere = new Entity(new TexturedModel(OBJLoader.loadObjModel("ball", loader),
-				new ModelTexture(loader.loadTexture("earth"))), new Vector3f(5, 5, -20), 0, 0, 0, 1f);
+				new ModelTexture(loader.loadTexture("earth"))), new Vector3f(5, -7, -15), 0, 0, 0, 1f);
 		sphere.setX(OBJLoader.getOBJLength().getX());
 		sphere.setY(OBJLoader.getOBJLength().getY());
 		sphere.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(sphere);
 
 		Entity sphere2 = new Entity(new TexturedModel(OBJLoader.loadObjModel("ball", loader),
-				new ModelTexture(loader.loadTexture("earth"))), new Vector3f(5, -5, -20), 0, 0, 0, 1f);
+				new ModelTexture(loader.loadTexture("earth"))), new Vector3f(5, 5, -13), 0, 0, 0, 1f);
 		sphere2.setX(OBJLoader.getOBJLength().getX());
 		sphere2.setY(OBJLoader.getOBJLength().getY());
 		sphere2.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(sphere2);
 
 		PhysicsObject obj3 = new PhysicsObject(
-				new Sphere(sphere.getPosition(), sphere.getY() / 2, Layers.Physics_Layer),
-				new Vector3f(0.0f, -1.0f, 0.0f), 100);
+				new Sphere(sphere.getPosition(), sphere.getY()/2, Layers.Physics_Layer),
+				new Vector3f(0.0f, 2.0f, 0.0f), 100);
 		PhysicsObject obj4 = new PhysicsObject(
-				new Sphere(sphere2.getPosition(), sphere2.getY() / 2, Layers.Physics_Layer),
-				new Vector3f(0.0f, 0.0f, 0.0f), 10);
+				new Sphere(sphere2.getPosition(),sphere2.getY()/2, Layers.Physics_Layer),
+				new Vector3f(0.0f, 0.0f, 0.0f), 100);
 		physicsEngine.AddObject(obj3);
 		physicsEngine.AddObject(obj4);
 
@@ -142,10 +142,10 @@ public class PhysicsTest implements GameLogic {
 		renderer = new MasterRenderer(loader, camera);
 
 		physicsEngine.setCollision(new OnOverLaps() {
-
+		 
 			@Override
 			public void OnCollision(PhysicsObject p1, PhysicsObject p2) {
-
+				
 			}
 		});
 

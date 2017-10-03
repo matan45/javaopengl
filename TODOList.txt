@@ -5,17 +5,19 @@ save and load
 loading screen
 macro record  
 UI system+layers // 2 scroll bar and radio button and textbox and need to do hash map for the gui handler 
+3D UI need to add
 settings files
 load videos
 physics (gravite, terrain test) //player collision move
 //no collision on rotation aabb need to implement Separating Axis Theorem for 3d
 //need to define velocity on the entities and only the physics check collision
 //aabb rotation is working but need the 4 corners to make it accurate and need to pass the rotation on the update method
+//need to add id to collider
 optimization // use Profiling
 level generator 
 FBO common class
 music class do not make it static
-AI //need to map the terrain for walkable layer nav agent
+AI //need to map the terrain for walkable layer nav agent and to path finding Astar or Bfs
 
 
 3D:
@@ -32,6 +34,6 @@ terrain // need to do common abstract class need to add normals maps like entity
 terrain editor //mabe?
 clouds 
 entity //need to add specular maps to the normal entity 
-
 add cube map reflection
+
 need to refactoring the shaders class
