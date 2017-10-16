@@ -15,7 +15,7 @@ import texture.TerrainTexture;
 import texture.TerrainTexturePack;
 //for png height map terrain
 public class Terrain {
-	static final float SIZE = 800;
+	static final float SIZE = 1000;
 	static final float MAX_HEIGHT = 40;
 	static final float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 	float x;

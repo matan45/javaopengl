@@ -1,6 +1,7 @@
 package test;
 
 import aduio.PlayList;
+import game.Game;
 import game.PhysicsTest;
 import video.MediaPanel;
 import window.MasterWindow;

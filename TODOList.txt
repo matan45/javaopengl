@@ -5,7 +5,7 @@ save and load
 loading screen
 macro record  
 UI system+layers // 2 scroll bar and radio button and textbox and need to do hash map for the gui handler 
-3D UI need to add
+3D space UI need to add
 settings files
 load videos
 physics (gravite, terrain test) //player collision move
@@ -18,6 +18,7 @@ level generator
 FBO common class
 music class do not make it static
 AI //need to map the terrain for walkable layer nav agent and to path finding Astar or Bfs
+light add radius
 
 
 3D:
@@ -27,7 +28,7 @@ input text //need to change the const to uniform
 shadow // add shadow to normal and entity like the terrain and optimize it
 material
 water system //need to optimize it
-animation need to add
+animation need to add //dont work whit other dae filles need to make my own file whit the data from collada file to animated 
 lens Flare need to add
 weather system (rain ,snow)//extend particle system
 terrain // need to do common abstract class need to add normals maps like entity 
@@ -35,5 +36,6 @@ terrain editor //mabe?
 clouds 
 entity //need to add specular maps to the normal entity 
 add cube map reflection
+texture bug on ball models
 
 need to refactoring the shaders class

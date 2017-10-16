@@ -64,6 +64,7 @@ public class Music {
 	}
 	public static void unmute(){
 		Control.setValue(5.0f);
+		
 	}
 	
 	
