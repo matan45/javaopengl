@@ -10,12 +10,14 @@ import java.util.List;
 
 import maths.Vector2f;
 import maths.Vector3f;
+import renderer.Loader;
+import renderer.RawModel;
 
 public class OBJFileLoader {
 
 	static Vector3f OBJLength = new Vector3f();
 
-	public static ModelData loadOBJ(String objFileName) {
+	public static RawModel loadOBJ(String objFileName,Loader loader) {
 		FileReader isr = null;
 		File objFile = new File("src/resources/3D model/" + objFileName + ".obj");
 		try {
@@ -92,7 +94,8 @@ public class OBJFileLoader {
 		float furthest = convertDataToArrays(vertices, textures, normals, verticesArray, texturesArray, normalsArray);
 		int[] indicesArray = convertIndicesListToArray(indices);
 		ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray, furthest);
-		return data;
+		
+		return loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(),data.getIndices());
 	}
 
 	private static void processVertex(String[] vertex, List<Vertex> vertices, List<Integer> indices) {

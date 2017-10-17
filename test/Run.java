@@ -23,7 +23,7 @@ public class Run {
 		mainwin.Scrollinput(true);
 		mainwin.Mouseinput(true);
 		mainwin.Cursorinput(true);
-		mainwin.run(new PhysicsTest());
+		mainwin.run(new Game());
 		s.closePlayList();
 
 		

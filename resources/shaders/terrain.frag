@@ -28,14 +28,14 @@ const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 
 void main(void){
 
-	float mapSize = 800.0;
+	float mapSize = 2048.0;
 	float texelSize = 1.0 / mapSize;
 	float total =0.0;
 	
 	for(int x = -pcfCount ; x <= pcfCount ; x++){
 		for(int y = -pcfCount; y <=pcfCount; y++){
 			float objectNearestLight = texture(shadowMap, shadowCoords.xy + vec2(x,y) * texelSize).r;
-			if(shadowCoords.z > objectNearestLight){
+			if(shadowCoords.z > objectNearestLight+0.002){
 				total += 1.0;
 			}
 		}	

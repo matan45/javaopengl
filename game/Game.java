@@ -104,7 +104,7 @@ public class Game implements GameLogic {
 		terrains.add(terrain);
 
 		// UP TO 4 LIGHTS
-		Light light = new Light(new Vector3f(1000000, 150000, -100000), new Vector3f(1f, 1f, 1f));
+		Light light = new Light(new Vector3f(1000000, 150000, -100000), new Vector3f(2f, 2f, 2f));
 		lights.add(light);
 		Light light2 = new Light(new Vector3f(21, 0, -40), new Vector3f(10, 0, 0), new Vector3f(1f, 0.1f, 0.002f));
 		lights.add(light2);
@@ -206,6 +206,7 @@ public class Game implements GameLogic {
 		barrel.getModel().getTexture().setShineDamper(10);
 		barrel.getModel().getTexture().setReflectivity(0.5f);
 		barrel.getModel().getTexture().setSpecularMap(loader.loadTexture("barrelS"));
+		
 		entitys.add(barrel);
 
 		for (Entity entity : entitys) {

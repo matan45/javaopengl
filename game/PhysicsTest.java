@@ -16,12 +16,9 @@ import input.Keyinput;
 import input.Mouseinput;
 import maths.Vector3f;
 import maths.Vector4f;
-import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import renderer.Loader;
 import renderer.MasterRenderer;
-import renderer.OBJLoader;
-import renderer.RawModel;
 import terrains.Terrain;
 import texture.ModelTexture;
 import texture.TerrainTexture;
@@ -59,19 +56,19 @@ public class PhysicsTest implements GameLogic {
 		terrains.add(terrain);
 
 		Entity box = new Entity(
-				new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
+				new TexturedModel(OBJFileLoader.loadOBJ("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
 				new Vector3f(25, 0, -20), 0, 0, 0, 0.5f);
-		box.setX(OBJLoader.getOBJLength().getX());
-		box.setY(OBJLoader.getOBJLength().getY());
-		box.setZ(OBJLoader.getOBJLength().getZ());
+		box.setX(OBJFileLoader.getOBJLength().getX());
+		box.setY(OBJFileLoader.getOBJLength().getY());
+		box.setZ(OBJFileLoader.getOBJLength().getZ());
 		entitys.add(box);
 
 		Entity box2 = new Entity(
-				new TexturedModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box"))),
+				new TexturedModel(OBJFileLoader.loadOBJ("box", loader), new ModelTexture(loader.loadTexture("box"))),
 				new Vector3f(30, 0, -20), 0, 0, 0, 1f);
-		box2.setX(OBJLoader.getOBJLength().getX());
-		box2.setY(OBJLoader.getOBJLength().getY());
-		box2.setZ(OBJLoader.getOBJLength().getZ());
+		box2.setX(OBJFileLoader.getOBJLength().getX());
+		box2.setY(OBJFileLoader.getOBJLength().getY());
+		box2.setZ(OBJFileLoader.getOBJLength().getZ());
 		entitys.add(box2);
 
 		b1 = new AABB(box.getPosition(), new Vector3f(box.getX() / 2, box.getY() / 2, box.getZ() / 2),
@@ -86,27 +83,27 @@ public class PhysicsTest implements GameLogic {
 		physicsEngine.AddObject(obj1);
 		physicsEngine.AddObject(obj2);
 
-		Entity sphere = new Entity(new TexturedModel(OBJLoader.loadObjModel("ball", loader),
+		Entity sphere = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("ball", loader),
 				new ModelTexture(loader.loadTexture("earth"))), new Vector3f(5, -7, -15), 0, 0, 0, 1f);
-		sphere.setX(OBJLoader.getOBJLength().getX());
-		sphere.setY(OBJLoader.getOBJLength().getY());
-		sphere.setZ(OBJLoader.getOBJLength().getZ());
+		sphere.setX(OBJFileLoader.getOBJLength().getX());
+		sphere.setY(OBJFileLoader.getOBJLength().getY());
+		sphere.setZ(OBJFileLoader.getOBJLength().getZ());
 		entitys.add(sphere);
 		
 
-		Entity sphere2 = new Entity(new TexturedModel(OBJLoader.loadObjModel("ball", loader),
+		Entity sphere2 = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("ball", loader),
 				new ModelTexture(loader.loadTexture("sun"))), new Vector3f(5, 5, -13), 0, 0, 0, 1f);
-		sphere2.setX(OBJLoader.getOBJLength().getX());
-		sphere2.setY(OBJLoader.getOBJLength().getY());
-		sphere2.setZ(OBJLoader.getOBJLength().getZ());
+		sphere2.setX(OBJFileLoader.getOBJLength().getX());
+		sphere2.setY(OBJFileLoader.getOBJLength().getY());
+		sphere2.setZ(OBJFileLoader.getOBJLength().getZ());
 		sphere2.getModel().getTexture().setUseFakeLighting(true);
 		entitys.add(sphere2);
 		
-		Entity sphere3 = new Entity(new TexturedModel(OBJLoader.loadObjModel("ball", loader),
+		Entity sphere3 = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("ball", loader),
 				new ModelTexture(loader.loadTexture("moon"))), new Vector3f(10, 0, -50), 0, 0, 0, 1f);
-		sphere3.setX(OBJLoader.getOBJLength().getX());
-		sphere3.setY(OBJLoader.getOBJLength().getY());
-		sphere3.setZ(OBJLoader.getOBJLength().getZ());
+		sphere3.setX(OBJFileLoader.getOBJLength().getX());
+		sphere3.setY(OBJFileLoader.getOBJLength().getY());
+		sphere3.setZ(OBJFileLoader.getOBJLength().getZ());
 		entitys.add(sphere3);
 
 		PhysicsObject obj3 = new PhysicsObject(
@@ -122,43 +119,42 @@ public class PhysicsTest implements GameLogic {
 		physicsEngine.AddObject(obj4);
 		physicsEngine.AddObject(obj5);
 
-		Entity sphere4 = new Entity(new TexturedModel(OBJLoader.loadObjModel("earth", loader),
+		Entity sphere4 = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("earth", loader),
 				new ModelTexture(loader.loadTexture("earth"))), b1.getMinExtents(), 0, 0, 0, 0.001f);
-		sphere2.setX(OBJLoader.getOBJLength().getX());
-		sphere2.setY(OBJLoader.getOBJLength().getY());
-		sphere2.setZ(OBJLoader.getOBJLength().getZ());
+		sphere2.setX(OBJFileLoader.getOBJLength().getX());
+		sphere2.setY(OBJFileLoader.getOBJLength().getY());
+		sphere2.setZ(OBJFileLoader.getOBJLength().getZ());
 		entitys.add(sphere4);
 
-		Entity sphere5 = new Entity(new TexturedModel(OBJLoader.loadObjModel("earth", loader),
+		Entity sphere5 = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("earth", loader),
 				new ModelTexture(loader.loadTexture("earth"))), b1.getMaxExtents(), 0, 0, 0, 0.001f);
-		sphere2.setX(OBJLoader.getOBJLength().getX());
-		sphere2.setY(OBJLoader.getOBJLength().getY());
-		sphere2.setZ(OBJLoader.getOBJLength().getZ());
+		sphere2.setX(OBJFileLoader.getOBJLength().getX());
+		sphere2.setY(OBJFileLoader.getOBJLength().getY());
+		sphere2.setZ(OBJFileLoader.getOBJLength().getZ());
 		entitys.add(sphere5);
 
-		Entity sphere6 = new Entity(new TexturedModel(OBJLoader.loadObjModel("earth", loader),
+		Entity sphere6 = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("earth", loader),
 				new ModelTexture(loader.loadTexture("earth"))), b2.getMinExtents(), 0, 0, 0, 0.001f);
-		sphere2.setX(OBJLoader.getOBJLength().getX());
-		sphere2.setY(OBJLoader.getOBJLength().getY());
-		sphere2.setZ(OBJLoader.getOBJLength().getZ());
+		sphere2.setX(OBJFileLoader.getOBJLength().getX());
+		sphere2.setY(OBJFileLoader.getOBJLength().getY());
+		sphere2.setZ(OBJFileLoader.getOBJLength().getZ());
 		entitys.add(sphere6);
 
-		Entity sphere7 = new Entity(new TexturedModel(OBJLoader.loadObjModel("earth", loader),
+		Entity sphere7 = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("earth", loader),
 				new ModelTexture(loader.loadTexture("earth"))), b2.getMaxExtents(), 0, 0, 0, 0.001f);
-		sphere2.setX(OBJLoader.getOBJLength().getX());
-		sphere2.setY(OBJLoader.getOBJLength().getY());
-		sphere2.setZ(OBJLoader.getOBJLength().getZ());
+		sphere2.setX(OBJFileLoader.getOBJLength().getX());
+		sphere2.setY(OBJFileLoader.getOBJLength().getY());
+		sphere2.setZ(OBJFileLoader.getOBJLength().getZ());
 		entitys.add(sphere7);
 		
 		//fix the bug texture sphere
-		ModelData data=OBJFileLoader.loadOBJ("ball");
-		RawModel ball=loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(),data.getIndices());
-		Entity test=new Entity(new TexturedModel(ball, new ModelTexture(loader.loadTexture("sun"))), new Vector3f(9, 0, -50), 0, 0, 0, 1f);
+		
+		Entity test=new Entity(new TexturedModel(OBJFileLoader.loadOBJ("ball",loader), new ModelTexture(loader.loadTexture("sun"))), new Vector3f(9, 0, -50), 0, 0, 0, 1f);
 		entitys.add(test);
 		
 		camera = new Camera(null);
 		
-		Light light = new Light(new Vector3f(sphere2.getPosition().x, sphere2.getY()/2+sphere2.getPosition().y, sphere2.getPosition().z), new Vector3f(1f, 0f, 0f));
+		Light light = new Light(new Vector3f(sphere2.getPosition().x, sphere2.getY()/2+sphere2.getPosition().y, sphere2.getPosition().z), new Vector3f(2f, 2f, 2f));
 		Light light2 = new Light(sphere2.getPosition(), new Vector3f(2f, 2f, 2f));
 		lights.add(light);
 		lights.add(light2);
@@ -179,6 +175,7 @@ public class PhysicsTest implements GameLogic {
 	@Override
 	public void update() {
 		camera.FirstPerson();
+
 		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera, new Vector4f(0, -1, 0, 1000));
 
 		physicsEngine.Simulate(Window.getDeltaTime());
