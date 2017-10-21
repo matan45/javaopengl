@@ -8,6 +8,7 @@ public class GuiTexture3D {
 	Vector3f scale;
 	Vector3f rotation;
 	boolean transparent = false;
+	boolean bothsides = false;
 
 	public GuiTexture3D(int texture, Vector3f position, Vector3f scale, Vector3f rotation) {
 		this.texture = texture;
@@ -63,5 +64,14 @@ public class GuiTexture3D {
 	public void setTransparent(boolean transparent) {
 		this.transparent = transparent;
 	}
+
+	public boolean isBothsides() {
+		return bothsides;
+	}
+
+	public void setBothsides(boolean bothsides) {
+		this.bothsides = bothsides;
+	}
 	
+
 }

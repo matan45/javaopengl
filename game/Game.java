@@ -255,8 +255,9 @@ public class Game implements GameLogic {
 				button.setRotation(new Vector2f(0, 0));
 			}
 		});
-		
+		//3D GuiTexture
 		GuiTexture3D test=new GuiTexture3D(loader.loadTexture("wolf"), new Vector3f(53, 2, -46), new Vector3f(10, 10, 10), new Vector3f());
+		test.setBothsides(true);
 		gui3d.add(test);
 		
 		WindowGui win = new WindowGui(loader.loadTexture("gui/windowgui"), new Vector2f(-0.7f, -0.7f),

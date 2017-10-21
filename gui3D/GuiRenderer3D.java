@@ -23,7 +23,7 @@ public class GuiRenderer3D {
 		shader = new GuiShader3D();
 	}
 
-	public void render(List<GuiTexture3D> guis,Matrix4f ProjectionMatrix,Camera camera) {
+	public void render(List<GuiTexture3D> guis, Matrix4f ProjectionMatrix, Camera camera) {
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
@@ -34,6 +34,10 @@ public class GuiRenderer3D {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			else
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			if (gui.isBothsides())
+				GL11.glDisable(GL11.GL_CULL_FACE);// render both sides
+			else
+				GL11.glEnable(GL11.GL_CULL_FACE);
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTexture());
 			Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale(), gui.getRotation());
@@ -52,5 +56,5 @@ public class GuiRenderer3D {
 	public void cleanUp() {
 		shader.cleanUp();
 	}
-	
+
 }

@@ -19,7 +19,7 @@ FBO common class
 music class do not make it static
 AI //need to map the terrain for walkable layer nav agent and to path finding Astar or Bfs
 light add radius
-
+objloader for normal and specular mps no need different loaders
 
 3D:
 day and night system //have time system just need to update you sky box and print to the gui text
