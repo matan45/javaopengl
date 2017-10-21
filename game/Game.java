@@ -16,6 +16,8 @@ import entities.Entity;
 import entities.Light;
 import entities.Player;
 import fontRendering.TextMaster;
+import gui3D.GuiRenderer3D;
+import gui3D.GuiTexture3D;
 import guis.GuiHandler;
 import guis.GuiRenderer;
 import guis.button.Button;
@@ -57,6 +59,7 @@ public class Game implements GameLogic {
 
 	MasterRenderer renderer;
 	GuiRenderer guiRenderer;
+	GuiRenderer3D guiRenderer3d;
 
 	WaterRenderer waterRenderer;
 	WaterShader waterShader;
@@ -68,6 +71,7 @@ public class Game implements GameLogic {
 	List<Terrain> terrains = new ArrayList<>();
 	List<WaterTile> waters = new ArrayList<>();
 	List<Source> audios = new ArrayList<>();
+	List<GuiTexture3D> gui3d = new ArrayList<>();
 
 	Camera camera;
 
@@ -224,6 +228,7 @@ public class Game implements GameLogic {
 		// INIT RENDERER
 		renderer = new MasterRenderer(loader, camera);
 		guiRenderer = new GuiRenderer(loader);
+		guiRenderer3d=new GuiRenderer3D(loader);
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
 
 		// GUI
@@ -250,7 +255,10 @@ public class Game implements GameLogic {
 				button.setRotation(new Vector2f(0, 0));
 			}
 		});
-
+		
+		GuiTexture3D test=new GuiTexture3D(loader.loadTexture("wolf"), new Vector3f(53, 2, -46), new Vector3f(10, 10, 10), new Vector3f());
+		gui3d.add(test);
+		
 		WindowGui win = new WindowGui(loader.loadTexture("gui/windowgui"), new Vector2f(-0.7f, -0.7f),
 				new Vector2f(0.3f, 0.3f), new Vector2f(0, 0), new Button(loader.loadTexture("gui/xxx"),
 						new Vector2f(0.9f, 0.9f), new Vector2f(0.05f, 0.05f), new Vector2f(0, 0), false));
@@ -322,11 +330,13 @@ public class Game implements GameLogic {
 		renderer.renderShadowMap(entitys, lights.get(0));
 
 		ParticleMaster.update(camera);
-
+		
+		
 		watercode();
 		multisampleFbo.bindFrameBuffer();
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera, new Vector4f(0, -1, 0, 1000));
+		guiRenderer3d.render(gui3d,renderer.getProjectionMatrix(),camera);
 		waterRenderer.render(waters, camera, lights.get(0));
 		ParticleMaster.renderParticles(camera);
 		multisampleFbo.unbindFrameBuffer();
@@ -334,7 +344,6 @@ public class Game implements GameLogic {
 		multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1,outputFbo2);
 		PostProcessing.doPostProcessing(outputFbo.getColourTexture(),outputFbo2.getColourTexture());
 		
-
 		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 		if (terrainPoint != null && Mouseinput.mouseButtonDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_1)) {
 			System.out.println(terrainPoint);
@@ -379,6 +388,7 @@ public class Game implements GameLogic {
 		waterShader.cleanUp();
 		renderer.cleanUp();
 		guiRenderer.cleanUp();
+		guiRenderer3d.cleanUp();
 		loader.cleanUp();
 		AudioMaster.cleanUp();
 		GuiHandler.cleanup();
