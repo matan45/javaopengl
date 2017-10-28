@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import aduio.AudioMaster;
+import aduio.PlayList;
 import aduio.Source;
 import entities.AABB;
 import entities.Camera;
@@ -72,6 +73,9 @@ public class Game implements GameLogic {
 	List<WaterTile> waters = new ArrayList<>();
 	List<Source> audios = new ArrayList<>();
 	List<GuiTexture3D> gui3d = new ArrayList<>();
+	
+	PlayList s = PlayList.getInstance();
+	
 
 	Camera camera;
 
@@ -82,6 +86,7 @@ public class Game implements GameLogic {
 	MousePicker picker;
 
 	public void preupdate() {
+		s.start();
 		// INIT OPENAL
 		AudioMaster.init();
 		AudioMaster.setListenerData(0, 0, 0);
@@ -91,7 +96,6 @@ public class Game implements GameLogic {
 		jungle.setVolume(0.3f);
 		jungle.setLooping(true);
 		audios.add(jungle);
-
 		Source Dragon = new Source(0, 0, 0);
 		Dragon.setBuffer(AudioMaster.loadSound("Dragon Roaring"));
 		audios.add(Dragon);
@@ -379,6 +383,7 @@ public class Game implements GameLogic {
 	}
 
 	public void onclose() {
+		s.closePlayList();
 		TextMaster.cleanUp();
 		ParticleMaster.cleanup();
 		multisampleFbo.cleanUp();
