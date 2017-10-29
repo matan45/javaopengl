@@ -3,6 +3,10 @@ package video;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Label;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -23,9 +27,10 @@ public class MediaPanel {
 	static String filename = "";
 	static String location = "src/resources/video/";
 	static String icon = "src/resources/icons/Video.png";
+	static EmbeddedMediaPlayer mediaPlayer;
 	static JFrame frame;
-	static volatile long size;
-	static volatile boolean running;
+	static boolean running = false;
+	static MediaPlayerFactory mediaPlayerFactory;
 
 	public static void start(String file) {
 		filename = file;
@@ -45,10 +50,9 @@ public class MediaPanel {
 		LibXUtil.initialise();
 	}
 
-
 	private MediaPanel() {
 		frame = new JFrame("VIDEO");
-		frame.setLocation(100, 100);
+		frame.setLocation(300, 50);
 		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -57,19 +61,24 @@ public class MediaPanel {
 
 		Canvas c = new Canvas();
 
-		c.setBackground(Color.black);
+		c.setBackground(Color.BLACK);
 		JPanel p = new JPanel();
 		p.setLayout(new BorderLayout());
-
 		p.add(c, BorderLayout.CENTER);
+		Label text = new Label("PASS F TO SKIP...");
+		text.setBackground(Color.BLACK);
+		text.setFont(new Font("Serif", Font.ITALIC|Font.BOLD, 40));
+		text.setForeground(Color.WHITE);
+		p.add(text, BorderLayout.SOUTH);
 		frame.add(p, BorderLayout.CENTER);
 
-		MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory();
+		mediaPlayerFactory = new MediaPlayerFactory();
 
-		EmbeddedMediaPlayer mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer(new Win32FullScreenStrategy(frame));
+		mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer(new Win32FullScreenStrategy(frame));
 		mediaPlayer.setVideoSurface(mediaPlayerFactory.newVideoSurface(c));
+		mediaPlayer.setAspectRatio("8:3");
 
-		//mediaPlayer.toggleFullScreen();
+		// mediaPlayer.toggleFullScreen();
 
 		mediaPlayer.setEnableMouseInputHandling(false);
 
@@ -79,29 +88,46 @@ public class MediaPanel {
 
 		mediaPlayer.play();
 
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		frame.addKeyListener(new KeyListener() {
 
-		size = mediaPlayer.getLength();
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyChar() == 'f' || e.getKeyChar() == 'F') {
+					mediaPlayer.stop();
+				}
+
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+
+			}
+		});
 
 	}
 
-	public static void WaitToEnd() {
-
-		try {
-			while (size == 0) {
-				Thread.sleep(100);
+	public static boolean isDone() {
+		if (mediaPlayer == null) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			Thread.sleep(size);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
-		frame.dispose();
-
+		if (!mediaPlayer.isPlaying()) {
+			frame.dispose();
+			mediaPlayer.release();
+			mediaPlayerFactory.release();
+			running = false;
+		}
+		return !running;
 	}
 
 }

@@ -46,6 +46,7 @@ public class Video {
 				fis = new FileInputStream(new File(mp3));
 				playMP3 = new Player(fis);
 			}
+
 			FrameGrab grab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(file));
 			Picture picture;
 
@@ -67,7 +68,7 @@ public class Video {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+	
 	}
 
 	private ByteBuffer convertImageData(BufferedImage image) {
@@ -129,9 +130,11 @@ public class Video {
 
 				}
 			}).start();
+
 		}
 
 		try {
+
 			if (i < frames.size()) {
 				frame = frames.get(i);
 				Thread.sleep((long) (frameRate * 1.318));
@@ -147,6 +150,7 @@ public class Video {
 			Done = true;
 		}
 	}
+	
 
 	private void cleanup() {
 		guiRenderer.cleanUp();

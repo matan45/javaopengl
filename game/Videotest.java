@@ -22,7 +22,7 @@ public class Videotest implements GameLogic {
 
 	@Override
 	public void update() {
-
+		
 		v.start();
 		if (v.isDone()) {
 			WindowManager.getWindow("main").run(new Game());

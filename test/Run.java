@@ -1,6 +1,6 @@
 package test;
 
-import game.Videotest;
+import game.IntoVideo;
 import window.MasterWindow;
 import window.Window;
 
@@ -14,7 +14,7 @@ public class Run {
 		mainwin.Scrollinput(true);
 		mainwin.Mouseinput(true);
 		mainwin.Cursorinput(true);
-		mainwin.run(new Videotest());
+		mainwin.run(new IntoVideo());
 
 	}
 
