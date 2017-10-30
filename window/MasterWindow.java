@@ -39,7 +39,6 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
-import game.GameLogic;
 import input.Keyinput;
 import input.MouseCursor;
 import input.MouseScroll;
@@ -95,6 +94,7 @@ public abstract class MasterWindow {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		
+		
 		//anti aliasing
 		glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
 		
@@ -144,7 +144,7 @@ public abstract class MasterWindow {
 		glfwShowWindow(window);
 	}
 
-	public abstract void run(GameLogic c);
+	public abstract void run();
 
 	public void setHide() {
 		GLFW.glfwHideWindow(window);

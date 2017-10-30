@@ -21,6 +21,9 @@ AI //need to map the terrain for walkable layer nav agent and to path finding As
 light add radius
 objloader for normal and specular mps no need different loaders
 
+bug on level manger render multi time the problem was calling the window.run multi times on the stuck calls
+try to do items to render and audio whit interface
+
 3D:
 day and night system //have time system just need to update you sky box and print to the gui text
 fog//need to add uniform variables for the const 

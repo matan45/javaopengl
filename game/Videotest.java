@@ -4,7 +4,6 @@ import guis.GuiRenderer;
 import maths.Vector2f;
 import openglvideo.Video;
 import renderer.Loader;
-import window.WindowManager;
 
 public class Videotest implements GameLogic {
 	Loader loader = new Loader();
@@ -25,15 +24,22 @@ public class Videotest implements GameLogic {
 		
 		v.start();
 		if (v.isDone()) {
-			WindowManager.getWindow("main").run(new Game());
+			
 		}
 
 	}
 
+
+	@Override
+	public void fixedupdate() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	@Override
 	public void onclose() {
-		System.out.println("hit");// not call
-		// need to do level manager like the window
+		guiRenderer.cleanUp();
+		loader.cleanUp();
 	}
 
 }

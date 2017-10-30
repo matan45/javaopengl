@@ -16,13 +16,18 @@ public class IntoVideo implements GameLogic {
 	public void update() {
 		if(MediaPanel.isDone()){
 			WindowManager.getWindow("main").setRestore();
-			WindowManager.getWindow("main").run(new Videotest());
+			
 		}
 		
 	}
 
 	@Override
 	public void onclose() {
+		
+	}
+
+	@Override
+	public void fixedupdate() {
 		// TODO Auto-generated method stub
 		
 	}

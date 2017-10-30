@@ -1,7 +1,8 @@
 package test;
 
-import game.IntoVideo;
+import game.Game;
 import window.MasterWindow;
+import window.SceneManager;
 import window.Window;
 
 public class Run {
@@ -14,7 +15,8 @@ public class Run {
 		mainwin.Scrollinput(true);
 		mainwin.Mouseinput(true);
 		mainwin.Cursorinput(true);
-		mainwin.run(new IntoVideo());
+		SceneManager.init(new Game());
+		mainwin.run();
 
 	}
 

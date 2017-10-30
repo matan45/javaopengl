@@ -52,6 +52,7 @@ import water.WaterFrameBuffers;
 import water.WaterRenderer;
 import water.WaterShader;
 import water.WaterTile;
+import window.SceneManager;
 import window.WindowManager;
 
 public class Game implements GameLogic {
@@ -376,6 +377,7 @@ public class Game implements GameLogic {
 			}
 			particlesystem.generateParticles(new Vector3f(entitys.get(11).getPosition()));
 		}
+		
 
 		Mouseinput.resetMouse();
 		Keyinput.resetKeyboard();
@@ -420,6 +422,18 @@ public class Game implements GameLogic {
 		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera,
 				new Vector4f(0, -1, 0, waters.get(0).getHeight()));
 		buffers.unbindCurrentFrameBuffer();
+	}
+
+	@Override
+	public void fixedupdate() {
+		
+		
+		if(Keyinput.keyDown(GLFW.GLFW_KEY_L)){
+			Keyinput.resetKeyboard();
+			SceneManager.changeScene(new PhysicsTest());
+		}
+		
+		
 	}
 
 }

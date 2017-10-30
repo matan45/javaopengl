@@ -5,20 +5,19 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-import game.GameLogic;
-
 public class Window extends MasterWindow {
 	String windowkey;
 	static float deltaTime;
-
+	int ticks = 0;
+	int fixframe = 2;
+	
 	public Window(int sizeX, int sizeY, String title, String windowkey) {
 		super(sizeX, sizeY, title);
 		this.windowkey = windowkey;
 		WindowManager.addWindow(windowkey, this);
 	}
 
-	public void run(GameLogic c) {
-
+	public void run() {
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
 		// LWJGL detects the context that is current in the current thread,
@@ -34,10 +33,10 @@ public class Window extends MasterWindow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//anti aliasing
+		// anti aliasing
 		GL11.glEnable(GL13.GL_MULTISAMPLE);
-
-		c.preupdate();
+		
+		SceneManager.frist();//for the first time
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
@@ -46,11 +45,16 @@ public class Window extends MasterWindow {
 		while (!GLFW.glfwWindowShouldClose(window)) {
 			// clear the frame buffer
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-			
-			long  t  = System.nanoTime();
-			deltaTime = (float)((t - time) / 1000000000.0);
-            time = t;
 
+			if ((ticks % fixframe) == 0) {
+				SceneManager.fixedupdate();
+			}
+
+			long t = System.nanoTime();
+			deltaTime = (float) ((t - time) / 1000000000.0);
+			time = t;
+
+			ticks++;
 
 			if (this.Width != prew || this.Height != preh) {
 				GL11.glViewport(-1, 1, this.Width, this.Height);
@@ -58,7 +62,7 @@ public class Window extends MasterWindow {
 				preh = this.Height;
 			}
 
-			c.update();
+			SceneManager.update();
 
 			GLFW.glfwSwapBuffers(window); // swap the color buffers
 
@@ -67,12 +71,13 @@ public class Window extends MasterWindow {
 			GLFW.glfwPollEvents();
 		}
 
-		c.onclose();
 		Windowclose();
 	}
 
 	private void Windowclose() {
+		SceneManager.close();//for the final time
 		WindowManager.removeWindow(windowkey);
+		WindowManager.close();
 		super.close();
 	}
 
@@ -80,6 +85,12 @@ public class Window extends MasterWindow {
 		return deltaTime;
 	}
 
-	
+	public int getFixframe() {
+		return fixframe;
+	}
+
+	public void setFixframe(int fixframe) {
+		this.fixframe = fixframe;
+	}
 
 }
