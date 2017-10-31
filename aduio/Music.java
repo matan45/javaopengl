@@ -24,7 +24,7 @@ public class Music {
 				clip = AudioSystem.getClip();
 				clip.open(audioIn);
 				Control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-				clip.start();
+				//clip.start();
 				if (loop)
 					clip.loop(Clip.LOOP_CONTINUOUSLY);
 
@@ -36,6 +36,13 @@ public class Music {
 		} catch (UnsupportedAudioFileException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public static void Play(){
+		if(clip != null){
+			stop();
+			clip.start();
 		}
 	}
 
@@ -58,7 +65,7 @@ public class Music {
 	}
 
 	public static void close() {
-		clip.stop();
+		stop();
 		clip.close();
 	}
 
@@ -73,6 +80,8 @@ public class Music {
 	public static Clip getClip() {
 		return clip;
 	}
-	
+	public static void stop(){
+		clip.stop();
+	}
 
 }

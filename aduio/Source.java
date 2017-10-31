@@ -62,11 +62,22 @@ public class Source {
 	}
 
 	public void setPitch(float pitch) {
-		AL10.alSourcef(sourceID, AL10.AL_POSITION, pitch);
+		AL10.alSourcef(sourceID, AL10.AL_PITCH, pitch);
 	}
 
 	public void setPosition(Vector3f position) {
 		AL10.alSource3f(sourceID, AL10.AL_POSITION, position.x, position.y, position.z);
 	}
+	
+	public void setOrientation(Vector3f at, Vector3f up) {
+        float[] data = new float[6];
+        data[0] = at.x;
+        data[1] = at.y;
+        data[2] = at.z;
+        data[3] = up.x;
+        data[4] = up.y;
+        data[5] = up.z;
+        AL10.alListenerfv(AL10.AL_ORIENTATION, data);
+    }
 
 }

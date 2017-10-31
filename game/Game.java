@@ -8,6 +8,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+import Animated2D.Image2D;
 import aduio.AudioMaster;
 import aduio.PlayList;
 import aduio.Source;
@@ -31,6 +32,7 @@ import maths.Vector2f;
 import maths.Vector3f;
 import maths.Vector4f;
 import normalMappingObjConverter.NormalMappedObjLoader;
+import objConverter.OBJFileLoader;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
 import particles.ParticleTexture;
@@ -74,20 +76,26 @@ public class Game implements GameLogic {
 	List<WaterTile> waters = new ArrayList<>();
 	List<Source> audios = new ArrayList<>();
 	List<GuiTexture3D> gui3d = new ArrayList<>();
-	
+
 	PlayList s = PlayList.getInstance();
-	
 
 	Camera camera;
 
-	Fbo multisampleFbo, outputFbo,outputFbo2;
+	Fbo multisampleFbo, outputFbo, outputFbo2;
 
 	ParticleSystem particlesystem;
 
 	MousePicker picker;
+	
+	Image2D im;
 
 	public void preupdate() {
+		// PlayList
+		s.addsong("Cassiopea");
+		s.addsong("Suns And Stars");
+		s.addsong("Everdream");
 		s.start();
+		
 		// INIT OPENAL
 		AudioMaster.init();
 		AudioMaster.setListenerData(0, 0, 0);
@@ -210,12 +218,12 @@ public class Game implements GameLogic {
 		player.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(player);
 
-		Entity barrel = new Entity(new TexturedModel(OBJLoader.loadObjModel("barrel", loader),
+		Entity barrel = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("barrel", loader),
 				new ModelTexture(loader.loadTexture("barrel"))), new Vector3f(15, 0, -20), 0, 0, 0, 0.2f);
 		barrel.getModel().getTexture().setShineDamper(10);
 		barrel.getModel().getTexture().setReflectivity(0.5f);
 		barrel.getModel().getTexture().setSpecularMap(loader.loadTexture("barrelS"));
-		
+
 		entitys.add(barrel);
 
 		for (Entity entity : entitys) {
@@ -233,7 +241,7 @@ public class Game implements GameLogic {
 		// INIT RENDERER
 		renderer = new MasterRenderer(loader, camera);
 		guiRenderer = new GuiRenderer(loader);
-		guiRenderer3d=new GuiRenderer3D(loader);
+		guiRenderer3d = new GuiRenderer3D(loader);
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
 
 		// GUI
@@ -260,11 +268,12 @@ public class Game implements GameLogic {
 				button.setRotation(new Vector2f(0, 0));
 			}
 		});
-		//3D GuiTexture
-		GuiTexture3D test=new GuiTexture3D(loader.loadTexture("wolf"), new Vector3f(53, 2, -46), new Vector3f(10, 10, 10), new Vector3f());
+		// 3D GuiTexture
+		GuiTexture3D test = new GuiTexture3D(loader.loadTexture("wolf"), new Vector3f(53, 10, -46),
+				new Vector3f(10, 10, 0), new Vector3f());
 		test.setBothsides(true);
 		gui3d.add(test);
-		
+
 		WindowGui win = new WindowGui(loader.loadTexture("gui/windowgui"), new Vector2f(-0.7f, -0.7f),
 				new Vector2f(0.3f, 0.3f), new Vector2f(0, 0), new Button(loader.loadTexture("gui/xxx"),
 						new Vector2f(0.9f, 0.9f), new Vector2f(0.05f, 0.05f), new Vector2f(0, 0), false));
@@ -326,6 +335,8 @@ public class Game implements GameLogic {
 		outputFbo2 = new Fbo(WindowManager.getWindow("main").getWidth(), WindowManager.getWindow("main").getHeight(),
 				Fbo.DEPTH_TEXTURE);
 		PostProcessing.init(loader);
+		
+		im=new Image2D("src/resources/2DAnimation/", 10, guiRenderer, new Vector2f(0.8f,-0.8f), new Vector2f(0.2f, 0.2f), new Vector2f(), false);
 	}
 
 	public void update() {
@@ -336,20 +347,19 @@ public class Game implements GameLogic {
 		renderer.renderShadowMap(entitys, lights.get(0));
 
 		ParticleMaster.update(camera);
-		
-		
+
 		watercode();
 		multisampleFbo.bindFrameBuffer();
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera, new Vector4f(0, -1, 0, 1000));
-		guiRenderer3d.render(gui3d,renderer.getProjectionMatrix(),camera);
+		guiRenderer3d.render(gui3d, renderer.getProjectionMatrix(), camera);
 		waterRenderer.render(waters, camera, lights.get(0));
 		ParticleMaster.renderParticles(camera);
 		multisampleFbo.unbindFrameBuffer();
-		multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0,outputFbo);
-		multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1,outputFbo2);
-		PostProcessing.doPostProcessing(outputFbo.getColourTexture(),outputFbo2.getColourTexture());
-		
+		multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
+		multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, outputFbo2);
+		PostProcessing.doPostProcessing(outputFbo.getColourTexture(), outputFbo2.getColourTexture());
+
 		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 		if (terrainPoint != null && Mouseinput.mouseButtonDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_1)) {
 			System.out.println(terrainPoint);
@@ -359,6 +369,7 @@ public class Game implements GameLogic {
 		}
 
 		guiRenderer.render(GuiHandler.getGuis());
+		im.start();
 		GuiHandler.update();
 		TextMaster.render();
 
@@ -367,8 +378,7 @@ public class Game implements GameLogic {
 		entitys.get(12).increaseRotation(0, 1, 0);
 		normalMapentitys.get(0).increaseRotation(0, 1, 0);
 		((Player) entitys.get(11)).move(terrains.get(0));
-		((Player)entitys.get(11)).colliding(entitys.get(0));
-		
+		((Player) entitys.get(11)).colliding(entitys.get(0));
 
 		if (AABB.collides(entitys.get(11), entitys.get(0))) {
 			if (!audios.get(1).isPlaying()) {
@@ -377,10 +387,6 @@ public class Game implements GameLogic {
 			}
 			particlesystem.generateParticles(new Vector3f(entitys.get(11).getPosition()));
 		}
-		
-
-		Mouseinput.resetMouse();
-		Keyinput.resetKeyboard();
 
 	}
 
@@ -426,14 +432,11 @@ public class Game implements GameLogic {
 
 	@Override
 	public void fixedupdate() {
-		
-		
-		if(Keyinput.keyDown(GLFW.GLFW_KEY_L)){
-			Keyinput.resetKeyboard();
+
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_L)) {
 			SceneManager.changeScene(new PhysicsTest());
 		}
-		
-		
+
 	}
 
 }

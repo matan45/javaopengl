@@ -15,7 +15,6 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import input.Keyinput;
-import input.Mouseinput;
 import maths.Vector3f;
 import maths.Vector4f;
 import objConverter.OBJFileLoader;
@@ -178,11 +177,9 @@ public class PhysicsTest implements GameLogic {
 
 		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera, new Vector4f(0, -1, 0, 1000));
 		if(Keyinput.keyDown(GLFW.GLFW_KEY_K)){
-			Keyinput.resetKeyboard();
 			SceneManager.changeScene(new Game());
 		}
-		Mouseinput.resetMouse();
-		Keyinput.resetKeyboard();
+		
 	}
 
 	@Override

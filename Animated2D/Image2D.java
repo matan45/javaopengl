@@ -4,6 +4,7 @@ import static org.lwjgl.stb.STBImage.stbi_failure_reason;
 import static org.lwjgl.stb.STBImage.stbi_info_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -24,7 +25,8 @@ import utill.IOUtil;
 //need to test
 public class Image2D {
 	double delay = 0;
-	int i = 0;
+	int index = 0;
+	int tick = 0;
 	GuiTexture frame;
 	GuiRenderer guiRenderer;
 	boolean loop;
@@ -32,40 +34,44 @@ public class Image2D {
 	List<GuiTexture> frames = new ArrayList<>();
 	List<Integer> textures = new ArrayList<Integer>();
 
-	public Image2D(String folderpath, int numberofFrame, double delay, GuiRenderer guiRenderer, Vector2f position,
-			Vector2f scale, Vector2f rotation, boolean loop) {
+	// folder path that contain images files only
+	public Image2D(String folderpath, double delay, GuiRenderer guiRenderer, Vector2f position, Vector2f scale,
+			Vector2f rotation, boolean loop) {
 		this.loop = loop;
 		this.delay = delay;
 		this.guiRenderer = guiRenderer;
 		Done = false;
+		File folder = new File(folderpath);
+		File[] listOfFiles = folder.listFiles();
 
-		for (int i = 0; i < numberofFrame; i++) {
-			frames.add(new GuiTexture(loadTexture(folderpath + i), position, scale, rotation));
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile())
+				frames.add(
+						new GuiTexture(loadTexture(folderpath + listOfFiles[i].getName()), position, scale, rotation));
 		}
+		frame = frames.get(0);
 
 	}
 
-	public void start(double deltatime) {
-		i++;
+	public void start() {
+		if (!Done) {
+			tick++;
 
-		try {
-
-			if (i < frames.size()) {
-				frame = frames.get(i);
-				Thread.sleep((long) (delay * deltatime));
+			if ((tick % delay == 0) && (index < frames.size())) {
+				frame = frames.get(index);
+				index++;
+				tick = 0;
 			}
 
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+			guiRenderer.render(frame);
 
-		guiRenderer.render(frame);
-		if (i == frames.size() && !loop) {
-			cleanup();
-			Done = true;
-		}
-		if (i == frames.size() && loop) {
-			i = 0;
+			if (index == frames.size() && !loop) {
+				cleanup();
+				Done = true;
+			}
+			if (index == frames.size() && loop) {
+				index = 0;
+			}
 		}
 	}
 
@@ -73,7 +79,7 @@ public class Image2D {
 		ByteBuffer imageBuffer;
 		ByteBuffer image;
 		try {
-			imageBuffer = IOUtil.ioResourceToByteBuffer(fileName + ".png", 8 * 1024);
+			imageBuffer = IOUtil.ioResourceToByteBuffer(fileName, 8 * 1024);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -124,7 +130,6 @@ public class Image2D {
 	}
 
 	private void cleanup() {
-		guiRenderer.cleanUp();
 		for (int texture : textures) {
 			GL11.glDeleteTextures(texture);
 		}

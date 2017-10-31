@@ -13,11 +13,13 @@ public class PlayList implements Runnable {
 	@Override
 	public void run() {
 		int index=-1;
-		Music.create("Silence", false);
+		Music.create("Silence", false);//needed for init the clip
+		Music.Play();
 		while (running) {
 			if(Music.isDone()){
 				index++;
 				Music.create(songlist.get(index), false);
+				Music.Play();
 				if(songlist.size()==index)
 					index=-1;
 			}
@@ -40,12 +42,13 @@ public class PlayList implements Runnable {
 
 	public void start() {
 		
-		songlist.add("Cassiopea");
-		songlist.add("Suns And Stars");
-		songlist.add("Everdream");
-		
 		running = true;
 		t = new Thread(this);
 		t.start();
 	}
+	
+	public void addsong(String song){
+		songlist.add(song);
+	}
+	
 }

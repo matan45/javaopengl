@@ -5,6 +5,9 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
+import input.Keyinput;
+import input.Mouseinput;
+
 public class Window extends MasterWindow {
 	String windowkey;
 	static float deltaTime;
@@ -48,6 +51,7 @@ public class Window extends MasterWindow {
 
 			if ((ticks % fixframe) == 0) {
 				SceneManager.fixedupdate();
+				ticks=0;//prevent overflow int
 			}
 
 			long t = System.nanoTime();
@@ -55,6 +59,7 @@ public class Window extends MasterWindow {
 			time = t;
 
 			ticks++;
+				
 
 			if (this.Width != prew || this.Height != preh) {
 				GL11.glViewport(-1, 1, this.Width, this.Height);
@@ -63,6 +68,9 @@ public class Window extends MasterWindow {
 			}
 
 			SceneManager.update();
+			
+			Mouseinput.resetMouse();
+			Keyinput.resetKeyboard();
 
 			GLFW.glfwSwapBuffers(window); // swap the color buffers
 
