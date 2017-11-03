@@ -115,7 +115,7 @@ public class MediaPanel {
 	public static boolean isDone() {
 		if (mediaPlayer == null) {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -45,65 +45,6 @@ public class Camera {
 		return roll;
 	}
 
-	public void FirstPerson() {
-
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_R)) {
-			position = new Vector3f(5, 8, -3);
-			pitch = 14.0f;
-			yaw = 36.0f;
-			roll = 0;
-		}
-
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_X))
-			roll--;
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_Z))
-			roll++;
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_C))
-			roll = 0;
-
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
-			position.y -= (float) (Math.cos(-yaw * Math.PI / 180) * speed);
-
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_SPACE))
-			position.y += (float) (Math.cos(-yaw * Math.PI / 180) * speed);
-
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_A))
-			position.x += (float) (Math.sin((-yaw - 90) * Math.PI / 180) * speed);
-
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_D))
-			position.x += (float) (Math.sin((-yaw + 90) * Math.PI / 180) * speed);
-
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_S))
-			position.z += (float) (Math.cos(-yaw * Math.PI / 180) * speed);
-
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_W))
-			position.z -= (float) (Math.cos(-yaw * Math.PI / 180) * speed);
-
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_Q))
-			yaw--;
-
-		if (Keyinput.keyDown(GLFW.GLFW_KEY_E))
-			yaw++;
-
-		MouseScroll.setS(new Scroll() {
-
-			@Override
-			public void ScrollUp(double speed) {
-				if (pitch < 70 && speed >= 0)
-					pitch += speed;
-
-			}
-
-			@Override
-			public void ScrollDown(double speed) {
-				if (pitch > -70 && speed < 0)
-					pitch += speed;
-
-			}
-		});
-
-	}
-
 	private void calculateZoom() {
 		MouseScroll.setS(new Scroll() {
 
@@ -174,4 +115,80 @@ public class Camera {
 		position.z = player.getPosition().z - offsetZ;
 		position.y = player.getPosition().y + VerticalDistance;
 	}
+
+	public void FirstPerson() {
+
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_R)) {
+			position = new Vector3f(5, 8, -3);
+			pitch = 14.0f;
+			yaw = 36.0f;
+			roll = 0;
+		}
+
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_A)) {
+			position.x -= (Math.cos(yaw / 180 * Math.PI)) * speed;
+			position.z -= (Math.sin(yaw / 180 * Math.PI)) * speed;
+		}
+
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_D)) {
+			position.x += (Math.cos(yaw / 180 * Math.PI)) * speed;
+			position.z += (Math.sin(yaw / 180 * Math.PI)) * speed;
+		}
+
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_S)) {
+			position.x -= (Math.sin(yaw / 180 * Math.PI)) * speed;
+			position.z += (Math.cos(yaw / 180 * Math.PI)) * speed;
+		}
+
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_W)) {
+			position.x += (Math.sin(yaw / 180 * Math.PI)) * speed;
+			position.z -= (Math.cos(yaw / 180 * Math.PI)) * speed;
+		}
+
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_Q)) {
+			position.y += -1 * speed;
+
+			if (position.y < -360)
+				position.y = 0;
+
+		}
+
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_E)) {
+			position.y += 1 * speed;
+
+			if (position.y > 360)
+				position.y = 0;
+		}
+
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_Z)) {
+			yaw += -1;
+			if (yaw < -360)
+				yaw += 360;
+		}
+
+		if (Keyinput.keyDown(GLFW.GLFW_KEY_X)) {
+			yaw += 1;
+			if (yaw > 360)
+				yaw -= 360;
+		}
+
+		MouseScroll.setS(new Scroll() {
+
+			@Override
+			public void ScrollUp(double speed) {
+				if (pitch < 70 && speed >= 0)
+					pitch += speed;
+
+			}
+
+			@Override
+			public void ScrollDown(double speed) {
+				if (pitch > -70 && speed < 0)
+					pitch += speed;
+
+			}
+		});
+
+	}
+
 }

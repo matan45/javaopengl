@@ -134,7 +134,7 @@ public abstract class MasterWindow {
 			glfwSetWindowPos(window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
 		} // the stack frame is popped automatically
 
-		// Make the OpenGL context current
+		// Make the OpenGL context current and need to add for a ew thread
 		glfwMakeContextCurrent(window);
 
 		// Enable v-sync
@@ -211,4 +211,5 @@ public abstract class MasterWindow {
 		this.Height = height;
 
 	}
+	
 }

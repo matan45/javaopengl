@@ -9,6 +9,7 @@ settings files
 
 need to add raycast to entity colliders there is only on the terrain
 physics (gravite, terrain test) //player collision move
+//need to test the gjk 3D
 //no collision on rotation aabb need to implement Separating Axis Theorem for 3d
 //need to define velocity on the entities and only the physics check collision
 //aabb rotation is working but need the 4 corners to make it accurate and need to pass the rotation on the update method
@@ -18,9 +19,10 @@ level generator
 FBO common class
 AI //need to map the terrain for walkable layer nav agent and to path finding Astar or Bfs
 //need to add path finding algorithm
-light add radius
 objloader for normal and specular maps no need different loaders
-
+terrain for detection slop on a player preplayer position and current position need to work on it for 3d space
+light need to do directions and distance 
+light add radius
 
 3D:
 day and night system //have time system just need to update you sky box and print to the gui text
@@ -29,15 +31,15 @@ input text //need to change the const to uniform
 shadow // add shadow to normal and entity like the terrain and optimize it
 material
 water system //need to optimize it
-animation need to add //dont work whit other dae filles need to make my own file whit the data from collada file to animated 
+animation need to add //dont work whit other dae files need to make my own file whit the data from collada file to animated 
 //need to abstract the animation from the animation project
-lens Flare need to add//it have a bug
+lens Flare need to add
 weather system (rain ,snow)//extend particle system
 terrain // need to do common abstract class, need to add normals maps like entity 
 terrain editor //mabe?
 clouds 
 entity //need to add specular maps to the normal entity 
 add cube map reflection
-texture bug on ball models
+extract animations from test
 
 need to refactoring the shaders class

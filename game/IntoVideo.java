@@ -1,6 +1,7 @@
 package game;
 
 import video.MediaPanel;
+import window.SceneManager;
 import window.WindowManager;
 
 public class IntoVideo implements GameLogic {
@@ -16,7 +17,7 @@ public class IntoVideo implements GameLogic {
 	public void update() {
 		if(MediaPanel.isDone()){
 			WindowManager.getWindow("main").setRestore();
-			
+			SceneManager.changeScene(new Game());
 		}
 		
 	}

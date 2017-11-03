@@ -18,7 +18,7 @@ layout (location = 1) out vec4 out_BrightColor;
  uniform float reflectivity;
  uniform vec3 skyColour;
  
- const float levels = 3.0;
+ const float levels = 5.0;
  
  void main () {
 	vec3 unitNormal = normalize(surfaceNormal);

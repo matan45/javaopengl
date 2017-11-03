@@ -315,6 +315,13 @@ public class Game implements GameLogic {
 		barrelModel.getTexture().setReflectivity(1f);
 		barrelModel.getTexture().setNormalMap(loader.loadTexture("oildrum_normal"));
 		normalMapentitys.add(new Entity(barrelModel, new Vector3f(20, 5, -20), 0, 0, 0, 2f));
+		
+		TexturedModel Zombie = new TexturedModel(NormalMappedObjLoader.loadOBJ("test", loader),
+				new ModelTexture(loader.loadTexture("parasiteZombie_diffuse")));
+		
+		Zombie.getTexture().setNormalMap(loader.loadTexture("parasiteZombie_normal"));
+		normalMapentitys.add(new Entity(Zombie, new Vector3f(20, 5, -15), 0, 0, 0, 2f));
+
 
 		for (Entity nentity : normalMapentitys) {
 			float y = terrain.getHeightOfTerrain(nentity.getPosition().x, nentity.getPosition().z);
@@ -323,8 +330,8 @@ public class Game implements GameLogic {
 
 		// PARTICLE EFFECTS
 		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("fire"), 8, true);
-		particlesystem = new ParticleSystem(particleTexture, 100, 10, 0.3f, 5f, 1.5f);
-		particlesystem.setDirection(new Vector3f(0, 3, 0), 0.05f);
+		particlesystem = new ParticleSystem(particleTexture, 50, 5, 0f, 1f, 10f);
+		particlesystem.setDirection(new Vector3f(-1, -0.5f, 0), 0.05f);
 		particlesystem.randomizeRotation();
 
 		// POST PROCESSING
@@ -336,7 +343,7 @@ public class Game implements GameLogic {
 				Fbo.DEPTH_TEXTURE);
 		PostProcessing.init(loader);
 		
-		im=new Image2D("src/resources/2DAnimation/", 10, guiRenderer, new Vector2f(0.8f,-0.8f), new Vector2f(0.2f, 0.2f), new Vector2f(), false);
+		im=new Image2D("src/resources/2DAnimation/", 5, guiRenderer, new Vector2f(0.8f,-0.8f), new Vector2f(0.2f, 0.2f), new Vector2f(), false);
 	}
 
 	public void update() {
@@ -385,7 +392,8 @@ public class Game implements GameLogic {
 				audios.get(1).setPosition(entitys.get(0).getPosition());
 				audios.get(1).play();
 			}
-			particlesystem.generateParticles(new Vector3f(entitys.get(11).getPosition()));
+			Vector3f temp=entitys.get(11).getPosition();
+			particlesystem.generateParticles(new Vector3f(temp.x-2,temp.y+2,temp.z));
 		}
 
 	}
