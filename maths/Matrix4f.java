@@ -815,4 +815,51 @@ public class Matrix4f extends Matrix implements Serializable {
 
 		return dest;
 	}
+	
+	public Matrix4f rotateGeneric(Quaternion quat, Matrix4f dest) {
+		float w2 = quat.w * quat.w;
+		float x2 = quat.x * quat.x;
+		float y2 = quat.y * quat.y;
+		float z2 = quat.z * quat.z;
+		float zw = quat.z * quat.w;
+		float xy = quat.x * quat.y;
+		float xz = quat.x * quat.z;
+		float yw = quat.y * quat.w;
+		float yz = quat.y * quat.z;
+		float xw = quat.x * quat.w;
+		float rm00 = w2 + x2 - z2 - y2;
+		float rm01 = xy + zw + zw + xy;
+		float rm02 = xz - yw + xz - yw;
+		float rm10 = -zw + xy - zw + xy;
+		float rm11 = y2 - z2 + w2 - x2;
+		float rm12 = yz + yz + xw + xw;
+		float rm20 = yw + xz + xz + yw;
+		float rm21 = yz + yz - xw - xw;
+		float rm22 = z2 - y2 - x2 + w2;
+		float nm00 = m00 * rm00 + m10 * rm01 + m20 * rm02;
+		float nm01 = m01 * rm00 + m11 * rm01 + m21 * rm02;
+		float nm02 = m02 * rm00 + m12 * rm01 + m22 * rm02;
+		float nm03 = m03 * rm00 + m13 * rm01 + m23 * rm02;
+		float nm10 = m00 * rm10 + m10 * rm11 + m20 * rm12;
+		float nm11 = m01 * rm10 + m11 * rm11 + m21 * rm12;
+		float nm12 = m02 * rm10 + m12 * rm11 + m22 * rm12;
+		float nm13 = m03 * rm10 + m13 * rm11 + m23 * rm12;
+		dest.m20 = m00 * rm20 + m10 * rm21 + m20 * rm22;
+		dest.m21 = m01 * rm20 + m11 * rm21 + m21 * rm22;
+		dest.m22 = m02 * rm20 + m12 * rm21 + m22 * rm22;
+		dest.m23 = m03 * rm20 + m13 * rm21 + m23 * rm22;
+		dest.m00 = nm00;
+		dest.m01 = nm01;
+		dest.m02 = nm02;
+		dest.m03 = nm03;
+		dest.m10 = nm10;
+		dest.m11 = nm11;
+		dest.m12 = nm12;
+		dest.m13 = nm13;
+		dest.m30 = m30;
+		dest.m31 = m31;
+		dest.m32 = m32;
+		dest.m33 = m33;
+		return dest;
+	}
 }
