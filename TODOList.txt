@@ -31,15 +31,14 @@ input text //need to change the const to uniform
 shadow // add shadow to normal and entity like the terrain and optimize it
 material
 water system //need to optimize it
-animation need to add //dont work whit other dae files need to make my own file whit the data from collada file to animated 
+animation need to add 3rd camera and switch animation 
 //need to abstract the animation from the animation project
-lens Flare need to add
+
 weather system (rain ,snow)//extend particle system
 terrain // need to do common abstract class, need to add normals maps like entity 
 terrain editor //mabe?
 clouds 
 entity //need to add specular maps to the normal entity 
 add cube map reflection
-extract animations from test
 
 need to refactoring the shaders class

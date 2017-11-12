@@ -45,5 +45,9 @@ public class Renderer {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		shader.stop();
 	}
+	
+	public void close(){
+		shader.cleanUp();
+	}
 
 }

@@ -75,6 +75,7 @@ public class AnimationTest implements GameLogic {
 	public void onclose() {
 		renderer.cleanUp();
 		loader.cleanUp();
+		re.close();
 	}
 
 }
