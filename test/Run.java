@@ -1,6 +1,6 @@
 package test;
 
-import game.LensFlareTest;
+import game.AnimationTest;
 import window.MasterWindow;
 import window.SceneManager;
 import window.Window;
@@ -15,7 +15,7 @@ public class Run {
 		mainwin.Scrollinput(true);
 		mainwin.Mouseinput(true);
 		mainwin.Cursorinput(true);
-		SceneManager.init(new LensFlareTest());
+		SceneManager.init(new AnimationTest());
 		mainwin.run();
 
 	}

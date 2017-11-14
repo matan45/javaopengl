@@ -157,6 +157,7 @@ public class FlareRenderer {
 		OpenGlUtils.disableBlending();
 		OpenGlUtils.enableDepthTesting(true);
 		OpenGlUtils.cullBackFaces(true);
+		
 	}
 
 }

@@ -33,6 +33,12 @@ public class AnimGameItem {
 	public Mesh[] getMeshes() {
 		return meshes;
 	}
+
+	public Map<String, Animation> getAnimations() {
+		return animations;
+	}
+	
+	
 	
 }
 

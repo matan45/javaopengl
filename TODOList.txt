@@ -33,7 +33,7 @@ material
 water system //need to optimize it
 animation need to add 3rd camera and switch animation 
 //need to abstract the animation from the animation project
-
+3D animation texture model material for 3d mesh
 weather system (rain ,snow)//extend particle system
 terrain // need to do common abstract class, need to add normals maps like entity 
 terrain editor //mabe?

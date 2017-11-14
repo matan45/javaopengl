@@ -51,8 +51,12 @@ public class AnimationTest implements GameLogic {
 		
 		re=new Renderer(renderer.getProjectionMatrix());
 		
-		AnimGameItem aim=AnimMeshesLoader.loadAnimGameItem("src/resources/Animation/model2.dae","src/resources/Animation/model2.png");
-		enim=new AnimatedEntity(new Vector3f(5,-6,-5), new Vector3f(0.02f,0.02f,0.02f), new Vector3f(90,0,180), aim);
+		AnimGameItem aim=AnimMeshesLoader.loadAnimGameItem("src/resources/Animation/Running.dae","src/resources/Animation/Ganfaul_diffuse.png");
+		enim=new AnimatedEntity(new Vector3f(10,-4,-10), new Vector3f(5f,5f,5f), new Vector3f(180,0,180), aim);
+		enim.setX(AnimMeshesLoader.getOBJLength().x);
+		enim.setY(AnimMeshesLoader.getOBJLength().y);
+		enim.setZ(AnimMeshesLoader.getOBJLength().z);
+		System.out.println(enim.getX()+" "+enim.getY()+" "+enim.getZ()+" ");
 
 	}
 

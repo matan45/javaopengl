@@ -39,6 +39,9 @@ import maths.Quaternion;
 import maths.Vector3f;
 
 public class AnimMeshesLoader {
+	
+	static Vector3f OBJLength = new Vector3f();
+	
 	private static void buildTransFormationMatrices(AINodeAnim aiNodeAnim, Node node) {
 		int numFrames = aiNodeAnim.mNumPositionKeys();
 		AIVectorKey.Buffer positionKeys = aiNodeAnim.mPositionKeys();
@@ -248,12 +251,24 @@ public class AnimMeshesLoader {
 
 	private static void processVertices(AIMesh aiMesh, List<Float> vertices) {
 		AIVector3D.Buffer aiVertices = aiMesh.mVertices();
+		float maxX = 0, minX = 0;
+		float maxY = 0, minY = 0;
+		float maxZ = 0, minZ = 0;
 		while (aiVertices.remaining() > 0) {
 			AIVector3D aiVertex = aiVertices.get();
 			vertices.add(aiVertex.x());
 			vertices.add(aiVertex.y());
 			vertices.add(aiVertex.z());
+			minX = Math.min(minX, aiVertex.x());
+			minY = Math.min(minY, aiVertex.y());
+			minZ = Math.min(minZ, aiVertex.z());
+			maxX = Math.max(maxX, aiVertex.x());
+			maxY = Math.max(maxY, aiVertex.y());
+			maxZ = Math.max(maxZ, aiVertex.z());
 		}
+		OBJLength.x = maxX - minX;
+		OBJLength.y = maxY - minY;
+		OBJLength.z = maxZ - minZ;
 	}
 
 	private static void processTextCoords(AIMesh aiMesh, List<Float> textures) {
@@ -291,6 +306,10 @@ public class AnimMeshesLoader {
 	private static Texture loadTexture(String textureFile) {
 		Texture diffuseTexture = Texture.newTexture(textureFile).anisotropic().create();
 		return diffuseTexture;
+	}
+
+	public static Vector3f getOBJLength() {
+		return OBJLength;
 	}
 
 }
