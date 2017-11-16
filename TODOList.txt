@@ -7,6 +7,7 @@ macro record
 UI system+layers // 2 scroll bar and radio button and textbox and need to do hash map for the gui handler plos need to get the texture Width, Height 
 settings files
 
+need to add first need to do Sweep and Prune(AABB) Broadphase and then GJK for Narrowphase 
 need to add raycast to entity colliders there is only on the terrain
 physics (gravite, terrain test) //player collision move
 //need to test the gjk 3D
@@ -24,6 +25,7 @@ terrain for detection slop on a player preplayer position and current position n
 light need to do directions and distance 
 light add radius
 
+problem Vertex Length cant read from dae file need to make obj in ordered to measure the model length
 3D:
 day and night system //have time system just need to update you sky box and print to the gui text
 fog//need to add uniform variables for the const 

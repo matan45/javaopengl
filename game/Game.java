@@ -9,6 +9,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import Animated2D.Image2D;
+import Animation.anim.AnimGameItem;
+import Animation.anim.AnimatedEntity;
+import Animation.graph.AnimationRenderer;
 import aduio.AudioMaster;
 import aduio.PlayList;
 import aduio.Source;
@@ -17,6 +20,11 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import flare.lensFlare.FlareManager;
+import flare.lensFlare.FlareTexture;
+import flare.sunRenderer.Sun;
+import flare.sunRenderer.SunRenderer;
+import flare.textures.Texture;
 import fontRendering.TextMaster;
 import gui3D.GuiRenderer3D;
 import gui3D.GuiTexture3D;
@@ -28,6 +36,7 @@ import guis.windowgui.IWindowgui;
 import guis.windowgui.WindowGui;
 import input.Keyinput;
 import input.Mouseinput;
+import loaders.assimp.AnimMeshesLoader;
 import maths.Vector2f;
 import maths.Vector3f;
 import maths.Vector4f;
@@ -69,6 +78,13 @@ public class Game implements GameLogic {
 	WaterShader waterShader;
 	WaterFrameBuffers buffers;
 
+	AnimationRenderer animationRenderer;
+	AnimatedEntity animatedEntity;
+
+	FlareManager lensFlare;
+	Sun theSun;
+	SunRenderer sunRenderer;
+
 	List<Entity> entitys = new ArrayList<>();
 	List<Entity> normalMapentitys = new ArrayList<>();
 	List<Light> lights = new ArrayList<>();
@@ -86,7 +102,7 @@ public class Game implements GameLogic {
 	ParticleSystem particlesystem;
 
 	MousePicker picker;
-	
+
 	Image2D im;
 
 	public void preupdate() {
@@ -95,7 +111,7 @@ public class Game implements GameLogic {
 		s.addsong("Suns And Stars");
 		s.addsong("Everdream");
 		s.start();
-		
+
 		// INIT OPENAL
 		AudioMaster.init();
 		AudioMaster.setListenerData(0, 0, 0);
@@ -315,13 +331,12 @@ public class Game implements GameLogic {
 		barrelModel.getTexture().setReflectivity(1f);
 		barrelModel.getTexture().setNormalMap(loader.loadTexture("oildrum_normal"));
 		normalMapentitys.add(new Entity(barrelModel, new Vector3f(20, 5, -20), 0, 0, 0, 2f));
-		
+
 		TexturedModel Zombie = new TexturedModel(NormalMappedObjLoader.loadOBJ("test", loader),
 				new ModelTexture(loader.loadTexture("parasiteZombie_diffuse")));
-		
 		Zombie.getTexture().setNormalMap(loader.loadTexture("parasiteZombie_normal"));
-		normalMapentitys.add(new Entity(Zombie, new Vector3f(20, 5, -15), 0, 0, 0, 2f));
-
+		Entity zob = new Entity(Zombie, new Vector3f(20, 5, -15), 0, 0, 0, 2f);
+		normalMapentitys.add(zob);
 
 		for (Entity nentity : normalMapentitys) {
 			float y = terrain.getHeightOfTerrain(nentity.getPosition().x, nentity.getPosition().z);
@@ -342,8 +357,44 @@ public class Game implements GameLogic {
 		outputFbo2 = new Fbo(WindowManager.getWindow("main").getWidth(), WindowManager.getWindow("main").getHeight(),
 				Fbo.DEPTH_TEXTURE);
 		PostProcessing.init(loader);
-		
-		im=new Image2D("src/resources/2DAnimation/", 5, guiRenderer, new Vector2f(0.8f,-0.8f), new Vector2f(0.2f, 0.2f), new Vector2f(), false);
+
+		// 2D Image Animation
+		im = new Image2D("src/resources/2DAnimation/", 5, guiRenderer, new Vector2f(0.8f, -0.8f),
+				new Vector2f(0.2f, 0.2f), new Vector2f(), false);
+
+		// 3D Model Animation
+		animationRenderer = new AnimationRenderer(renderer.getProjectionMatrix());
+
+		AnimGameItem aim = AnimMeshesLoader.loadAnimGameItem("src/resources/Animation/Running.dae",
+				"src/resources/Animation/Ganfaul_diffuse.png");
+		animatedEntity = new AnimatedEntity(new Vector3f(10, 0, -10), new Vector3f(2f, 2f, 2f),
+				new Vector3f(180, 0, 180), aim);
+
+		// loading textures for lens flare
+		Texture texture1 = Texture.newTexture("src/resources/lensFlare/tex1.png").normalMipMap().create();
+		Texture texture2 = Texture.newTexture("src/resources/lensFlare/tex2.png").normalMipMap().create();
+		Texture texture3 = Texture.newTexture("src/resources/lensFlare/tex3.png").normalMipMap().create();
+		Texture texture4 = Texture.newTexture("src/resources/lensFlare/tex4.png").normalMipMap().create();
+		Texture texture5 = Texture.newTexture("src/resources/lensFlare/tex5.png").normalMipMap().create();
+		Texture texture6 = Texture.newTexture("src/resources/lensFlare/tex6.png").normalMipMap().create();
+		Texture texture7 = Texture.newTexture("src/resources/lensFlare/tex7.png").normalMipMap().create();
+		Texture texture8 = Texture.newTexture("src/resources/lensFlare/tex8.png").normalMipMap().create();
+		Texture texture9 = Texture.newTexture("src/resources/lensFlare/tex9.png").normalMipMap().create();
+		Texture sun = Texture.newTexture("src/resources/lensFlare/sun.png").normalMipMap().create();
+		// set up lens flare
+		lensFlare = new FlareManager(0.16f, new FlareTexture(texture6, 0.5f), new FlareTexture(texture4, 0.23f),
+				new FlareTexture(texture2, 0.1f), new FlareTexture(texture7, 0.05f), new FlareTexture(texture1, 0.02f),
+				new FlareTexture(texture3, 0.06f), new FlareTexture(texture9, 0.12f), new FlareTexture(texture5, 0.07f),
+				new FlareTexture(texture1, 0.012f), new FlareTexture(texture7, 0.2f), new FlareTexture(texture9, 0.1f),
+				new FlareTexture(texture3, 0.07f), new FlareTexture(texture5, 0.3f), new FlareTexture(texture4, 0.4f),
+				new FlareTexture(texture8, 0.6f));
+
+		// init sun and set sun direction
+		sunRenderer = new SunRenderer();
+		Vector3f lightDir = new Vector3f(0.55f, -0.34f, 1);
+		theSun = new Sun(sun, 55);
+
+		theSun.setDirection(lightDir.x, lightDir.y, lightDir.z);
 	}
 
 	public void update() {
@@ -358,7 +409,12 @@ public class Game implements GameLogic {
 		watercode();
 		multisampleFbo.bindFrameBuffer();
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		// need to be here else it will not render properly
+		animationRenderer.renderScene(camera, animatedEntity, theSun.getLightDirection());
+		animatedEntity.getAim().getCurrentAnimation().nextFrame();
 		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera, new Vector4f(0, -1, 0, 1000));
+		sunRenderer.render(theSun, camera.getPosition(), camera,
+				renderer.getProjectionMatrix());
 		guiRenderer3d.render(gui3d, renderer.getProjectionMatrix(), camera);
 		waterRenderer.render(waters, camera, lights.get(0));
 		ParticleMaster.renderParticles(camera);
@@ -374,6 +430,9 @@ public class Game implements GameLogic {
 				System.out.println("inside");
 
 		}
+		
+		lensFlare.render(camera, renderer.getProjectionMatrix(),
+				theSun.getWorldPosition(camera.getPosition()));
 
 		guiRenderer.render(GuiHandler.getGuis());
 		im.start();
@@ -392,9 +451,10 @@ public class Game implements GameLogic {
 				audios.get(1).setPosition(entitys.get(0).getPosition());
 				audios.get(1).play();
 			}
-			Vector3f temp=entitys.get(11).getPosition();
-			particlesystem.generateParticles(new Vector3f(temp.x-2,temp.y+2,temp.z));
+			Vector3f temp = entitys.get(11).getPosition();
+			particlesystem.generateParticles(new Vector3f(temp.x - 2, temp.y + 2, temp.z));
 		}
+		
 
 	}
 
@@ -414,6 +474,9 @@ public class Game implements GameLogic {
 		loader.cleanUp();
 		AudioMaster.cleanUp();
 		GuiHandler.cleanup();
+		lensFlare.cleanUp();
+		sunRenderer.cleanUp();
+		animationRenderer.close();
 		for (Source s : audios)
 			s.delete();
 

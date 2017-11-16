@@ -54,7 +54,7 @@ public class PhysicsTest implements GameLogic {
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 		// RANDOM HEIGHTS
-		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "map");
+		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "flat");
 		terrains.add(terrain);
 
 		Entity box = new Entity(
