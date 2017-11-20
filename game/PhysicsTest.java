@@ -59,7 +59,7 @@ public class PhysicsTest implements GameLogic {
 
 		Entity box = new Entity(
 				new TexturedModel(OBJFileLoader.loadOBJ("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
-				new Vector3f(25, 0, -20), 0, 0, 0, 0.5f);
+				new Vector3f(-20, 0, -20), 0, 0, 0, 0.5f);
 		box.setX(OBJFileLoader.getOBJLength().getX());
 		box.setY(OBJFileLoader.getOBJLength().getY());
 		box.setZ(OBJFileLoader.getOBJLength().getZ());
@@ -79,8 +79,8 @@ public class PhysicsTest implements GameLogic {
 		b2 = new AABB(box2.getPosition(), new Vector3f(box2.getX() / 2, box2.getY() / 2, box2.getZ() / 2),
 				Layers.Physics_Layer);
 
-		PhysicsObject obj1 = new PhysicsObject(b1, new Vector3f(1.0f, 0.0f, 0.0f), 100);
-		PhysicsObject obj2 = new PhysicsObject(b2, new Vector3f(0.0f, 0.0f, 0.0f), 100);
+		PhysicsObject obj1 = new PhysicsObject(b1, new Vector3f(20.0f, 0.0f, 0.0f), 200);
+		PhysicsObject obj2 = new PhysicsObject(b2, new Vector3f(0.0f, 0.0f, 0.0f), 10000);
 
 		physicsEngine.AddObject(obj1);
 		physicsEngine.AddObject(obj2);
@@ -104,7 +104,7 @@ public class PhysicsTest implements GameLogic {
 
 		Entity sphere3 = new Entity(
 				new TexturedModel(OBJFileLoader.loadOBJ("ball", loader), new ModelTexture(loader.loadTexture("moon"))),
-				new Vector3f(10, 0, -50), 0, 0, 0, 1f);
+				new Vector3f(5, 5, -50), 0, 0, 0, 1f);
 		sphere3.setX(OBJFileLoader.getOBJLength().getX());
 		sphere3.setY(OBJFileLoader.getOBJLength().getY());
 		sphere3.setZ(OBJFileLoader.getOBJLength().getZ());
@@ -118,7 +118,7 @@ public class PhysicsTest implements GameLogic {
 				new Vector3f(0.0f, 0.0f, 0.0f), 100);
 		PhysicsObject obj5 = new PhysicsObject(
 				new Sphere(sphere3.getPosition(), sphere3.getY() / 2, Layers.Physics_Layer),
-				new Vector3f(0.0f, 0.0f, 2.0f), 100);
+				new Vector3f(0.0f, 0.0f, 8.0f), 100);
 		physicsEngine.AddObject(obj3);
 		physicsEngine.AddObject(obj4);
 		physicsEngine.AddObject(obj5);

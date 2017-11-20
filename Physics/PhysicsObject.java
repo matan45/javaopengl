@@ -8,7 +8,7 @@ public class PhysicsObject {
 	IntersectData data;
 	Vector3f temp = new Vector3f();
 	float mass = 0;
-	float friction = 0.001f;
+	float friction = 0.01f;
 
 	public PhysicsObject(ICollider collider, Vector3f velocity, float mass) {
 		this.velocity = velocity;

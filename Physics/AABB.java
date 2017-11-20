@@ -9,7 +9,6 @@ public class AABB extends Collider {
 	Vector3f halfwidths;
 	Vector3f rotation;
 
-
 	public AABB(Vector3f center, Vector3f halfwidths, Layers layer) {
 		super(ColliderType.TYPE_AABB, layer);
 		this.halfwidths = halfwidths;
@@ -50,20 +49,26 @@ public class AABB extends Collider {
 	}
 
 	public IntersectData IntersectSphere(Sphere other) {
-		Vector3f distances1 = new Vector3f();
-		Vector3f.sub(other.getCenter(), this.maxExtents, distances1);
 
-		Vector3f distances2 = new Vector3f();
-		Vector3f.sub(this.minExtents, other.getCenter(), distances2);
+		// get closest point on box from sphere centre
+		Vector3f xClosest = ClosestPointOnAABB(other.center);
+		// find the separation
+		Vector3f xDiff = new Vector3f();
+		Vector3f.sub(other.center, xClosest, xDiff);
+		// check if points are far enough
+		float fDistSquared = xDiff.lengthSquared();
 
-		Vector3f distances = distances1.Max(distances2);
-		float distanceX = Math.abs(distances.x);
-		float distanceY = Math.abs(distances.y);
-		float distanceZ = Math.abs(distances.z);
-		if (distanceX <= other.getRadius() && distanceY <= other.getRadius() && distanceZ <= other.getRadius()) {
-			return new IntersectData(true, distanceX - other.getRadius());
+		if (fDistSquared > other.getRadius() * other.getRadius()) {
+			return new IntersectData(false, 0);
 		}
-		return new IntersectData(false, 0);
+
+		float fDist = (float) Math.sqrt(fDistSquared);
+
+		// collision depth
+		float fDcoll = other.getRadius() - fDist;
+
+		return new IntersectData(true, fDcoll);
+
 	}
 
 	@Override
@@ -74,7 +79,6 @@ public class AABB extends Collider {
 		this.minExtents = Vector3f.sub(this.center, this.halfwidths, this.minExtents);
 		this.maxExtents.y = this.maxExtents.y + this.halfwidths.y;
 		this.minExtents.y = this.minExtents.y + this.halfwidths.y;
-		
 
 	}
 
@@ -97,6 +101,17 @@ public class AABB extends Collider {
 		minro = minsub.rotate(this.rotation);
 		minExtents = Vector3f.add(minro, center, minExtents);
 
+	}
+
+	private Vector3f ClosestPointOnAABB(Vector3f Point) {
+		Vector3f xClosestPoint = new Vector3f();
+		xClosestPoint.x = (Point.x < this.minExtents.x) ? this.minExtents.x
+				: (Point.x > this.maxExtents.x) ? this.maxExtents.x : Point.x;
+		xClosestPoint.y = (Point.y < this.minExtents.y) ? this.minExtents.y
+				: (Point.y > this.maxExtents.y) ? this.maxExtents.y : Point.y;
+		xClosestPoint.z = (Point.z < this.minExtents.z) ? this.minExtents.z
+				: (Point.z > this.maxExtents.z) ? this.maxExtents.z : Point.z;
+		return xClosestPoint;
 	}
 
 }

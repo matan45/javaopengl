@@ -7,7 +7,7 @@ macro record
 UI system+layers // 2 scroll bar and radio button and textbox and need to do hash map for the gui handler plos need to get the texture Width, Height 
 settings files
 
-need to add first need to do Sweep and Prune(AABB) Broadphase and then GJK for Narrowphase 
+need to add first need to do Sweep and Prune(AABB) Broadphase and then GJK for Narrowphase and EPA for collision info
 need to add raycast to entity colliders there is only on the terrain
 physics (gravite, terrain test) //player collision move
 //need to test the gjk 3D

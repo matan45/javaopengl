@@ -816,6 +816,7 @@ public class Matrix4f extends Matrix implements Serializable {
 		return dest;
 	}
 	
+	
 	public Matrix4f rotateGeneric(Quaternion quat, Matrix4f dest) {
 		float w2 = quat.w * quat.w;
 		float x2 = quat.x * quat.x;

@@ -330,7 +330,7 @@ public class Game implements GameLogic {
 		barrelModel.getTexture().setShineDamper(10);
 		barrelModel.getTexture().setReflectivity(1f);
 		barrelModel.getTexture().setNormalMap(loader.loadTexture("oildrum_normal"));
-		normalMapentitys.add(new Entity(barrelModel, new Vector3f(20, 5, -20), 0, 0, 0, 2f));
+		normalMapentitys.add(new Entity(barrelModel, new Vector3f(20, 5, -20), 0, 0, 0, 50f));
 
 		TexturedModel Zombie = new TexturedModel(NormalMappedObjLoader.loadOBJ("test", loader),
 				new ModelTexture(loader.loadTexture("parasiteZombie_diffuse")));
@@ -422,7 +422,10 @@ public class Game implements GameLogic {
 		multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, outputFbo);
 		multisampleFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1, outputFbo2);
 		PostProcessing.doPostProcessing(outputFbo.getColourTexture(), outputFbo2.getColourTexture());
-
+		
+		lensFlare.render(camera, renderer.getProjectionMatrix(),
+				theSun.getWorldPosition(camera.getPosition()));
+		
 		Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 		if (terrainPoint != null && Mouseinput.mouseButtonDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_1)) {
 			System.out.println(terrainPoint);
@@ -430,9 +433,6 @@ public class Game implements GameLogic {
 				System.out.println("inside");
 
 		}
-		
-		lensFlare.render(camera, renderer.getProjectionMatrix(),
-				theSun.getWorldPosition(camera.getPosition()));
 
 		guiRenderer.render(GuiHandler.getGuis());
 		im.start();
