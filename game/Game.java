@@ -330,7 +330,7 @@ public class Game implements GameLogic {
 		barrelModel.getTexture().setShineDamper(10);
 		barrelModel.getTexture().setReflectivity(1f);
 		barrelModel.getTexture().setNormalMap(loader.loadTexture("oildrum_normal"));
-		normalMapentitys.add(new Entity(barrelModel, new Vector3f(20, 5, -20), 0, 0, 0, 50f));
+		normalMapentitys.add(new Entity(barrelModel, new Vector3f(20, 5, -20), 0, 0, 0, 2f));
 
 		TexturedModel Zombie = new TexturedModel(NormalMappedObjLoader.loadOBJ("test", loader),
 				new ModelTexture(loader.loadTexture("parasiteZombie_diffuse")));

@@ -1,6 +1,6 @@
 package test;
 
-import game.PhysicsTest;
+import game.PBRTest;
 import window.MasterWindow;
 import window.SceneManager;
 import window.Window;
@@ -15,7 +15,7 @@ public class Run {
 		mainwin.Scrollinput(true);
 		mainwin.Mouseinput(true);
 		mainwin.Cursorinput(true);
-		SceneManager.init(new PhysicsTest());
+		SceneManager.init(new PBRTest());
 		mainwin.run();
 
 	}

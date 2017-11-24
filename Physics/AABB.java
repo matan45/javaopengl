@@ -7,7 +7,7 @@ public class AABB extends Collider {
 	Vector3f maxExtents; // top right corner
 	Vector3f center;
 	Vector3f halfwidths;
-	Vector3f rotation;
+	
 
 	public AABB(Vector3f center, Vector3f halfwidths, Layers layer) {
 		super(ColliderType.TYPE_AABB, layer);
@@ -83,22 +83,21 @@ public class AABB extends Collider {
 	}
 
 	public void setRotation(Vector3f rotation) {
-		this.rotation = rotation;
-		PositionAfterRotation();
+		PositionAfterRotation(rotation);
 	}
 
-	private void PositionAfterRotation() {
+	private void PositionAfterRotation(Vector3f rotation) {
 
 		Vector3f maxsub = new Vector3f();
 		maxsub = Vector3f.sub(maxExtents, center, maxsub);
 		Vector3f maxro = new Vector3f();
-		maxro = maxsub.rotate(this.rotation);
+		maxro = maxsub.rotate(rotation);
 		maxExtents = Vector3f.add(maxro, center, maxExtents);
 
 		Vector3f minsub = new Vector3f();
 		minsub = Vector3f.sub(minExtents, center, minsub);
 		Vector3f minro = new Vector3f();
-		minro = minsub.rotate(this.rotation);
+		minro = minsub.rotate(rotation);
 		minExtents = Vector3f.add(minro, center, minExtents);
 
 	}
@@ -113,5 +112,6 @@ public class AABB extends Collider {
 				: (Point.z > this.maxExtents.z) ? this.maxExtents.z : Point.z;
 		return xClosestPoint;
 	}
+
 
 }

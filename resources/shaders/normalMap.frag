@@ -21,6 +21,7 @@ void main(void){
 	vec4 normalMapValue = 2.0 *texture(normalMap, pass_textureCoordinates) - 1.0;
 
 	vec3 unitNormal = normalize(normalMapValue.rgb);
+	
 	vec3 unitVectorToCamera = normalize(toCameraVector);
 	
 	vec3 totalDiffuse = vec3(0.0);

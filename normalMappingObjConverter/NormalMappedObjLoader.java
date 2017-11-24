@@ -98,7 +98,7 @@ public class NormalMappedObjLoader {
 		return loader.loadToVAO(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray);
 	}
 
-	// NEW
+	
 	private static void calculateTangents(VertexNM v0, VertexNM v1, VertexNM v2, List<Vector2f> textures) {
 		Vector3f delatPos1 = Vector3f.sub(v1.getPosition(), v0.getPosition(), null);
 		Vector3f delatPos2 = Vector3f.sub(v2.getPosition(), v0.getPosition(), null);
