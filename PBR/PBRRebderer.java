@@ -47,11 +47,14 @@ public class PBRRebderer {
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
-
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, mat.getAlbedoMap());
+		
 		if (mat.getAlbedo() != null)
 			shader.loadalbedo(mat.getAlbedo());
+		shader.loadhasalbedoMap(mat.isHasalbedoMap());
+		if (mat.isHasalbedoMap()) {
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, mat.getAlbedoMap());
+		}
 		shader.loadmetallic(mat.getMetallic());
 		shader.loadhasMetallicMap(mat.isHasmetallicMap());
 		if (mat.isHasmetallicMap()) {
@@ -87,7 +90,7 @@ public class PBRRebderer {
 	}
 
 	private void prepareInstance(PBREntity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotation().x,entity.getRotation().y,entity.getRotation().z,entity.getScale().x);
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getScale(),entity.getRotation());
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 

@@ -36,6 +36,33 @@ uniform float UsingAoMap;
 
 
 const float PI = 3.14159265359;
+
+
+
+vec4 GammaCorrectTexture(sampler2D tex, vec2 uv)
+{
+	vec4 samp = texture(tex, uv);
+	return vec4(pow(samp.rgb, vec3(2.2)), samp.a);
+}
+
+
+vec3 GetAlbedo()
+{
+	return (1.0 - UsingAlbedoMap) * AlbedoColor + UsingAlbedoMap * GammaCorrectTexture(AlbedoMap, TexCoords).rgb;
+}
+float GetMetallic()
+{
+	return (1.0 - UsingMetallicMap) * metallicColor + UsingMetallicMap * texture(metallicMap, TexCoords).r;
+}
+float GetRoughness()
+{
+	return (1.0 - UsingRoughnessMap) * roughnessColor + UsingRoughnessMap * texture(roughnessMap, TexCoords).r;
+}
+float GetAo()
+{
+	return (1.0 - UsingAoMap) * aoColor + UsingAoMap * texture(aoMap, TexCoords).r;
+}
+
 // ----------------------------------------------------------------------------
 // Easy trick to get tangent-normals to world-space to keep PBR code simplified.
 // Don't worry if you don't get what's going on; you generally want to do normal 
@@ -100,10 +127,10 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 // ----------------------------------------------------------------------------
 void main()
 {		
-    vec3 albedo     = pow(texture(AlbedoMap, TexCoords).rgb, vec3(2.2)) * UsingAlbedoMap + AlbedoColor;
-    float metallic  = texture(metallicMap, TexCoords).r * UsingMetallicMap + metallicColor;
-    float roughness = texture(roughnessMap, TexCoords).r * UsingRoughnessMap + roughnessColor;
-    float ao        = texture(aoMap, TexCoords).r * UsingAoMap + aoColor;
+    vec3 albedo     = GetAlbedo();
+    float metallic  = GetMetallic();
+    float roughness = GetRoughness();
+    float ao        = GetAo();
 
     vec3 N = getNormalFromMap() * UsingNormalMap;
     vec3 V = normalize(camPos - WorldPos);

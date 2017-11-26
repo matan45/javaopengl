@@ -34,6 +34,7 @@ public class Terrain {
 		this.model = generateTerrain(loader, heightMap);
 
 	}
+	
 
 	private RawModel generateTerrain(Loader loader, String heightMap) {
 		BufferedImage image = null;
@@ -83,6 +84,8 @@ public class Terrain {
 		}
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
+	
+	
 
 	private float getHeight(int x, int y, BufferedImage image) {
 		if (x < 0 || x >= image.getHeight() || y < 0 || y >= image.getWidth())
@@ -93,7 +96,7 @@ public class Terrain {
 		height *= MAX_HEIGHT;
 		return height;
 	}
-
+	
 	public float getHeightOfTerrain(float worldX, float worldZ) {
 		float terrainX = worldX - this.x;
 		float terrainZ = worldZ - this.z;
@@ -127,6 +130,8 @@ public class Terrain {
 		normal.normalise();
 		return normal;
 	}
+	
+	
 
 	public float getX() {
 		return x;

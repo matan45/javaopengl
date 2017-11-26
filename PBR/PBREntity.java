@@ -18,6 +18,11 @@ public class PBREntity {
 		this.material = material;
 	}
 
+	public void increaseRotation(float dx, float dy, float dz) {
+		this.rotation.x += dx;
+		this.rotation.y += dy;
+		this.rotation.z += dz;
+	}
 	
 
 	public RawModel getModel() {
