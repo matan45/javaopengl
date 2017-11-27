@@ -59,5 +59,5 @@ layout (location = 1) out vec4 out_BrightColor;
  	} 	
     out_Color = vec4(totalDiffuse,1.0) * textureColour + vec4(totalSpecular,1.0);
     out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
-    out_BrightColor = vec4(1.0,0.0,0.0,1.0);
+	out_BrightColor = vec4(1.0,0.0,0.0,1.0);
 }

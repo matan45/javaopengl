@@ -1,5 +1,6 @@
 #version 400 core
 
+
 in vec2 pass_textureCoordinates;
 in vec3 surfaceNormal;
 in vec3 toLightVector[4];
@@ -25,6 +26,14 @@ uniform vec3 skyColour;
 
 const int pcfCount = 2;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
+
+// tonemapping
+vec3 Burgess(vec3 color){
+	vec3 maxColor = max( vec3(0.0), color - 0.004);
+	vec3 retColor = (maxColor * (6.2 * maxColor + 0.05)) / (maxColor * (6.2 * maxColor + 2.3) + 0.06);
+	return retColor;
+
+}
 
 void main(void){
 
@@ -77,5 +86,7 @@ void main(void){
 
 	out_Color =  vec4(totalDiffuse,1.0) * totalColour + vec4(totalSpecular,1.0);
 	out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
-	out_BrightColor = vec4(0.0,1.0,0.0,1.0);
+	vec3 tonemapping = vec3(totalDiffuse * totalColour + vec3(totalSpecular));
+	vec3 outcolor = Burgess(tonemapping);
+	out_BrightColor = vec4(outcolor,1.0);
 }
