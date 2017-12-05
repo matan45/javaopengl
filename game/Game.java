@@ -12,6 +12,9 @@ import Animated2D.Image2D;
 import Animation.anim.AnimGameItem;
 import Animation.anim.AnimatedEntity;
 import Animation.graph.AnimationRenderer;
+import PBR.Material;
+import PBR.PBREntity;
+import PBR.PBRRebderer;
 import aduio.AudioMaster;
 import aduio.PlayList;
 import aduio.Source;
@@ -104,6 +107,9 @@ public class Game implements GameLogic {
 	MousePicker picker;
 
 	Image2D im;
+	
+	PBRRebderer pbrender;
+	PBREntity pbrentity;
 
 	public void preupdate() {
 		// PlayList
@@ -332,12 +338,6 @@ public class Game implements GameLogic {
 		barrelModel.getTexture().setNormalMap(loader.loadTexture("oildrum_normal"));
 		normalMapentitys.add(new Entity(barrelModel, new Vector3f(20, 5, -20), 0, 0, 0, 2f));
 
-		TexturedModel Zombie = new TexturedModel(NormalMappedObjLoader.loadOBJ("test", loader),
-				new ModelTexture(loader.loadTexture("parasiteZombie_diffuse")));
-		Zombie.getTexture().setNormalMap(loader.loadTexture("parasiteZombie_normal"));
-		Entity zob = new Entity(Zombie, new Vector3f(20, 5, -15), 0, 0, 0, 2f);
-		normalMapentitys.add(zob);
-
 		for (Entity nentity : normalMapentitys) {
 			float y = terrain.getHeightOfTerrain(nentity.getPosition().x, nentity.getPosition().z);
 			nentity.setPosition(new Vector3f(nentity.getPosition().x, y, nentity.getPosition().z));
@@ -395,6 +395,15 @@ public class Game implements GameLogic {
 		theSun = new Sun(sun, 55);
 
 		theSun.setDirection(lightDir.x, lightDir.y, lightDir.z);
+		
+		pbrender=new PBRRebderer(renderer.getProjectionMatrix());
+		Material material=new Material();
+		material.setAlbedoMap(loader.loadTexture("PBR/gun/albedo"));
+		material.setMetallicMap(loader.loadTexture("PBR/gun/metallic"));
+		material.setRoughnessMap(loader.loadTexture("PBR/gun/roughness"));
+		material.setNormalMap(loader.loadTexture("PBR/gun/normal"));
+		material.setAoMap(loader.loadTexture("PBR/gun/ao"));
+		pbrentity=new PBREntity(OBJFileLoader.loadOBJ("gun", loader), new Vector3f(20, 1f, -15), new Vector3f(), new Vector3f(2, 2, 2), material);
 	}
 
 	public void update() {
@@ -412,7 +421,9 @@ public class Game implements GameLogic {
 		// need to be here else it will not render properly
 		animationRenderer.renderScene(camera, animatedEntity, theSun.getLightDirection());
 		animatedEntity.getAim().getCurrentAnimation().nextFrame();
+		pbrender.render(pbrentity, lights, camera);
 		renderer.renderScene(entitys, normalMapentitys, terrains, lights, camera, new Vector4f(0, -1, 0, 1000));
+		pbrentity.increaseRotation(0, 0.2f, 0);
 		sunRenderer.render(theSun, camera.getPosition(), camera,
 				renderer.getProjectionMatrix());
 		guiRenderer3d.render(gui3d, renderer.getProjectionMatrix(), camera);
@@ -451,8 +462,8 @@ public class Game implements GameLogic {
 				audios.get(1).setPosition(entitys.get(0).getPosition());
 				audios.get(1).play();
 			}
-			Vector3f temp = entitys.get(11).getPosition();
-			particlesystem.generateParticles(new Vector3f(temp.x - 2, temp.y + 2, temp.z));
+			Vector3f temp = entitys.get(0).getPosition();
+			particlesystem.generateParticles(new Vector3f(temp.x - 2, temp.y + 2, temp.z+0.5f));
 		}
 		
 
@@ -477,6 +488,7 @@ public class Game implements GameLogic {
 		lensFlare.cleanUp();
 		sunRenderer.cleanUp();
 		animationRenderer.close();
+		pbrender.cleanUp();
 		for (Source s : audios)
 			s.delete();
 

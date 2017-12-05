@@ -25,6 +25,8 @@ void main(void){
     
     float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);
     factor = clamp(factor, 0.0, 1.0);
-    
-    out_Color = mix(vec4(fogColour, 1.0), finalColour, factor);
+    vec4 result=mix(vec4(fogColour, 1.0), finalColour, factor);
+    vec3 temp=vec3(result.r,result.g,result.b);
+    temp=pow(temp, vec3(1.0 / 2.2));
+    out_Color = vec4(temp,1.0);
 }

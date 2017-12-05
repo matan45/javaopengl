@@ -88,9 +88,9 @@ void main(void) {
 	specular = pow(specular, shineDamper);
 	vec3 specularHighlights = lightColour * specular * reflectivity * clamp(waterDepth/5.0, 0.0, 1.0);
 
-	out_Color = mix(reflectColour, refractColour, refractiveFactor);
-	out_Color = mix(out_Color, vec4(0.0, 0.3, 0.5, 1.0), 0.2) + vec4(specularHighlights, 0.0);
-	out_Color.a = clamp(waterDepth/5.0, 0.0, 1.0);
+	out_Color = mix(reflectColour, refractColour + vec4(specularHighlights, 0.0), refractiveFactor);
+	out_Color = mix(out_Color, vec4(0.0, 0.3, 0.5, 1.0), 0.2);
+	out_Color.a = clamp(waterDepth/0.5, 0.0, 1.0);
 	
 	vec3 tonemapping = vec3(out_Color.r,out_Color.g,out_Color.b);
 	vec3 outcolor = uncharted2Tonemap(tonemapping);

@@ -34,10 +34,7 @@ uniform float UsingRoughnessMap;
 uniform float UsingNormalMap;
 uniform float UsingAoMap;
 
-
 const float PI = 3.14159265359;
-
-
 
 vec4 GammaCorrectTexture(sampler2D tex, vec2 uv)
 {
@@ -196,7 +193,7 @@ void main()
 
         // scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
-
+		
         // add to outgoing radiance Lo
         Lo += (kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
     }   

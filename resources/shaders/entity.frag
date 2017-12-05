@@ -20,6 +20,29 @@ layout (location = 1) out vec4 out_BrightColor;
  
  const float levels = 5.0;
  
+ // tonemapping
+float A = 0.15;
+float B = 0.50;
+float C = 0.10;
+float D = 0.15;
+float E = 0.50;
+float F = 0.10;
+float W = 11.2;
+
+vec3 uncharted2Math(vec3 X){
+	return ((X * (A * X + C * B) + D * E) / (X * (A * X + B) + D * F)) - E / F;
+}
+
+vec3 uncharted2Tonemap(vec3 color){
+
+	float exposureBias = 2.0;
+	
+	vec3 curr = uncharted2Math(exposureBias * color);
+	vec3 whitScale = vec3(1.0) / uncharted2Math(vec3(W));
+	
+	return (curr * whitScale);
+}
+ 
  void main () {
 	vec3 unitNormal = normalize(surfaceNormal);
 	vec3 unitVectorToCamera = normalize(toCameraVector);
@@ -59,5 +82,8 @@ layout (location = 1) out vec4 out_BrightColor;
  	} 	
     out_Color = vec4(totalDiffuse,1.0) * textureColour + vec4(totalSpecular,1.0);
     out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
-	out_BrightColor = vec4(1.0,0.0,0.0,1.0);
+    vec3 temp= vec3(out_Color.r,out_Color.g,out_Color.b);
+    temp=uncharted2Tonemap(temp);
+    temp=pow(temp, vec3(1.0 / 2.2));
+	out_BrightColor = vec4(temp,1.0);
 }

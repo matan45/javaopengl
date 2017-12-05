@@ -88,5 +88,6 @@ void main(void){
 	out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
 	vec3 tonemapping = vec3(totalDiffuse * totalColour + vec3(totalSpecular));
 	vec3 outcolor = Burgess(tonemapping);
+	outcolor=pow(outcolor, vec3(1.0 / 2.2));
 	out_BrightColor = vec4(outcolor,1.0);
 }

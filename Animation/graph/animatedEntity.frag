@@ -17,7 +17,12 @@ void main(void){
 		
 	vec3 unitNormal = normalize(pass_normal);
 	float diffuseLight = max(dot(-lightDirection, unitNormal), 0.0) * lightBias.x + lightBias.y;
-	out_colour = diffuseColour * diffuseLight;
+	
+	vec4 color = diffuseColour * diffuseLight;
+	 // HDR tonemapping
+    color.rgb = color.rgb / (color.rgb + vec3(1.0));
+    
+	out_colour = color;
 	
 }
 
