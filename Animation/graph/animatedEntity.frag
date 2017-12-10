@@ -21,6 +21,8 @@ void main(void){
 	vec4 color = diffuseColour * diffuseLight;
 	 // HDR tonemapping
     color.rgb = color.rgb / (color.rgb + vec3(1.0));
+     // gamma correct
+    color.rgb = pow(color.rgb, vec3(1.0/2.2)); 
     
 	out_colour = color;
 	
