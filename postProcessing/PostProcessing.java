@@ -31,10 +31,10 @@ public class PostProcessing {
 		quad = loader.loadToVAO(POSITIONS, 2);
 		brightFilter = new BrightFilter(WindowManager.getWindow("main").getWidth(),
 				WindowManager.getWindow("main").getHeight());
-		hBlur = new HorizontalBlur(WindowManager.getWindow("main").getWidth() / 8,
-				WindowManager.getWindow("main").getHeight() / 8);
-		vBlur = new VerticalBlur(WindowManager.getWindow("main").getWidth() / 8,
-				WindowManager.getWindow("main").getHeight() / 8);
+		hBlur = new HorizontalBlur(WindowManager.getWindow("main").getWidth() / 2,
+				WindowManager.getWindow("main").getHeight() / 2);
+		vBlur = new VerticalBlur(WindowManager.getWindow("main").getWidth() / 2,
+				WindowManager.getWindow("main").getHeight() / 2);
 		hBlur2 = new HorizontalBlur(WindowManager.getWindow("main").getWidth() / 4,
 				WindowManager.getWindow("main").getHeight() / 4);
 		vBlur2 = new VerticalBlur(WindowManager.getWindow("main").getWidth() / 4,
@@ -51,11 +51,11 @@ public class PostProcessing {
 		brightFilter.render(colourTexture);
 		hBlur2.render(brightTexture);
 		vBlur2.render(hBlur2.getOutputTexture());
-		hBlur2.render(vBlur2.getOutputTexture());
-		vBlur2.render(hBlur2.getOutputTexture());
-		chromaticAberrations.render(vBlur2.getOutputTexture());
+		hBlur.render(vBlur2.getOutputTexture());
+		vBlur.render(hBlur.getOutputTexture());
+		//chromaticAberrations.render(colourTexture); working
 		// contrastChanger.render(brightFilter.getOutputTexture());
-		grain.render(chromaticAberrations.getOutputTexture());
+		grain.render(vBlur.getOutputTexture());
 		combineFilter.render(brightFilter.getOutputTexture(), grain.getOutputTexture());
 		end();
 	}

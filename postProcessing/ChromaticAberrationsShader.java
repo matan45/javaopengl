@@ -5,7 +5,7 @@ import shader.ShaderProgram;
 public class ChromaticAberrationsShader extends ShaderProgram {
 	private int location_colourTexture;
 	private int location_distortionMax;
-	private int location_distortionIter;
+	private int location_distortionvignet;
 	
 	public ChromaticAberrationsShader(String vertexFile, String fragmentFile) {
 		super(vertexFile, fragmentFile);
@@ -14,9 +14,9 @@ public class ChromaticAberrationsShader extends ShaderProgram {
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_colourTexture = super.getUniformLocation("RT");
-		location_distortionMax = super.getUniformLocation("distortionmax");
-		location_distortionIter = super.getUniformLocation("distortioniter");
+		location_colourTexture = super.getUniformLocation("colourTexture");
+		location_distortionMax = super.getUniformLocation("distortionStrength");
+		location_distortionvignet = super.getUniformLocation("vignetStrength");
 		
 	}
 	protected void connectTextureUnits() {
@@ -34,8 +34,8 @@ public class ChromaticAberrationsShader extends ShaderProgram {
 		super.loadFloat(location_distortionMax, distortionMax);
 	}
 	
-	protected void distortionIter(int distortionIter){
-		super.loadInt(location_distortionIter, distortionIter);
+	protected void distortionvignet(float distortionvignet){
+		super.loadFloat(location_distortionvignet, distortionvignet);
 	}
 	
 

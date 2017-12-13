@@ -11,7 +11,7 @@ public class Grain {
 		shader=new GrainShader("contrast.vs", "Filmgrain.frag");
 		shader.start();
 		shader.connectTextureUnits();
-		shader.strength(100);
+		shader.strength(25);
 		shader.stop();
 		renderer = new ImageRenderer(width,height);
 	}

@@ -48,6 +48,7 @@ public class Fbo {
 	public Fbo(int width, int height, int depthBufferType) {
 		this.width = width;
 		this.height = height;
+		//this.multisampleAndMultiTarget = true;
 		initialiseFrameBuffer(depthBufferType);
 	}
 

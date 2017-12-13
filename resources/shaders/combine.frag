@@ -7,22 +7,17 @@ out vec4 out_Colour;
 uniform sampler2D colourTexture;
 uniform sampler2D highlightTexture;
 
-vec3 Tonemap( vec3 x )
-{
-    float a = 0.010;
-    float b = 0.132;
-    float c = 0.010;
-    float d = 0.163;
-    float e = 0.101;
-
-    return ( x * ( a * x + b ) ) / ( x * ( c * x + d ) + e );
+vec3 vignetting(vec3 col,float strong){
+	col *= strong + 0.3 * sqrt(16.0*textureCoords.x*textureCoords.y*(1.0-textureCoords.x)*(1.0-textureCoords.y));
+	return col;
 }
 
 void main(void){
 	vec4 sceneColour = texture(colourTexture,textureCoords);
 	vec4 highlightColur = texture(highlightTexture,textureCoords);
-	highlightColur = vec4(Tonemap(highlightColur.rgb),1.0);
 	
-	out_Colour = sceneColour + highlightColur * 0.3;
+	vec4 col = sceneColour + highlightColur * 0.3;
+	out_Colour = vec4(vignetting(col.rgb,1.0),1.0);
+	
 
 }

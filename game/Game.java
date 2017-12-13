@@ -52,7 +52,6 @@ import postProcessing.Fbo;
 import postProcessing.PostProcessing;
 import renderer.Loader;
 import renderer.MasterRenderer;
-import renderer.OBJLoader;
 import terrains.Terrain;
 import text.FontType;
 import text.GUIText;
@@ -153,29 +152,29 @@ public class Game implements GameLogic {
 		lights.add(light4);
 
 		// INIT ENTITYS
-		Entity dragon = new Entity(new TexturedModel(OBJLoader.loadObjModel("dragon", loader),
+		Entity dragon = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("dragon", loader),
 				new ModelTexture(loader.loadTexture("dragon"))), new Vector3f(30, 0, -35), 0, 0, 0, 0.3f);
 		dragon.getModel().getTexture().setReflectivity(2);
 		dragon.getModel().getTexture().setShineDamper(10);
-		dragon.setX(OBJLoader.getOBJLength().getX());
-		dragon.setY(OBJLoader.getOBJLength().getY());
-		dragon.setZ(OBJLoader.getOBJLength().getZ());
+		dragon.setX(OBJFileLoader.getOBJLength().getX());
+		dragon.setY(OBJFileLoader.getOBJLength().getY());
+		dragon.setZ(OBJFileLoader.getOBJLength().getZ());
 		entitys.add(dragon);
 
-		Entity grass = new Entity(new TexturedModel(OBJLoader.loadObjModel("grassModel", loader),
+		Entity grass = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("grassModel", loader),
 				new ModelTexture(loader.loadTexture("grassTexture"))), new Vector3f(32, 0, -37), 0, 0, 0, 1f);
 		grass.getModel().getTexture().setHasTransparency(true);
 		grass.getModel().getTexture().setUseFakeLighting(true);
 		entitys.add(grass);
 
-		Entity lowtree = new Entity(new TexturedModel(OBJLoader.loadObjModel("lowPolyTree", loader),
+		Entity lowtree = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("lowPolyTree", loader),
 				new ModelTexture(loader.loadTexture("lowPolyTree"))), new Vector3f(31, 0, -42), 0, 0, 0, 0.2f);
 		lowtree.getModel().getTexture().setHasTransparency(true);
 		lowtree.getModel().getTexture().setUseFakeLighting(true);
 		entitys.add(lowtree);
 
 		Entity tree = new Entity(
-				new TexturedModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree"))),
+				new TexturedModel(OBJFileLoader.loadOBJ("tree", loader), new ModelTexture(loader.loadTexture("tree"))),
 				new Vector3f(33, 0, -38), 0, 0, 0, 1.7f);
 		tree.getModel().getTexture().setReflectivity(5);
 		tree.getModel().getTexture().setShineDamper(20);
@@ -184,7 +183,7 @@ public class Game implements GameLogic {
 		// TEXTURE ATLASES
 		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
 		fernTextureAtlas.setNumberOfRows(2);
-		TexturedModel Mfern = new TexturedModel(OBJLoader.loadObjModel("fern", loader), fernTextureAtlas);
+		TexturedModel Mfern = new TexturedModel(OBJFileLoader.loadOBJ("fern", loader), fernTextureAtlas);
 
 		Entity fern = new Entity(Mfern, 0, new Vector3f(25, 0, -35), 0, 0, 0, 0.45f);
 		fern.getModel().getTexture().setHasTransparency(true);
@@ -207,37 +206,36 @@ public class Game implements GameLogic {
 		entitys.add(fern4);
 
 		Entity lamp = new Entity(
-				new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
+				new TexturedModel(OBJFileLoader.loadOBJ("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
 				new Vector3f(21, 0, -40), 0, 0, 0, 0.4f);
 		lamp.getModel().getTexture().setReflectivity(1f);
 		lamp.getModel().getTexture().setShineDamper(5f);
 		lamp.addLight(light);
-		lamp.setX(OBJLoader.getOBJLength().getX());
-		lamp.setY(OBJLoader.getOBJLength().getY());
-		lamp.setZ(OBJLoader.getOBJLength().getZ());
 		entitys.add(lamp);
 
 		Entity lamp2 = new Entity(
-				new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
+				new TexturedModel(OBJFileLoader.loadOBJ("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
 				new Vector3f(50, 0, -30), 0, 0, 0, 0.4f);
 		lamp2.getModel().getTexture().setReflectivity(1f);
 		lamp2.getModel().getTexture().setShineDamper(5f);
+		lamp2.addLight(light2);
 		entitys.add(lamp2);
 
 		Entity lamp3 = new Entity(
-				new TexturedModel(OBJLoader.loadObjModel("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
+				new TexturedModel(OBJFileLoader.loadOBJ("lamp", loader), new ModelTexture(loader.loadTexture("lamp"))),
 				new Vector3f(35, 0, -52), 0, 0, 0, 0.4f);
 		lamp3.getModel().getTexture().setReflectivity(1f);
 		lamp3.getModel().getTexture().setShineDamper(5f);
+		lamp3.addLight(light3);
 		entitys.add(lamp3);
 
 		Entity player = new Player(
-				new TexturedModel(OBJLoader.loadObjModel("player", loader),
+				new TexturedModel(OBJFileLoader.loadOBJ("player", loader),
 						new ModelTexture(loader.loadTexture("playerTexture"))),
 				new Vector3f(30, 0, -20), 0, 0, 0, 0.3f);
-		player.setX(OBJLoader.getOBJLength().getX());
-		player.setY(OBJLoader.getOBJLength().getY());
-		player.setZ(OBJLoader.getOBJLength().getZ());
+		player.setX(OBJFileLoader.getOBJLength().getX());
+		player.setY(OBJFileLoader.getOBJLength().getY());
+		player.setZ(OBJFileLoader.getOBJLength().getZ());
 		entitys.add(player);
 
 		Entity barrel = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("barrel", loader),
@@ -245,9 +243,12 @@ public class Game implements GameLogic {
 		barrel.getModel().getTexture().setShineDamper(10);
 		barrel.getModel().getTexture().setReflectivity(0.5f);
 		barrel.getModel().getTexture().setSpecularMap(loader.loadTexture("barrelS"));
-
 		entitys.add(barrel);
-
+		
+		Entity knight = new Entity(new TexturedModel(OBJFileLoader.loadOBJ("knight", loader),
+				new ModelTexture(loader.loadTexture("knight"))), new Vector3f(50, 0, -20), 0, -90, 0, 1f);
+		entitys.add(knight);
+		
 		for (Entity entity : entitys) {
 			float y = terrain.getHeightOfTerrain(entity.getPosition().x, entity.getPosition().z);
 			entity.setPosition(new Vector3f(entity.getPosition().x, y, entity.getPosition().z));
@@ -353,9 +354,9 @@ public class Game implements GameLogic {
 		multisampleFbo = new Fbo(WindowManager.getWindow("main").getWidth(),
 				WindowManager.getWindow("main").getHeight());
 		outputFbo = new Fbo(WindowManager.getWindow("main").getWidth(), WindowManager.getWindow("main").getHeight(),
-				Fbo.DEPTH_TEXTURE);
+				Fbo.DEPTH_RENDER_BUFFER);
 		outputFbo2 = new Fbo(WindowManager.getWindow("main").getWidth(), WindowManager.getWindow("main").getHeight(),
-				Fbo.DEPTH_TEXTURE);
+				Fbo.DEPTH_RENDER_BUFFER);
 		PostProcessing.init(loader);
 
 		// 2D Image Animation
@@ -403,7 +404,8 @@ public class Game implements GameLogic {
 		material.setRoughnessMap(loader.loadTexture("PBR/gun/roughness"));
 		material.setNormalMap(loader.loadTexture("PBR/gun/normal"));
 		material.setAoMap(loader.loadTexture("PBR/gun/ao"));
-		pbrentity=new PBREntity(OBJFileLoader.loadOBJ("gun", loader), new Vector3f(20, 1f, -15), new Vector3f(), new Vector3f(2, 2, 2), material);
+		pbrentity=new PBREntity(OBJFileLoader.loadOBJ("gun", loader), new Vector3f(20, 1f, -15), new Vector3f(), new Vector3f(2f, 2f, 2f), material);
+		
 	}
 
 	public void update() {

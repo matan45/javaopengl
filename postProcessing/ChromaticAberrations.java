@@ -11,8 +11,8 @@ public class ChromaticAberrations {
 		shader=new ChromaticAberrationsShader("contrast.vs", "chromaticaberrations.frag");
 		shader.start();
 		shader.connectTextureUnits();
-		shader.distortionIter(10);
-		shader.distortionMax(2f);
+		shader.distortionvignet(0.6f);
+		shader.distortionMax(1.25f);
 		shader.stop();
 		renderer = new ImageRenderer(width,height);
 	}
