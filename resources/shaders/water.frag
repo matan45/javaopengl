@@ -21,29 +21,6 @@ const float waveStrength = 0.04;
 const float shineDamper = 20.0;
 const float reflectivity = 0.5;
 
-// tonemapping
-float A = 0.15;
-float B = 0.50;
-float C = 0.10;
-float D = 0.15;
-float E = 0.50;
-float F = 0.10;
-float W = 11.2;
-
-vec3 uncharted2Math(vec3 X){
-	return ((X * (A * X + C * B) + D * E) / (X * (A * X + B) + D * F)) - E / F;
-}
-
-vec3 uncharted2Tonemap(vec3 color){
-
-	float exposureBias = 2.0;
-	
-	vec3 curr = uncharted2Math(exposureBias * color);
-	vec3 whitScale = vec3(1.0) / uncharted2Math(vec3(W));
-	
-	return (curr * whitScale);
-}
-
 void main(void) {
 
 	vec2 ndc = (clipSpace.xy/clipSpace.w)/2.0 + 0.5;
@@ -88,13 +65,9 @@ void main(void) {
 	specular = pow(specular, shineDamper);
 	vec3 specularHighlights = lightColour * specular * reflectivity * clamp(waterDepth/5.0, 0.0, 1.0);
 
-	out_Color = mix(reflectColour, refractColour + vec4(specularHighlights, 0.0), refractiveFactor);
-	out_Color = mix(out_Color, vec4(0.0, 0.3, 0.5, 1.0), 0.2);
-	out_Color.a = clamp(waterDepth/0.5, 0.0, 1.0);
+	vec4 col = mix(reflectColour, refractColour + vec4(specularHighlights, 0.0), refractiveFactor);
 	
-	vec3 tonemapping = vec3(out_Color.r,out_Color.g,out_Color.b);
-	vec3 outcolor = uncharted2Tonemap(tonemapping);
-	// gamma correct
-	outcolor = pow(outcolor, vec3(1.0/2.2));
-	out_BrightColor = vec4(0.0,0.0,outcolor.b,1.0);
+	out_Color = mix(col, vec4(0.0, 0.3, 0.5, 1.0), 0.2);
+	out_Color.a = clamp(waterDepth/0.5, 0.0, 1.0);
+	out_BrightColor = vec4(0.0,0.0,1.0,1.0);
 }

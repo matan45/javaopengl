@@ -3,16 +3,15 @@ package postProcessing;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-public class ChromaticAberrations {
+public class Faxx {
 	private ImageRenderer renderer;
-	ChromaticAberrationsShader shader;
+	FaxxShader shader;
 	
-	public ChromaticAberrations(int width, int height) {
-		shader=new ChromaticAberrationsShader("contrast.vs", "chromaticaberrations.frag");
+	public Faxx(int width, int height) {
+		shader=new FaxxShader("contrast.vs", "fxaa.frag");
 		shader.start();
 		shader.connectTextureUnits();
-		shader.distortionvignet(0.5f);
-		shader.distortionMax(0.5f);
+		shader.loadResolution(width, height);
 		shader.stop();
 		renderer = new ImageRenderer(width,height);
 	}
@@ -29,6 +28,7 @@ public class ChromaticAberrations {
 		renderer.cleanUp();
 		shader.cleanUp();
 	}
+	
 	public int getOutputTexture(){
 		return renderer.getOutputTexture();
 	}
