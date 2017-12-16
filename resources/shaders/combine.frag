@@ -45,5 +45,3 @@ void main(void){
 	out_Colour = vec4(ColorGrade(vignetting(col.rgb,1.0)),1.0);
 }
 
-
-

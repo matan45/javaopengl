@@ -24,25 +24,31 @@ public class PostProcessing {
 	private static CombineFilter combineFilter;
 	private static ChromaticAberrations chromaticAberrations;
 	private static Grain grain;
-	private static Faxx faxx;
+	private static Fxaa fxaa;
+	private static UnderWater underWater;
+	private static EdgeGlow edgeGlow;
 
 	public static void init(Loader loader) {
 		quad = loader.loadToVAO(POSITIONS, 2);
 		brightFilter = new BrightFilter(WindowManager.getWindow("main").getWidth(),
 				WindowManager.getWindow("main").getHeight());
-		hBlur = new HorizontalBlur(WindowManager.getWindow("main").getWidth() / 8,
-				WindowManager.getWindow("main").getHeight() / 8);
-		vBlur = new VerticalBlur(WindowManager.getWindow("main").getWidth() / 8,
-				WindowManager.getWindow("main").getHeight() / 8);
-		hBlur2 = new HorizontalBlur(WindowManager.getWindow("main").getWidth() / 4,
+		hBlur = new HorizontalBlur(WindowManager.getWindow("main").getWidth() / 4,
 				WindowManager.getWindow("main").getHeight() / 4);
-		vBlur2 = new VerticalBlur(WindowManager.getWindow("main").getWidth() / 4,
+		vBlur = new VerticalBlur(WindowManager.getWindow("main").getWidth() / 4,
 				WindowManager.getWindow("main").getHeight() / 4);
+		hBlur2 = new HorizontalBlur(WindowManager.getWindow("main").getWidth() / 2,
+				WindowManager.getWindow("main").getHeight() / 2);
+		vBlur2 = new VerticalBlur(WindowManager.getWindow("main").getWidth() / 2,
+				WindowManager.getWindow("main").getHeight() / 2);
 		chromaticAberrations = new ChromaticAberrations(WindowManager.getWindow("main").getWidth(),
 				WindowManager.getWindow("main").getHeight());
 		grain=new Grain(WindowManager.getWindow("main").getWidth(),
 				WindowManager.getWindow("main").getHeight());
-		faxx=new Faxx(WindowManager.getWindow("main").getWidth(),
+		fxaa=new Fxaa(WindowManager.getWindow("main").getWidth(),
+				WindowManager.getWindow("main").getHeight());
+		underWater=new UnderWater(WindowManager.getWindow("main").getWidth(),
+				WindowManager.getWindow("main").getHeight());
+		edgeGlow=new EdgeGlow(WindowManager.getWindow("main").getWidth(),
 				WindowManager.getWindow("main").getHeight());
 		combineFilter = new CombineFilter();
 	}
@@ -56,8 +62,10 @@ public class PostProcessing {
 		vBlur.render(hBlur.getOutputTexture());
 		chromaticAberrations.render(brightFilter.getOutputTexture());
 		grain.render(vBlur.getOutputTexture());
-		faxx.render(chromaticAberrations.getOutputTexture());
-		combineFilter.render(faxx.getOutputTexture(), grain.getOutputTexture());
+		//underWater.render(chromaticAberrations.getOutputTexture());
+		//edgeGlow.render(underWater.getOutputTexture());
+		fxaa.render(chromaticAberrations.getOutputTexture());
+		combineFilter.render(fxaa.getOutputTexture(), grain.getOutputTexture());
 		end();
 	}
 
@@ -69,7 +77,9 @@ public class PostProcessing {
 		chromaticAberrations.cleanUp();
 		grain.cleanUp();
 		combineFilter.cleanUp();
-		faxx.cleanUp();
+		fxaa.cleanUp();
+		underWater.cleanUp();
+		edgeGlow.cleanUp();
 
 	}
 

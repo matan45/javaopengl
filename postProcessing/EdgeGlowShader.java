@@ -3,10 +3,12 @@ package postProcessing;
 import maths.Vector2f;
 import shader.ShaderProgram;
 
-public class FaxxShader extends ShaderProgram {
+public class EdgeGlowShader extends ShaderProgram {
 	private int location_colourTexture;
 	private int location_iResolution;
-	public FaxxShader(String vertexFile, String fragmentFile) {
+	private int location_time;
+	
+	public EdgeGlowShader(String vertexFile, String fragmentFile) {
 		super(vertexFile, fragmentFile);
 		// TODO Auto-generated constructor stub
 	}
@@ -15,6 +17,7 @@ public class FaxxShader extends ShaderProgram {
 	protected void getAllUniformLocations() {
 		location_colourTexture = super.getUniformLocation("colourTexture");
 		location_iResolution = super.getUniformLocation("iResolution");
+		location_time=super.getUniformLocation("time");
 		
 	}
 	
@@ -29,6 +32,9 @@ public class FaxxShader extends ShaderProgram {
 	
 	public void loadResolution(float x, float y) {
 		super.load2DVector(location_iResolution, new Vector2f(x, y));
+	}
+	protected void time(float time){
+		super.loadFloat(location_time, time);
 	}
 
 }

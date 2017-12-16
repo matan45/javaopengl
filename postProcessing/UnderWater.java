@@ -4,14 +4,14 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-public class Grain {
+public class UnderWater {
 	private ImageRenderer renderer;
-	GrainShader shader;
-	public Grain(int width, int height) {
-		shader=new GrainShader("contrast.vs", "Filmgrain.frag");
+	UnderWaterShader shader;
+	public UnderWater(int width, int height) {
+		shader=new UnderWaterShader("contrast.vs", "underwater.frag");
 		shader.start();
 		shader.connectTextureUnits();
-		shader.strength(15);
+		shader.speed(0.5f);
 		shader.stop();
 		renderer = new ImageRenderer(width,height);
 	}

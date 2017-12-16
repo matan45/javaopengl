@@ -3,12 +3,12 @@ package postProcessing;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-public class Faxx {
+public class Fxaa {
 	private ImageRenderer renderer;
-	FaxxShader shader;
+	FxaaShader shader;
 	
-	public Faxx(int width, int height) {
-		shader=new FaxxShader("contrast.vs", "fxaa.frag");
+	public Fxaa(int width, int height) {
+		shader=new FxaaShader("contrast.vs", "fxaa.frag");
 		shader.start();
 		shader.connectTextureUnits();
 		shader.loadResolution(width, height);
