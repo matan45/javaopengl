@@ -79,7 +79,7 @@ public class PhysicsTest implements GameLogic {
 		b2 = new AABB(box2.getPosition(), new Vector3f(box2.getX() / 2, box2.getY() / 2, box2.getZ() / 2),
 				Layers.Physics_Layer);
 
-		PhysicsObject obj1 = new PhysicsObject(b1, new Vector3f(0.0f, 0.0f, -5.0f), 200);
+		PhysicsObject obj1 = new PhysicsObject(b1, new Vector3f(0.0f, 0.0f, -2.0f), 200);
 		PhysicsObject obj2 = new PhysicsObject(b2, new Vector3f(0.0f, 0.0f, 0.0f), 10000);
 
 		physicsEngine.AddObject(obj1);

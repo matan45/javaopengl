@@ -13,6 +13,10 @@ public class BrightFilter {
 	public BrightFilter(int width, int height) {
 		shader = new BrightFilterShader("simple.vs", "brightFilter.frag");
 		renderer = new ImageRenderer(width, height);
+		shader.start();
+		shader.loadshades(0);
+		shader.scale(0);
+		shader.stop();
 	}
 
 	public void render(int texture) {

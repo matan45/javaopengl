@@ -13,6 +13,7 @@ public class EdgeGlow {
 		shader.start();
 		shader.connectTextureUnits();
 		shader.loadResolution(width, height);
+		shader.speed(5.0f);
 		shader.stop();
 		renderer = new ImageRenderer(width, height);
 	}
@@ -24,6 +25,7 @@ public class EdgeGlow {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 		renderer.renderQuad();
 		shader.stop();
+		
 	}
 
 	public void cleanUp() {

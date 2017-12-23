@@ -3,6 +3,7 @@
 uniform sampler2D colourTexture;
 
 uniform float time;
+uniform float speed;
 uniform vec2 iResolution;
 
 in vec2 textureCoords;
@@ -39,11 +40,12 @@ bool isEdgeFragment(vec2 fragCoord) {
 }
 
 void main(void) {
+
 	vec4 actualColor = texture(colourTexture,textureCoords);
 	if(!isEdgeFragment(textureCoords)) {
 		FragColor = actualColor;
 	} else {
-		FragColor = vec4(0., 1., 0., 1.) * sin(time * 5.) + actualColor * cos(time * 5.);
+		FragColor = vec4(0., 1., 0., 1.) * sin(time * speed) + actualColor * cos(time * speed);
     }
 }
 

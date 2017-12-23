@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL13;
 public class UnderWater {
 	private ImageRenderer renderer;
 	UnderWaterShader shader;
+	
 	public UnderWater(int width, int height) {
 		shader=new UnderWaterShader("contrast.vs", "underwater.frag");
 		shader.start();
@@ -23,6 +24,7 @@ public class UnderWater {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 		renderer.renderQuad();
 		shader.stop();
+		
 	}
 	
 	public void cleanUp() {

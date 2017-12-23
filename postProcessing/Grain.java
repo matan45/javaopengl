@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL13;
 public class Grain {
 	private ImageRenderer renderer;
 	GrainShader shader;
+	
+	
 	public Grain(int width, int height) {
 		shader=new GrainShader("contrast.vs", "Filmgrain.frag");
 		shader.start();
@@ -23,6 +25,7 @@ public class Grain {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 		renderer.renderQuad();
 		shader.stop();
+		
 	}
 	
 	public void cleanUp() {
